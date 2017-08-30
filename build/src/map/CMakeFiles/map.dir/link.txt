@@ -1,2 +1,0 @@
-/usr/bin/ar cr ../../lib/libmap.a  CMakeFiles/map.dir/image_utils.cpp.o CMakeFiles/map.dir/map_utils.cpp.o CMakeFiles/map.dir/sgrid_builder.cpp.o CMakeFiles/map.dir/graph_builder.cpp.o CMakeFiles/map.dir/square_grid.cpp.o
-/usr/bin/ranlib ../../lib/libmap.a

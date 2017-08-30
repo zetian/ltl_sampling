@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++11    CMakeFiles/simple_graph.dir/simple_graph.cpp.o  -o ../../bin/simple_graph -rdynamic 

@@ -1,2 +1,0 @@
-/usr/bin/ar cr ../../lib/libvis.a  CMakeFiles/vis.dir/vis_utils.cpp.o CMakeFiles/vis.dir/graph_vis.cpp.o
-/usr/bin/ranlib ../../lib/libvis.a
