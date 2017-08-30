@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11    CMakeFiles/test_dubins.dir/test_dubins.cpp.o  -o ../../bin/test_dubins -rdynamic ../../lib/libtrajectory.a 

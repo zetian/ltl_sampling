@@ -1,0 +1,17 @@
+https://google.github.io/styleguide/cppguide.html
+
+File names
+----------
+
+Class names
+-----------
+
+Function and variable names
+---------------------------
+
+Doxygen compatibility
+---------------------
+See http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
+
+Authorship and copyright notice
+-------------------------------

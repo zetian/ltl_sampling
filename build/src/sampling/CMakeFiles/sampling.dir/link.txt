@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libsampling.a  CMakeFiles/sampling.dir/sample_node.cpp.o
+/usr/bin/ranlib ../../lib/libsampling.a

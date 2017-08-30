@@ -1,0 +1,1 @@
+H2C is an open-source library of hierarchical, hybrid control algorithms.

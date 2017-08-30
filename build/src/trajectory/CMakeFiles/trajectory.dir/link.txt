@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libtrajectory.a  CMakeFiles/trajectory.dir/dubins_steer.cpp.o
+/usr/bin/ranlib ../../lib/libtrajectory.a
