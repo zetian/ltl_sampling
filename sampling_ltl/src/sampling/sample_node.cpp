@@ -2,17 +2,17 @@
 
 #include "sampling/sample_node.h"
 
-SampleNode::SampleNode(uint64_t id, std::pair<double, double> pos){
+SampleNode::SampleNode(uint64_t id, std::vector<double> states){
     id_ = id;
-    position_ = pos;
+    states_ = states;
 }
 
-std::pair<double, double> SampleNode::get_postion(){
-    return position_;
+std::vector<double> SampleNode::get_states(){
+    return states_;
 }
 
-void SampleNode::set_position(std::pair<double, double> pos){
-    position_ = pos;
+void SampleNode::set_states(std::vector<double> states){
+    states_ = states;
 }
 
 uint64_t SampleNode::get_id(){

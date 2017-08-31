@@ -6,11 +6,11 @@
 class SampleNode {
 public:
     SampleNode();
-    SampleNode(uint64_t id, std::pair<double, double> pos);
+    SampleNode(uint64_t id, std::vector<double> states);
     ~SampleNode();
 
 private:
-    std::pair<double, double> position_;
+    std::vector<double> states_;
     uint64_t id_;
     int ba_state_;
     double cost_;
@@ -19,8 +19,8 @@ private:
     std::vector<uint64_t> children_;
 
 public:
-    std::pair<double, double> get_postion();
-    void set_position(std::pair<double, double> pos);
+    std::vector<double> get_states();
+    void set_states(std::vector<double> states);
 
     uint64_t get_id();
     void set_id(uint64_t id);
