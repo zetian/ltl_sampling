@@ -1,5 +1,5 @@
 #include <algorithm>
-
+#include <cmath>
 #include "sampling/sample_node.h"
 
 SampleNode::SampleNode(uint64_t id, std::vector<double> states){
@@ -55,4 +55,37 @@ std::vector<uint64_t> SampleNode::get_children_id(){
 }
 void SampleNode::set_children_id(std::vector<uint64_t> children){
     children_ = children;
+}
+
+double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
+    double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[0] - states_2[0], 2));
+    return dist;
+}
+
+void SubSampleSpace::insert_sample(SampleNode new_sample) {
+    sample_nodes_.push_back(new_sample);
+}
+
+int SubSampleSpace::num_samples() {
+    return sample_nodes_.size();
+}
+
+int SubSampleSpace::get_ba_state() {
+    return ba_state_;
+}
+
+SampleNode SubSampleSpace::get_parent(std::vector<double> states) {
+    SampleNode parent_sample;
+    if (!sample_nodes_.empty()) {
+        SampleNode parent_sample = sample_nodes_.front();
+    }
+    
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        // std::vector<double> parent_states = sample_nodes_[i].get_states();
+        // double dist = SubSampleSpace::get_dist(parent_states, states);
+        if (get_dist(sample_nodes_[i].get_states(), states) < get_dist(parent_sample.get_states(), states)) {
+            parent_sample = sample_nodes_[i];
+        }
+    }
+    return parent_sample;
 }

@@ -42,3 +42,20 @@ public:
 
 
 };
+
+
+class SubSampleSpace {
+public:
+    SubSampleSpace();
+    ~SubSampleSpace();
+private:
+    std::vector<SampleNode> sample_nodes_;
+    int ba_state_;
+    double get_dist(std::vector<double> states_1, std::vector<double> states_2);
+public:
+    void insert_sample(SampleNode new_sample);
+    int num_samples();
+    int get_ba_state();
+    SampleNode get_parent(std::vector<double> states);
+
+};
