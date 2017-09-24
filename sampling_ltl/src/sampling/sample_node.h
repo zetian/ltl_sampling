@@ -1,16 +1,16 @@
 // #ifndef SRC_SAMPLE_NODE_H_
 // #define SRC_SAMPLE_NODE_H_
-
+#include <map>
 #include <vector>
 
 class SampleNode {
 public:
-    SampleNode();
+    SampleNode(){};
     SampleNode(uint64_t id, std::vector<double> states);
-    ~SampleNode();
+    ~SampleNode(){};
 
 private:
-    std::vector<double> states_;
+    std::vector<double> state_;
     uint64_t id_;
     int ba_state_;
     double cost_;
@@ -19,8 +19,8 @@ private:
     std::vector<uint64_t> children_;
 
 public:
-    std::vector<double> get_states();
-    void set_states(std::vector<double> states);
+    std::vector<double> get_state();
+    void set_state(std::vector<double> state);
 
     uint64_t get_id();
     void set_id(uint64_t id);
@@ -46,16 +46,19 @@ public:
 
 class SubSampleSpace {
 public:
-    SubSampleSpace();
-    ~SubSampleSpace();
+    SubSampleSpace(){};
+    ~SubSampleSpace(){};
 private:
     std::vector<SampleNode> sample_nodes_;
     int ba_state_;
+    std::map<int, SampleNode> sample_node_id_map_; 
     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
 public:
     void insert_sample(SampleNode new_sample);
+    SampleNode get_sample(uint64_t id);
     int num_samples();
     int get_ba_state();
-    SampleNode get_parent(std::vector<double> states);
+    SampleNode& get_parent(std::vector<double> state);
+
 
 };

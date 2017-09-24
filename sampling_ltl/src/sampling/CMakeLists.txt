@@ -10,6 +10,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(SAMPLING_LIB_SRC
 	sample_node.cpp
 	sample_space.cpp
+	region.cpp
 )
 add_library(sampling STATIC ${SAMPLING_LIB_SRC})
 target_link_libraries(sampling)

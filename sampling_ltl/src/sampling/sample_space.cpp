@@ -8,3 +8,20 @@ SampleSpace::SampleSpace(int num_ba) {
         sample_space_ltl_map_[i] = new_sub_space;
     }
 }
+
+SubSampleSpace& SampleSpace::get_sub_space(int num_ba) {
+    return sample_space_ltl_map_.find(num_ba)->second;
+    // return sample_space_ltl_map_[num_ba];
+}
+
+void SampleSpace::insert_sample(SampleNode new_sample, int sub_space_id) {
+    sample_space_ltl_map_.find(sub_space_id)->second.insert_sample(new_sample);
+}
+
+uint64_t SampleSpace::total_sample_num() {
+    uint64_t total_num = 0;
+    for (int i = 0; i < num_ba_; i++) {
+        total_num = total_num + sample_space_ltl_map_[i].num_samples();
+    }
+    return total_num;
+}

@@ -24,7 +24,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 include_directories(${CMAKE_SOURCE_DIR}/src/third_party/)
 
 # Add sub source directories
-#add_subdirectory(src/trans_sys)
+add_subdirectory(src/trans_sys)
 add_subdirectory(src/tests)
 add_subdirectory(src/graph)
 add_subdirectory(src/map)
