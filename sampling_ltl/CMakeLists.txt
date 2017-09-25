@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(sampling-ltl)
 
+# cmake module path
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+
+# automatically build LCM types.  This also defines a number of CMake
+# variables, see cmake/lcmtypes.cmake for details
+include(cmake/lcmtypes.cmake)
+lcmtypes_build()
+
 # Set compiler to use c++ 11 features
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)

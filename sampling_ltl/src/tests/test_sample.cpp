@@ -8,6 +8,7 @@
 #include <ctime>
 #include <cmath>
 #include <random>
+#include <lcm/lcm-cpp.hpp>
 
 #include "trajectory/dubins_steer.h"
 #include "graph/graph.h"
@@ -187,6 +188,7 @@ int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BA
 
 int main()
 {
+    lcm::LCM lcm;
     double EPSILON = 5;
     std::string ltl_formula = "(<> p0) && (<> p1) && (<> p2)";
     std::vector<std::string> buchi_regions;
