@@ -36,23 +36,40 @@ class SamplingVis(object):
         print("   region position x: " + str(msg.position_x[0]) + " to " + str(msg.position_x[1]))
         print("   region position y: " + str(msg.position_y[0]) + " to " + str(msg.position_y[1]))
         self.regions.append(region)
+
 def main():
     lc = lcm.LCM()
     sample_vis = SamplingVis(100, 100)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
+
+    
     
     # lc = lcm.LCM()
     # subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
-
+    print("OOOOOOOOOOOOOOOOOOOOOOOOOO")
     try:
         while True:
             lc.handle()
-
     except KeyboardInterrupt:
+        print 'Resuming...'
         pass
+        # continue
+        # print("######")
+    
 
     lc.unsubscribe(subscription)
+    
+
+    all_states_x = []
+    all_states_y = []
+    
+    for x in sample_vis.all_samples:
+        all_states_x.append(x[0])
+        all_states_y.append(x[1])
+
+    plt.plot(all_states_x, all_states_y, 'ro')
+    plt.show()
 
 if __name__ == '__main__':
     main()

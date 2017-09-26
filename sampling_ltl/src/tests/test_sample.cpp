@@ -209,7 +209,8 @@ int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BA
 int main()
 {
     lcm::LCM lcm;
-    double EPSILON = 5;
+    double EPSILON = 6;
+    double RADIUS = 12;
     std::string ltl_formula = "(<> p0) && (<> p1) && (<> p2)";
     std::vector<std::string> buchi_regions;
     buchi_regions.push_back("p0");
@@ -382,7 +383,7 @@ int main()
     // all_interest_regions.push_back(interest_0);
     // all_interest_regions.push_back(interest_1);
     // all_interest_regions.push_back(interest_2);
-    int iteration = 5;
+    int iteration = 100;
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba, all_space);
         double new_node_x = 0;
@@ -427,14 +428,27 @@ int main()
         
         // std::vector<double> test_position = {15.0, 85.0};
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba, all_interest_regions);
+        /// Choose parent
+
+        // std::vector<int> parent_ba_candidate;
+        // if (new_ba == parent_sample.get_ba()) {
+        //     parent_ba_candidate.push_back(new_ba);
+        // }
+        // else {
+        //     parent_ba_candidate.push_back(parent_sample.get_ba());
+        //     parent_ba_candidate.push_back(new_ba);
+        // }
+        SampleNode chosen_parent_sample = all_space.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, RADIUS);
+
+
 
         SampleNode new_node;
         new_node.set_id(all_space.get_sub_space(new_ba).num_samples());
         new_node.set_ba(new_ba);
         new_node.set_state(new_sample_state);
-        new_node.set_cost(parent_sample.get_cost() + get_dist(parent_sample.get_state(), new_sample_state));
-        new_node.set_parent_ba(parent_sample.get_id());
-        new_node.set_parent_id(parent_sample.get_ba());
+        new_node.set_cost(chosen_parent_sample.get_cost() + get_dist(chosen_parent_sample.get_state(), new_sample_state));
+        new_node.set_parent_ba(chosen_parent_sample.get_id());
+        new_node.set_parent_id(chosen_parent_sample.get_ba());
         all_space.insert_sample(new_node, new_ba);
         
         sampling::sample_data node_data;

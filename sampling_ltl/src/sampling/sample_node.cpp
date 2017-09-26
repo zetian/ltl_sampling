@@ -94,3 +94,25 @@ SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     }
     return parent_sample;
 }
+
+SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS) {
+    SampleNode &new_parent_sample = sample_nodes_.front();
+    // if (!sample_nodes_.empty()) {
+    //     SampleNode parent_sample = sample_nodes_.front();
+    // }
+    
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        // std::vector<double> parent_states = sample_nodes_[i].get_states();
+        // double dist = SubSampleSpace::get_dist(parent_states, states);
+        if (get_dist(sample_nodes_[i].get_state(), state) < RADIUS &&
+            get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < 
+            parent_sample.get_cost() + get_dist(parent_sample.get_state(), state)) {
+            new_parent_sample = sample_nodes_[i];
+        }
+    }
+    return new_parent_sample;
+}
+
+void SubSampleSpace::rewire(SampleNode new_sample) {
+    
+}

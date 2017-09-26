@@ -59,6 +59,8 @@ public:
     int num_samples();
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
+    SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
 
-
+    void rewire(SampleNode new_sample);
+    
 };
