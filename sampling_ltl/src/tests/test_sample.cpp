@@ -8,7 +8,7 @@
 #include <ctime>
 #include <cmath>
 #include <random>
-#include <lcm/lcm-cpp.hpp>
+
 
 #include "trajectory/dubins_steer.h"
 #include "graph/graph.h"
@@ -18,7 +18,9 @@
 // #include "sampling/sample_node.h"
 #include "sampling/sample_space.h"
 #include "sampling/region.h"
-#include "lcmtypes/sample_data.lcm"
+
+#include <lcm/lcm-cpp.hpp>
+#include "lcmtypes/srcl_msgs.hpp"
 
 using namespace srcl;
 
@@ -322,6 +324,8 @@ int main()
     // std::cout << "f3333: " << f3 << std::endl;
     double work_space_size_x = 100;
     double work_space_size_y = 100;
+    sampling::region_data r_data;
+
     Region interest_0;
     Region interest_1;
     Region interest_2;
@@ -329,16 +333,33 @@ int main()
     std::pair <double, double> position_y (30, 45);
     interest_0.set_position(position_x, position_y);
     interest_0.set_region_interest(0);
+    
+    r_data.position_x[0] =  position_x.first;
+    r_data.position_x[1] =  position_x.second;
+    r_data.position_y[0] =  position_y.first;
+    r_data.position_y[1] =  position_y.second;
+    lcm.publish("REGION", &r_data);
 
     position_x = std::make_pair(55, 95);
     position_y = std::make_pair(55, 95);
     interest_1.set_position(position_x, position_y);
     interest_1.set_region_interest(1);
+    r_data.position_x[0] =  position_x.first;
+    r_data.position_x[1] =  position_x.second;
+    r_data.position_y[0] =  position_y.first;
+    r_data.position_y[1] =  position_y.second;
+    lcm.publish("REGION", &r_data);
+
 
     position_x = std::make_pair(10, 20);
     position_y = std::make_pair(80, 90);
     interest_2.set_position(position_x, position_y);
     interest_2.set_region_interest(2);
+    r_data.position_x[0] =  position_x.first;
+    r_data.position_x[1] =  position_x.second;
+    r_data.position_y[0] =  position_y.first;
+    r_data.position_y[1] =  position_y.second;
+    lcm.publish("REGION", &r_data);
 
     std::cout << "interest 0 position x: " << interest_0.get_x_position().first << ", " << interest_0.get_x_position().second << std::endl;
     std::cout << "interest 0 position y: " << interest_0.get_y_position().first << ", " << interest_0.get_y_position().second << std::endl;
@@ -361,7 +382,7 @@ int main()
     // all_interest_regions.push_back(interest_0);
     // all_interest_regions.push_back(interest_1);
     // all_interest_regions.push_back(interest_2);
-    int iteration = 500;
+    int iteration = 5;
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba, all_space);
         double new_node_x = 0;
@@ -416,7 +437,7 @@ int main()
         new_node.set_parent_id(parent_sample.get_ba());
         all_space.insert_sample(new_node, new_ba);
         
-        srcl_sampling::sample_data node_data;
+        sampling::sample_data node_data;
         node_data.state[0] = new_sample_state[0];
         node_data.state[1] = new_sample_state[1];
         lcm.publish("SAMPLE", &node_data);

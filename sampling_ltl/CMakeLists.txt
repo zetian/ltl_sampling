@@ -30,6 +30,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 # Add include directories of third party libraries
 include_directories(${CMAKE_SOURCE_DIR}/src/third_party/)
+include_directories(${PROJECT_BINARY_DIR}/include)
 
 # Add sub source directories
 add_subdirectory(src/trans_sys)

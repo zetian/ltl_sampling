@@ -1,0 +1,13 @@
+package sampling;
+
+struct sample_data
+{
+    double state[2];
+}
+package sampling;
+struct region_data
+{
+    double position_x[2];
+    double position_y[2];
+}
+
