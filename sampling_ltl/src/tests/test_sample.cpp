@@ -18,6 +18,8 @@
 // #include "sampling/sample_node.h"
 #include "sampling/sample_space.h"
 #include "sampling/region.h"
+#include "lcmtypes/sample_data.lcm"
+
 using namespace srcl;
 
 double fRand(double fMin, double fMax)
@@ -177,11 +179,27 @@ std::vector<double> step_from_to (SampleNode parent_sample, std::vector<double> 
 }
 
 int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions) {
+    std::bitset<32> bit_set;
+    int buchi_num = paraent_ba;
     for (int i = 0; i < all_interest_regions.size(); i++) {
-        
+        if (if_in_region(new_sample_state, all_interest_regions.find(i)->second)) {
+            // std::cout << "(step_from_to_buchi function) interested region num: " << all_interest_regions.find(i)->second.get_region_interest() << std::endl;
+            bit_set.set(all_interest_regions.find(i)->second.get_region_interest());
+            break;
+        }
     }
-    
-    return 1;
+    int act = bit_set.to_ullong();
+    // std::cout << "(step_from_to_buchi function) paraent buchi state: " << paraent_ba << std::endl;
+    for (int i = 0; i < ba.trans_con[paraent_ba].size(); i++) {
+        if (std::find(ba.trans_con[paraent_ba][i].begin(), ba.trans_con[paraent_ba][i].end(), act) != ba.trans_con[paraent_ba][i].end()) {
+            buchi_num = i;
+            break;
+        }
+    }
+    // std::cout << "(step_from_to_buchi function) out buchi state: " << buchi_num << std::endl;
+    // std::cout << "(step_from_to_buchi function) test bit set: " << bit_set << std::endl;
+    // std::cout << "(step_from_to_buchi function) test int: " << bit_set.to_ullong() << std::endl;
+    return buchi_num;
 }
 
 
@@ -245,6 +263,8 @@ int main()
     SampleNode init_node;
     init_node.set_id(0);
     init_node.set_state(init_state);
+    init_node.set_ba(ba.init_state_idx);
+    init_node.set_cost(0.0);
     std::cout << "initial node id: " << init_node.get_id() << ", node 1 state: " << init_node.get_state()[0] << std::endl;
     all_space.insert_sample(init_node, init_ba);
     std::cout << "all sample " << init_ba << " space size: " << all_space.get_sub_space(init_ba).num_samples() << std::endl;
@@ -341,7 +361,7 @@ int main()
     // all_interest_regions.push_back(interest_0);
     // all_interest_regions.push_back(interest_1);
     // all_interest_regions.push_back(interest_2);
-    int iteration = 1;
+    int iteration = 500;
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba, all_space);
         double new_node_x = 0;
@@ -383,13 +403,36 @@ int main()
         std::cout << "paraent node x: " << parent_sample.get_state()[0] << ", paraent node y: " << parent_sample.get_state()[1] << std::endl;
         std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, EPSILON);
         std::cout << "new sample state x: " << new_sample_state[0] << ", new sample state y: " << new_sample_state[1] << std::endl;
-
-
         
+        // std::vector<double> test_position = {15.0, 85.0};
+        int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba, all_interest_regions);
+
+        SampleNode new_node;
+        new_node.set_id(all_space.get_sub_space(new_ba).num_samples());
+        new_node.set_ba(new_ba);
+        new_node.set_state(new_sample_state);
+        new_node.set_cost(parent_sample.get_cost() + get_dist(parent_sample.get_state(), new_sample_state));
+        new_node.set_parent_ba(parent_sample.get_id());
+        new_node.set_parent_id(parent_sample.get_ba());
+        all_space.insert_sample(new_node, new_ba);
+        
+        srcl_sampling::sample_data node_data;
+        node_data.state[0] = new_sample_state[0];
+        node_data.state[1] = new_sample_state[1];
+        lcm.publish("SAMPLE", &node_data);
+
+
+        if (new_ba == ba.acc_state_idx.front()) {
+            // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
+            std::cout << "Find a solution!!!" << std::endl;
+            break;
+        }
+
+
+        std::cout << "total sample num: " << all_space.total_sample_num() << std::endl;
         // std::cout << "sample buchi 1: " << ba_act[0] << ", sample buchi 2: " << ba_act[1] << std::endl;
         // std::cout << "double random: " << fRand(0, 100) << std::endl;
 
     }
-    
     return 0;
 }

@@ -1,0 +1,7 @@
+package srcl_sampling;
+
+struct sample_data
+{
+    double state[2];
+}
+
