@@ -1,8 +1,10 @@
 import lcm
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 from sampling import sample_data
 from sampling import region_data
+from sampling import path_data
 
 class Region(object):
     def __init__(self, position_x, position_y):
@@ -14,13 +16,16 @@ class Region(object):
 class SamplingVis(object):
     regions = []
     all_samples = []
+    # fig = plt.figure(figsize=(10, 10))
+    path_x = []
+    path_y = []
 
     def __init__(self, size_x, size_y):
         self.size_x = size_x
         self.size_y = size_y
 
-    def add_region(self, region):
-        self.regions.append(region)
+    # def add_region(self, region):
+    #     self.regions.append(region)
         
     def sampling_node_handler(self, channel, data):
         msg = sample_data.decode(data)
@@ -30,6 +35,7 @@ class SamplingVis(object):
         self.all_samples.append(msg.state)
 
     def region_handler(self, channel, data):
+        self.all_samples = []
         msg = region_data.decode(data)
         region = Region(msg.position_x, msg.position_y)
         print("Received message on channel \"%s\"" % channel)
@@ -37,22 +43,61 @@ class SamplingVis(object):
         print("   region position y: " + str(msg.position_y[0]) + " to " + str(msg.position_y[1]))
         self.regions.append(region)
 
+    def path_handler(self, channel, data):
+        msg = path_data.decode(data)
+        print("Received message on channel \"%s\"" % channel)
+        print("Length of path is: " + str(len(msg.state_x)))
+        self.path_x = msg.state_x
+        self.path_y = msg.state_y
+    
+    
+    # def region_draw(self, channel, data):
+    #     self.fig
+    #     plt.axis([0,self.size_x, 0, self.size_y])
+    #     rect = patches.Rectangle((50,100),40,30,linewidth=1,edgecolor='r',facecolor='none')
+    #     plt.gca().add_patch(rect)
+    #     plt.show()
+
+    def samples_draw(self, channel, data):
+        all_states_x = []
+        all_states_y = []
+        for x in self.all_samples:
+            all_states_x.append(x[0])
+            all_states_y.append(x[1])
+        # self.fig
+        plt.figure(figsize=(10,10))
+        plt.plot(all_states_x, all_states_y, 'ro')
+
+        for rect in self.regions:
+            draw_rect = patches.Rectangle((rect.position_x[0],rect.position_y[0]), rect.position_x[1] - rect.position_x[0],rect.position_y[1] - rect.position_y[0],linewidth=1,edgecolor='orange',facecolor='orange')
+            currentAxis = plt.gca()
+            currentAxis.add_patch(draw_rect)
+
+        plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
+        plt.axis([0,self.size_x, 0, self.size_y])
+        plt.axes().set_aspect('equal')
+        
+        plt.show()
+
+
 def main():
     lc = lcm.LCM()
     sample_vis = SamplingVis(100, 100)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
-
+    subscription = lc.subscribe("PATH", sample_vis.path_handler)
+    # subscription = lc.subscribe("DRAW_REGION", sample_vis.region_draw)
+    subscription = lc.subscribe("DRAW_SAMPLE", sample_vis.samples_draw)
     
     
     # lc = lcm.LCM()
     # subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
-    print("OOOOOOOOOOOOOOOOOOOOOOOOOO")
+    # print("OOOOOOOOOOOOOOOOOOOOOOOOOO")
     try:
         while True:
             lc.handle()
     except KeyboardInterrupt:
-        print 'Resuming...'
+        # print 'Resuming...'
         pass
         # continue
         # print("######")
@@ -61,15 +106,15 @@ def main():
     lc.unsubscribe(subscription)
     
 
-    all_states_x = []
-    all_states_y = []
+    # all_states_x = []
+    # all_states_y = []
     
-    for x in sample_vis.all_samples:
-        all_states_x.append(x[0])
-        all_states_y.append(x[1])
+    # for x in sample_vis.all_samples:
+    #     all_states_x.append(x[0])
+    #     all_states_y.append(x[1])
 
-    plt.plot(all_states_x, all_states_y, 'ro')
-    plt.show()
+    # plt.plot(all_states_x, all_states_y, 'ro')
+    # plt.show()
 
 if __name__ == '__main__':
     main()

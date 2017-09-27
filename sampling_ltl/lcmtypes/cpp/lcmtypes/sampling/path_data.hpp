@@ -6,17 +6,22 @@
 
 #include <lcm/lcm_coretypes.h>
 
-#ifndef __sampling_sample_data_hpp__
-#define __sampling_sample_data_hpp__
+#ifndef __sampling_path_data_hpp__
+#define __sampling_path_data_hpp__
 
+#include <vector>
 
 namespace sampling
 {
 
-class sample_data
+class path_data
 {
     public:
-        double     state[2];
+        int32_t    num_state;
+
+        std::vector< double > state_x;
+
+        std::vector< double > state_y;
 
     public:
         /**
@@ -54,7 +59,7 @@ class sample_data
         inline static int64_t getHash();
 
         /**
-         * Returns "sample_data"
+         * Returns "path_data"
          */
         inline static const char* getTypeName();
 
@@ -65,7 +70,7 @@ class sample_data
         inline static uint64_t _computeHash(const __lcm_hash_ptr *p);
 };
 
-int sample_data::encode(void *buf, int offset, int maxlen) const
+int path_data::encode(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
     int64_t hash = (int64_t)getHash();
@@ -79,7 +84,7 @@ int sample_data::encode(void *buf, int offset, int maxlen) const
     return pos;
 }
 
-int sample_data::decode(const void *buf, int offset, int maxlen)
+int path_data::decode(const void *buf, int offset, int maxlen)
 {
     int pos = 0, thislen;
 
@@ -94,52 +99,76 @@ int sample_data::decode(const void *buf, int offset, int maxlen)
     return pos;
 }
 
-int sample_data::getEncodedSize() const
+int path_data::getEncodedSize() const
 {
     return 8 + _getEncodedSizeNoHash();
 }
 
-int64_t sample_data::getHash()
+int64_t path_data::getHash()
 {
     static int64_t hash = _computeHash(NULL);
     return hash;
 }
 
-const char* sample_data::getTypeName()
+const char* path_data::getTypeName()
 {
-    return "sample_data";
+    return "path_data";
 }
 
-int sample_data::_encodeNoHash(void *buf, int offset, int maxlen) const
+int path_data::_encodeNoHash(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
 
-    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->state[0], 2);
+    tlen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &this->num_state, 1);
     if(tlen < 0) return tlen; else pos += tlen;
+
+    if(this->num_state > 0) {
+        tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->state_x[0], this->num_state);
+        if(tlen < 0) return tlen; else pos += tlen;
+    }
+
+    if(this->num_state > 0) {
+        tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->state_y[0], this->num_state);
+        if(tlen < 0) return tlen; else pos += tlen;
+    }
 
     return pos;
 }
 
-int sample_data::_decodeNoHash(const void *buf, int offset, int maxlen)
+int path_data::_decodeNoHash(const void *buf, int offset, int maxlen)
 {
     int pos = 0, tlen;
 
-    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->state[0], 2);
+    tlen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &this->num_state, 1);
     if(tlen < 0) return tlen; else pos += tlen;
+
+    if(this->num_state) {
+        this->state_x.resize(this->num_state);
+        tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->state_x[0], this->num_state);
+        if(tlen < 0) return tlen; else pos += tlen;
+    }
+
+    if(this->num_state) {
+        this->state_y.resize(this->num_state);
+        tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->state_y[0], this->num_state);
+        if(tlen < 0) return tlen; else pos += tlen;
+    }
 
     return pos;
 }
 
-int sample_data::_getEncodedSizeNoHash() const
+int path_data::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
-    enc_size += __double_encoded_array_size(NULL, 2);
+    enc_size += __int32_t_encoded_array_size(NULL, 1);
+    enc_size += __double_encoded_array_size(NULL, this->num_state);
+    enc_size += __double_encoded_array_size(NULL, this->num_state);
     return enc_size;
 }
 
-uint64_t sample_data::_computeHash(const __lcm_hash_ptr *)
+uint64_t path_data::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x5c4b2f699a665926LL;
+    uint64_t hash = 0x6655b004fa7976deLL;
     return (hash<<1) + ((hash>>63)&1);
 }
 

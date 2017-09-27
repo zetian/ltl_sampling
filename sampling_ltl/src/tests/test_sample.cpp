@@ -37,11 +37,11 @@ std::vector<int> sample_from_ba(BAStruct buchi, SampleSpace &sample_space)
     if (sample_space.total_sample_num() == 0) {
         return std::vector<int>();
     }
-    srand(time(NULL));
+    // srand(time(NULL));
     int size_buchi = buchi.state_num;
     std::vector<uint32_t> ba_accept_state = buchi.acc_state_idx;
     int new_ba_sample = rand() % (size_buchi);
-    // std::cout << "random!!! " << new_ba_sample << std::endl;
+    std::cout << "AAAAAA random!!! AAAAAAAAAAA:   " << new_ba_sample << std::endl;
     std::vector<int> new_ba_candidate;
     std::vector<int> temp_candidate;
     std::vector<std::vector<int>> act_q;
@@ -102,11 +102,12 @@ std::vector<int> sample_from_ba(BAStruct buchi, SampleSpace &sample_space)
     // for (auto &i:new_ba_candidate) {
     //     std::cout << i << " ";
     // }
-    srand(time(NULL));
+    // srand(time(NULL));
     int r = rand() % (new_ba_candidate.size());
     // std::cout << "random num: " << r << std::endl;
     int new_ba_state = new_ba_candidate[r];
     // std::cout << "new_ba_state: " << new_ba_state << std::endl;
+    std::cout << "BBBBBB sampled buchi state:    " << act_q[r][0] << ", and: "<< act_q[r][1] << std::endl;
     return act_q[r];
 }
 
@@ -164,7 +165,7 @@ bool if_in_region (std::vector<double> state, Region region) {
 }
 
 double get_dist(std::vector<double> states_1, std::vector<double> states_2) {
-    double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[0] - states_2[0], 2));
+    double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[1] - states_2[1], 2));
     return dist;
 }
 
@@ -182,11 +183,14 @@ std::vector<double> step_from_to (SampleNode parent_sample, std::vector<double> 
 
 int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions) {
     std::bitset<32> bit_set;
+    std::cout << "*******in step from to buchi function: ******" << std::endl;
+    std::cout << "parent ba: " << paraent_ba << std::endl;
     int buchi_num = paraent_ba;
     for (int i = 0; i < all_interest_regions.size(); i++) {
         if (if_in_region(new_sample_state, all_interest_regions.find(i)->second)) {
             // std::cout << "(step_from_to_buchi function) interested region num: " << all_interest_regions.find(i)->second.get_region_interest() << std::endl;
             bit_set.set(all_interest_regions.find(i)->second.get_region_interest());
+            std::cout << "new state is in region: " << all_interest_regions.find(i)->second.get_region_interest() << std::endl;
             break;
         }
     }
@@ -198,9 +202,11 @@ int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BA
             break;
         }
     }
+    std::cout << "new ba: " << buchi_num << std::endl;
     // std::cout << "(step_from_to_buchi function) out buchi state: " << buchi_num << std::endl;
     // std::cout << "(step_from_to_buchi function) test bit set: " << bit_set << std::endl;
     // std::cout << "(step_from_to_buchi function) test int: " << bit_set.to_ullong() << std::endl;
+    std::cout << "****************************************" << std::endl;
     return buchi_num;
 }
 
@@ -208,6 +214,7 @@ int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BA
 
 int main()
 {
+    srand(time(NULL));
     lcm::LCM lcm;
     double EPSILON = 6;
     double RADIUS = 12;
@@ -253,9 +260,12 @@ int main()
     // }
 
     // std::shared_ptr<Graph_t<BuchiState>> buchi_graph = BuchiAutomaton::CreateBuchiGraph(ltl_formula, buchi_regions);
+    buchi_post(ba, indep_set);
     SampleSpace all_space(ba.state_num);
     int init_ba = ba.init_state_idx;
+    int acc_ba = ba.acc_state_idx.front();
     std::cout << "init buchi state: " << init_ba << std::endl;
+    std::cout << "accept buchi state: " << acc_ba << std::endl;
     // std::vector<double> init_state = {1.4, 3.2};
     // std::vector<double> init_state = {50, 10, M_PI};
     std::vector<double> init_state = {50, 10};
@@ -280,7 +290,7 @@ int main()
     // std::cout << "all sample space 6 size: " << all_space.get_sub_space(6).num_samples() << std::endl;
 
 
-    buchi_post(ba, indep_set);
+    
 
     int idx = 0;
     for (auto it = ba.alphabet_set.begin(); it != ba.alphabet_set.end(); it++)
@@ -301,7 +311,7 @@ int main()
             {
                 str = str + std::to_string(*itc) + ",";
             }
-            std::cout << std::setw(10) << str << " ";
+            std::cout << std::setw(8) << str << " ";
         }
         std::cout << "   -----   line " << i << std::endl;
     }
@@ -326,6 +336,7 @@ int main()
     double work_space_size_x = 100;
     double work_space_size_y = 100;
     sampling::region_data r_data;
+    sampling::all_regions all_regions_data;
 
     Region interest_0;
     Region interest_1;
@@ -383,8 +394,12 @@ int main()
     // all_interest_regions.push_back(interest_0);
     // all_interest_regions.push_back(interest_1);
     // all_interest_regions.push_back(interest_2);
-    int iteration = 200;
+    bool find_path = false;
+    uint64_t first_acc_state_id;
+    int iteration = 300;
+    
     for (int i = 0; i < iteration; i++) {
+        std::cout << "=============New Iteration============================" << std::endl;
         std::vector<int> ba_act = sample_from_ba(ba, all_space);
         double new_node_x = 0;
         double new_node_y = 0;
@@ -410,14 +425,15 @@ int main()
             double new_node_y_max = all_interest_regions.find(interest_id)->second.get_y_position().second;
             new_node_x = fRand(new_node_x_min, new_node_x_max);
             new_node_y = fRand(new_node_y_min, new_node_y_max);
-            std::cout << "=============================================" << std::endl;
+            // std::cout << "=============================================" << std::endl;
             std::cout << "x min: " << new_node_x_min << "x max: " << new_node_x_max << std::endl;
             std::cout << "y min: " << new_node_y_min << "x max: " << new_node_y_max << std::endl;
-            std::cout << "random x: " << new_node_x << std::endl;
-            std::cout << "random y: " << new_node_y << std::endl;
+            
             std::cout << "randomed interest region id: " << interest_id << std::endl;
         }
-
+        std::cout  << "!!!!!Sampled ba state: " << ba_act[0] << std::endl;
+        std::cout << "random x: " << new_node_x << std::endl;
+        std::cout << "random y: " << new_node_y << std::endl;
         std::vector<double> sampled_position = {new_node_x, new_node_y}; 
         SampleNode parent_sample = all_space.get_sub_space(ba_act[0]).get_parent(sampled_position);
         // std::cout << "===== size: " << parent_sample.get_state().size() << std::endl;
@@ -437,17 +453,22 @@ int main()
         //     parent_ba_candidate.push_back(parent_sample.get_ba());
         //     parent_ba_candidate.push_back(new_ba);
         // }
+        // SampleNode chosen_parent_sample = parent_sample;
+        // std::cout << "!!!!!dist between two node: " << get_dist(chosen_parent_sample.get_state(), new_sample_state) << std::endl;
+        
         SampleNode chosen_parent_sample = all_space.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, RADIUS);
 
 
 
         SampleNode new_node;
-        new_node.set_id(all_space.get_sub_space(new_ba).num_samples());
+        uint64_t new_id = all_space.get_sub_space(new_ba).num_samples();
+        new_node.set_id(new_id);
         new_node.set_ba(new_ba);
         new_node.set_state(new_sample_state);
         new_node.set_cost(chosen_parent_sample.get_cost() + get_dist(chosen_parent_sample.get_state(), new_sample_state));
-        new_node.set_parent_ba(chosen_parent_sample.get_id());
-        new_node.set_parent_id(chosen_parent_sample.get_ba());
+        // std::cout << "parent ba state: " << new_ba << std::endl;
+        new_node.set_parent_ba(chosen_parent_sample.get_ba());
+        new_node.set_parent_id(chosen_parent_sample.get_id());
         all_space.insert_sample(new_node, new_ba);
         
         sampling::sample_data node_data;
@@ -459,6 +480,8 @@ int main()
         if (new_ba == ba.acc_state_idx.front()) {
             // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
             std::cout << "Find a solution!!!" << std::endl;
+            first_acc_state_id = new_id;
+            find_path = true;
             break;
         }
 
@@ -468,5 +491,55 @@ int main()
         // std::cout << "double random: " << fRand(0, 100) << std::endl;
 
     }
+    
+    
+    /// path generate
+    std::vector<std::vector<double>> path;
+    int current_ba = acc_ba;
+    uint64_t current_id = first_acc_state_id;
+    std::cout << "last ba id: " << acc_ba << std::endl;
+    std::cout << "last id " << current_id << std::endl;
+
+    // SampleNode test_node = all_space.get_sub_space(0).get_sample(0);
+    // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************" << std::endl;
+    if (find_path) {
+        
+        while (current_ba != init_ba || current_id != 0) {
+            
+            SampleNode current_node = all_space.get_sub_space(current_ba).get_sample(current_id);
+            
+            std::vector<double> path_node = current_node.get_state();
+            path.push_back(path_node);
+            
+            current_ba = current_node.get_parent_ba();
+            current_id = current_node.get_parent_id();
+            // std::cout << "current ba id: " << current_ba << std::endl;
+            // std::cout << "current id " << current_id << std::endl;
+            
+        }
+    }
+    // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************"  << std::endl;
+    std::reverse(path.begin(), path.end());
+    
+
+    sampling::path_data path_data_;
+    path_data_.num_state = path.size();
+    path_data_.state_x.resize(path_data_.num_state);
+    path_data_.state_y.resize(path_data_.num_state);
+    for (int i = 0; i < path.size(); i++) {
+        
+        path_data_.state_x[i] = path[i][0];
+        
+        path_data_.state_y[i] = path[i][1];
+    }
+    std::cout << "Length of the solution path: " << path.size() << std::endl;
+    lcm.publish("PATH", &path_data_);
+
+
+
+    sampling::sample_draw draw;
+    draw.if_draw = true;
+    // lcm.publish("DRAW_REGION", &draw);
+    lcm.publish("DRAW_SAMPLE", &draw);
     return 0;
 }

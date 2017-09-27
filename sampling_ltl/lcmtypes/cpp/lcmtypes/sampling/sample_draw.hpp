@@ -6,17 +6,17 @@
 
 #include <lcm/lcm_coretypes.h>
 
-#ifndef __sampling_sample_data_hpp__
-#define __sampling_sample_data_hpp__
+#ifndef __sampling_sample_draw_hpp__
+#define __sampling_sample_draw_hpp__
 
 
 namespace sampling
 {
 
-class sample_data
+class sample_draw
 {
     public:
-        double     state[2];
+        int8_t     if_draw;
 
     public:
         /**
@@ -54,7 +54,7 @@ class sample_data
         inline static int64_t getHash();
 
         /**
-         * Returns "sample_data"
+         * Returns "sample_draw"
          */
         inline static const char* getTypeName();
 
@@ -65,7 +65,7 @@ class sample_data
         inline static uint64_t _computeHash(const __lcm_hash_ptr *p);
 };
 
-int sample_data::encode(void *buf, int offset, int maxlen) const
+int sample_draw::encode(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
     int64_t hash = (int64_t)getHash();
@@ -79,7 +79,7 @@ int sample_data::encode(void *buf, int offset, int maxlen) const
     return pos;
 }
 
-int sample_data::decode(const void *buf, int offset, int maxlen)
+int sample_draw::decode(const void *buf, int offset, int maxlen)
 {
     int pos = 0, thislen;
 
@@ -94,52 +94,52 @@ int sample_data::decode(const void *buf, int offset, int maxlen)
     return pos;
 }
 
-int sample_data::getEncodedSize() const
+int sample_draw::getEncodedSize() const
 {
     return 8 + _getEncodedSizeNoHash();
 }
 
-int64_t sample_data::getHash()
+int64_t sample_draw::getHash()
 {
     static int64_t hash = _computeHash(NULL);
     return hash;
 }
 
-const char* sample_data::getTypeName()
+const char* sample_draw::getTypeName()
 {
-    return "sample_data";
+    return "sample_draw";
 }
 
-int sample_data::_encodeNoHash(void *buf, int offset, int maxlen) const
+int sample_draw::_encodeNoHash(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
 
-    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->state[0], 2);
+    tlen = __boolean_encode_array(buf, offset + pos, maxlen - pos, &this->if_draw, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
 }
 
-int sample_data::_decodeNoHash(const void *buf, int offset, int maxlen)
+int sample_draw::_decodeNoHash(const void *buf, int offset, int maxlen)
 {
     int pos = 0, tlen;
 
-    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->state[0], 2);
+    tlen = __boolean_decode_array(buf, offset + pos, maxlen - pos, &this->if_draw, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
 }
 
-int sample_data::_getEncodedSizeNoHash() const
+int sample_draw::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
-    enc_size += __double_encoded_array_size(NULL, 2);
+    enc_size += __boolean_encoded_array_size(NULL, 1);
     return enc_size;
 }
 
-uint64_t sample_data::_computeHash(const __lcm_hash_ptr *)
+uint64_t sample_draw::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x5c4b2f699a665926LL;
+    uint64_t hash = 0x353c2e8252453c2cLL;
     return (hash<<1) + ((hash>>63)&1);
 }
 

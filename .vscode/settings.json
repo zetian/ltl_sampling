@@ -58,6 +58,13 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "__functional_03": "cpp",
-        "hashtable": "cpp"
+        "hashtable": "cpp",
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "csignal": "cpp",
+        "slist": "cpp",
+        "fstream": "cpp",
+        "thread": "cpp",
+        "geometry": "cpp"
     }
 }

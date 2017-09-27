@@ -6,17 +6,21 @@
 
 #include <lcm/lcm_coretypes.h>
 
-#ifndef __sampling_sample_data_hpp__
-#define __sampling_sample_data_hpp__
+#ifndef __sampling_all_regions_hpp__
+#define __sampling_all_regions_hpp__
 
+#include <vector>
+#include "lcmtypes/sampling/region_data.hpp"
 
 namespace sampling
 {
 
-class sample_data
+class all_regions
 {
     public:
-        double     state[2];
+        int32_t    num_region;
+
+        std::vector< sampling::region_data > regions;
 
     public:
         /**
@@ -54,7 +58,7 @@ class sample_data
         inline static int64_t getHash();
 
         /**
-         * Returns "sample_data"
+         * Returns "all_regions"
          */
         inline static const char* getTypeName();
 
@@ -65,7 +69,7 @@ class sample_data
         inline static uint64_t _computeHash(const __lcm_hash_ptr *p);
 };
 
-int sample_data::encode(void *buf, int offset, int maxlen) const
+int all_regions::encode(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
     int64_t hash = (int64_t)getHash();
@@ -79,7 +83,7 @@ int sample_data::encode(void *buf, int offset, int maxlen) const
     return pos;
 }
 
-int sample_data::decode(const void *buf, int offset, int maxlen)
+int all_regions::decode(const void *buf, int offset, int maxlen)
 {
     int pos = 0, thislen;
 
@@ -94,52 +98,74 @@ int sample_data::decode(const void *buf, int offset, int maxlen)
     return pos;
 }
 
-int sample_data::getEncodedSize() const
+int all_regions::getEncodedSize() const
 {
     return 8 + _getEncodedSizeNoHash();
 }
 
-int64_t sample_data::getHash()
+int64_t all_regions::getHash()
 {
     static int64_t hash = _computeHash(NULL);
     return hash;
 }
 
-const char* sample_data::getTypeName()
+const char* all_regions::getTypeName()
 {
-    return "sample_data";
+    return "all_regions";
 }
 
-int sample_data::_encodeNoHash(void *buf, int offset, int maxlen) const
+int all_regions::_encodeNoHash(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
 
-    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->state[0], 2);
+    tlen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &this->num_region, 1);
     if(tlen < 0) return tlen; else pos += tlen;
+
+    for (int a0 = 0; a0 < this->num_region; a0++) {
+        tlen = this->regions[a0]._encodeNoHash(buf, offset + pos, maxlen - pos);
+        if(tlen < 0) return tlen; else pos += tlen;
+    }
 
     return pos;
 }
 
-int sample_data::_decodeNoHash(const void *buf, int offset, int maxlen)
+int all_regions::_decodeNoHash(const void *buf, int offset, int maxlen)
 {
     int pos = 0, tlen;
 
-    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->state[0], 2);
+    tlen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &this->num_region, 1);
     if(tlen < 0) return tlen; else pos += tlen;
+
+    this->regions.resize(this->num_region);
+    for (int a0 = 0; a0 < this->num_region; a0++) {
+        tlen = this->regions[a0]._decodeNoHash(buf, offset + pos, maxlen - pos);
+        if(tlen < 0) return tlen; else pos += tlen;
+    }
 
     return pos;
 }
 
-int sample_data::_getEncodedSizeNoHash() const
+int all_regions::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
-    enc_size += __double_encoded_array_size(NULL, 2);
+    enc_size += __int32_t_encoded_array_size(NULL, 1);
+    for (int a0 = 0; a0 < this->num_region; a0++) {
+        enc_size += this->regions[a0]._getEncodedSizeNoHash();
+    }
     return enc_size;
 }
 
-uint64_t sample_data::_computeHash(const __lcm_hash_ptr *)
+uint64_t all_regions::_computeHash(const __lcm_hash_ptr *p)
 {
-    uint64_t hash = 0x5c4b2f699a665926LL;
+    const __lcm_hash_ptr *fp;
+    for(fp = p; fp != NULL; fp = fp->parent)
+        if(fp->v == all_regions::getHash)
+            return 0;
+    const __lcm_hash_ptr cp = { p, (void*)all_regions::getHash };
+
+    uint64_t hash = 0x5116c004e56bc0afLL +
+         sampling::region_data::_computeHash(&cp);
+
     return (hash<<1) + ((hash>>63)&1);
 }
 

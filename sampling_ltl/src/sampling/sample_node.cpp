@@ -58,7 +58,7 @@ void SampleNode::set_children_id(std::vector<std::pair<int, uint64_t>> children)
 }
 
 double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
-    double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[0] - states_2[0], 2));
+    double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[1] - states_2[1], 2));
     return dist;
 }
 

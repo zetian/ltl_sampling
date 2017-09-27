@@ -4,10 +4,27 @@ struct sample_data
 {
     double state[2];
 }
-package sampling;
+
+struct path_data
+{
+    int32_t num_state;
+    double state_x[num_state];
+    double state_y[num_state];
+}
+
 struct region_data
 {
     double position_x[2];
     double position_y[2];
 }
 
+struct all_regions
+{
+    int32_t num_region;
+    region_data regions[num_region];
+}
+
+struct sample_draw
+{
+    boolean if_draw;
+}
