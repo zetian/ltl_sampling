@@ -50,10 +50,10 @@ void SampleNode::set_parent_ba(int parent_ba){
     parent_ba_ = parent_ba;
 }
 
-std::vector<uint64_t> SampleNode::get_children_id(){
+std::vector<std::pair<int, uint64_t>> SampleNode::get_children_id(){
     return children_;
 }
-void SampleNode::set_children_id(std::vector<uint64_t> children){
+void SampleNode::set_children_id(std::vector<std::pair<int, uint64_t>> children){
     children_ = children;
 }
 
@@ -114,5 +114,5 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
 }
 
 void SubSampleSpace::rewire(SampleNode new_sample) {
-    
+
 }

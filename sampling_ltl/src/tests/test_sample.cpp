@@ -383,7 +383,7 @@ int main()
     // all_interest_regions.push_back(interest_0);
     // all_interest_regions.push_back(interest_1);
     // all_interest_regions.push_back(interest_2);
-    int iteration = 100;
+    int iteration = 200;
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba, all_space);
         double new_node_x = 0;
@@ -416,7 +416,6 @@ int main()
             std::cout << "random x: " << new_node_x << std::endl;
             std::cout << "random y: " << new_node_y << std::endl;
             std::cout << "randomed interest region id: " << interest_id << std::endl;
-
         }
 
         std::vector<double> sampled_position = {new_node_x, new_node_y}; 
@@ -456,7 +455,7 @@ int main()
         node_data.state[1] = new_sample_state[1];
         lcm.publish("SAMPLE", &node_data);
 
-
+        std::cout << "new ba state: " << new_ba << std::endl;
         if (new_ba == ba.acc_state_idx.front()) {
             // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
             std::cout << "Find a solution!!!" << std::endl;

@@ -2,6 +2,7 @@
 // #define SRC_SAMPLE_NODE_H_
 #include <map>
 #include <vector>
+#include <utility>
 
 class SampleNode {
 public:
@@ -16,7 +17,7 @@ private:
     double cost_;
     uint64_t parent_id_;
     int parent_ba_;
-    std::vector<uint64_t> children_;
+    std::vector<std::pair<int, uint64_t>> children_;
 
 public:
     std::vector<double> get_state();
@@ -37,9 +38,8 @@ public:
     int get_parent_ba();
     void set_parent_ba(int parent_ba);
 
-    std::vector<uint64_t> get_children_id();
-    void set_children_id(std::vector<uint64_t> children);
-
+    std::vector<std::pair<int, uint64_t>> get_children_id();
+    void set_children_id(std::vector<std::pair<int, uint64_t>> children);
 
 };
 
@@ -62,5 +62,5 @@ public:
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
 
     void rewire(SampleNode new_sample);
-    
+
 };
