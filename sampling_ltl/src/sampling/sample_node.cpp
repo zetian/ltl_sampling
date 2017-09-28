@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <climits>
 #include "sampling/sample_node.h"
 
 SampleNode::SampleNode(uint64_t id, std::vector<double> state){

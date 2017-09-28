@@ -1,6 +1,7 @@
 #include <random>
 #include <algorithm>
 #include <bitset>
+#include <climits>
 
 #include "sampling/ltl_sampling_simple.h"
 
