@@ -65,6 +65,8 @@
         "slist": "cpp",
         "fstream": "cpp",
         "thread": "cpp",
-        "geometry": "cpp"
+        "geometry": "cpp",
+        "__nullptr": "cpp",
+        "numeric": "cpp"
     }
 }

@@ -79,6 +79,21 @@ SampleNode SubSampleSpace::get_sample(uint64_t id) {
     return sample_node_id_map_.find(id)->second;
 }
 
+SampleNode SubSampleSpace::get_min_cost_sample() {
+    double min_cost = INT_MAX;
+    uint64_t min_id = 0;
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        // std::vector<double> parent_states = sample_nodes_[i].get_states();
+        // double dist = SubSampleSpace::get_dist(parent_states, states);
+        if (sample_nodes_[i].get_cost() < min_cost) {
+            min_cost = sample_nodes_[i].get_cost();
+            min_id = i;
+        }
+    }
+    SampleNode min_cost_sample = get_sample(min_id);
+    return min_cost_sample;
+}
+
 SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     SampleNode &parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {

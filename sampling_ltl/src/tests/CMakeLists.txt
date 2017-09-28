@@ -43,3 +43,6 @@ target_link_libraries(test_dubins trajectory)
 
 add_executable(test_sample test_sample.cpp)
 target_link_libraries(test_sample transsys trajectory sampling ${LCM_LIBRARIES})
+
+add_executable(test_sample_v2 test_sample_v2.cpp)
+target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIES})

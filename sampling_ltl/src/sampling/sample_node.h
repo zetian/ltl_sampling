@@ -56,6 +56,7 @@ private:
 public:
     void insert_sample(SampleNode new_sample);
     SampleNode get_sample(uint64_t id);
+    SampleNode get_min_cost_sample();
     int num_samples();
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
