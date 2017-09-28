@@ -83,7 +83,7 @@ int main()
     
 
     ltl_sampling_simple.set_init_state(init_state);
-    int interation = 500;
+    int interation = 1000;
 
     ltl_sampling_simple.start_sampling(interation);
     std::vector<std::vector<double>> path = ltl_sampling_simple.get_path();

@@ -67,6 +67,7 @@
         "thread": "cpp",
         "geometry": "cpp",
         "__nullptr": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "*.ipp": "cpp"
     }
 }

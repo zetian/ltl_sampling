@@ -51,11 +51,15 @@ void SampleNode::set_parent_ba(int parent_ba){
     parent_ba_ = parent_ba;
 }
 
-std::vector<std::pair<int, uint64_t>> SampleNode::get_children_id(){
+std::vector<std::pair<int, uint64_t>>& SampleNode::get_children_id(){
     return children_;
 }
 void SampleNode::set_children_id(std::vector<std::pair<int, uint64_t>> children){
     children_ = children;
+}
+
+void SampleNode::add_children_id(std::pair<int, uint64_t> one_children) {
+    children_.push_back(one_children);
 }
 
 double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
@@ -76,11 +80,16 @@ int SubSampleSpace::get_ba_state() {
     return ba_state_;
 }
 
-SampleNode SubSampleSpace::get_sample(uint64_t id) {
+SampleNode& SubSampleSpace::get_sample(uint64_t id) {
     return sample_node_id_map_.find(id)->second;
 }
 
-SampleNode SubSampleSpace::get_min_cost_sample() {
+std::vector<SampleNode>& SubSampleSpace::get_all_samples() {
+    return sample_nodes_;
+}
+
+
+SampleNode& SubSampleSpace::get_min_cost_sample() {
     double min_cost = INT_MAX;
     uint64_t min_id = 0;
     for (int i = 0; i < sample_nodes_.size(); i++) {
@@ -91,7 +100,7 @@ SampleNode SubSampleSpace::get_min_cost_sample() {
             min_id = i;
         }
     }
-    SampleNode min_cost_sample = get_sample(min_id);
+    SampleNode& min_cost_sample = get_sample(min_id);
     return min_cost_sample;
 }
 
@@ -129,6 +138,20 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
     return new_parent_sample;
 }
 
-void SubSampleSpace::rewire(SampleNode new_sample) {
+// void SubSampleSpace::rewire(uint64_t new_sample_id, double RADIUS) {
+//     SampleNode &new_sample = sample_node_id_map_.find(new_sample_id)->second;
+//     for (int i = 0; i < sample_nodes_.size(); i++) {
+//         if (sample_nodes_[i].get_id() != new_sample.get_parent_id() &&
+//             get_dist(sample_nodes_[i].get_state(), new_sample.get_state()) < RADIUS &&
+//             get_dist(sample_nodes_[i].get_state(), new_sample.get_state()) + new_sample.get_cost() < 
+//             sample_nodes_[i].get_cost() ) {
+            
+//             SampleNode &rewire_sample = sample_nodes_[i];
+//             uint64_t old_parent_id = rewire_sample.get_parent_id();
+//             int old_parent_ba = rewire_sample.get_parent_ba();
 
-}
+
+//         }
+//     }
+
+// }

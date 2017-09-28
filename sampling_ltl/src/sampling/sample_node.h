@@ -38,8 +38,9 @@ public:
     int get_parent_ba();
     void set_parent_ba(int parent_ba);
 
-    std::vector<std::pair<int, uint64_t>> get_children_id();
+    std::vector<std::pair<int, uint64_t>>& get_children_id();
     void set_children_id(std::vector<std::pair<int, uint64_t>> children);
+    void add_children_id(std::pair<int, uint64_t> one_children);
 
 };
 
@@ -55,13 +56,14 @@ private:
     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
 public:
     void insert_sample(SampleNode new_sample);
-    SampleNode get_sample(uint64_t id);
-    SampleNode get_min_cost_sample();
+    SampleNode& get_sample(uint64_t id);
+    std::vector<SampleNode>& get_all_samples();
+    SampleNode& get_min_cost_sample();
     int num_samples();
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
 
-    void rewire(SampleNode new_sample);
+    // void rewire(uint64_t rewire_sample_id, double RADIUS);
 
 };

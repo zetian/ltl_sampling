@@ -272,12 +272,15 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         // std::cout << "new sample state x: " << new_sample_state[0] << ", new sample state y: " << new_sample_state[1] << std::endl;
         
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        SampleNode chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, RADIUS);
+        SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, RADIUS);
         
         SampleNode new_node;
         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
         new_node.set_id(new_id);
         new_node.set_ba(new_ba);
+
+        chosen_parent_sample.add_children_id(std::make_pair(new_ba, new_id));
+
         new_node.set_state(new_sample_state);
         new_node.set_cost(chosen_parent_sample.get_cost() + get_dist(chosen_parent_sample.get_state(), new_sample_state));
         // std::cout << "parent ba state: " << new_ba << std::endl;
@@ -285,7 +288,9 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         new_node.set_parent_id(chosen_parent_sample.get_id());
         all_space_.insert_sample(new_node, new_ba);
 
-        /// Vis
+        all_space_.rewire(new_id, new_ba, RADIUS);
+
+        /// Vis for debug
         sampling::sample_data node_data;
         node_data.state[0] = new_sample_state[0];
         node_data.state[1] = new_sample_state[1];
