@@ -2,6 +2,7 @@
 #include <cmath>
 #include <climits>
 #include "sampling/sample_node.h"
+#include "trajectory/dubins_steer.h"
 
 SampleNode::SampleNode(uint64_t id, std::vector<double> state){
     id_ = id;
@@ -62,9 +63,17 @@ void SampleNode::add_children_id(std::pair<int, uint64_t> one_children) {
     children_.push_back(one_children);
 }
 
+
+
+
 double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
     double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[1] - states_2[1], 2));
     return dist;
+}
+
+double SubSampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_l, double radius_r) {
+    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_l, radius_r);
+    return min_length;
 }
 
 void SubSampleSpace::insert_sample(SampleNode new_sample) {
@@ -120,6 +129,22 @@ SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     return parent_sample;
 }
 
+SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_l, double radius_r) {
+    SampleNode &parent_sample = sample_nodes_.front();
+    // if (!sample_nodes_.empty()) {
+    //     SampleNode parent_sample = sample_nodes_.front();
+    // }
+    
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        // std::vector<double> parent_states = sample_nodes_[i].get_states();
+        // double dist = SubSampleSpace::get_dist(parent_states, states);
+        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_l, radius_r) < get_dist_dubins(parent_sample.get_state(), state, radius_l, radius_r)) {
+            parent_sample = sample_nodes_[i];
+        }
+    }
+    return parent_sample;
+}
+
 SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {
@@ -132,6 +157,24 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
         if (get_dist(sample_nodes_[i].get_state(), state) < RADIUS &&
             get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < 
             parent_sample.get_cost() + get_dist(parent_sample.get_state(), state)) {
+            new_parent_sample = sample_nodes_[i];
+        }
+    }
+    return new_parent_sample;
+}
+
+SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_l, double radius_r) {
+    SampleNode &new_parent_sample = sample_nodes_.front();
+    // if (!sample_nodes_.empty()) {
+    //     SampleNode parent_sample = sample_nodes_.front();
+    // }
+    
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        // std::vector<double> parent_states = sample_nodes_[i].get_states();
+        // double dist = SubSampleSpace::get_dist(parent_states, states);
+        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_l, radius_r) < RADIUS &&
+            get_dist_dubins(sample_nodes_[i].get_state(), state, radius_l, radius_r) + sample_nodes_[i].get_cost() < 
+            parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_l, radius_r)) {
             new_parent_sample = sample_nodes_[i];
         }
     }

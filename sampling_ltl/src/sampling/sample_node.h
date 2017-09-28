@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 
+
 class SampleNode {
 public:
     SampleNode(){};
@@ -18,6 +19,7 @@ private:
     uint64_t parent_id_;
     int parent_ba_;
     std::vector<std::pair<int, uint64_t>> children_;
+    std::vector<std::vector<double>> traj_point_wise_;
 
 public:
     std::vector<double> get_state();
@@ -54,6 +56,7 @@ private:
     int ba_state_;
     std::map<int, SampleNode> sample_node_id_map_; 
     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
+    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_l, double radius_r);
 public:
     void insert_sample(SampleNode new_sample);
     SampleNode& get_sample(uint64_t id);
@@ -62,8 +65,33 @@ public:
     int num_samples();
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
+    SampleNode& get_parent_dubins(std::vector<double> state, double radius_l, double radius_r);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
-
+    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_l, double radius_r);
+    
     // void rewire(uint64_t rewire_sample_id, double RADIUS);
 
 };
+
+// template <class SampleType> class SubSampleSpace{
+// // public:
+// //     SubSampleSpace(){};
+// //     ~SubSampleSpace(){};
+// private:
+//     std::vector<SampleType> sample_nodes_;
+//     int ba_state_;
+//     std::map<int, SampleType> sample_node_id_map_; 
+//     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
+// public:
+//     void insert_sample(SampleType new_sample);
+//     SampleType& get_sample(uint64_t id);
+//     std::vector<SampleType>& get_all_samples();
+//     SampleType& get_min_cost_sample();
+//     int num_samples();
+//     int get_ba_state();
+//     SampleType& get_parent(std::vector<double> state);
+//     SampleType& rechoose_parent(SampleType parent_sample, std::vector<double> state, double RADIUS);
+
+//     // void rewire(uint64_t rewire_sample_id, double RADIUS);
+
+// };
