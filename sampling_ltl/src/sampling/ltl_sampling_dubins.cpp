@@ -4,7 +4,7 @@
 #include <climits>
 
 #include "sampling/ltl_sampling_dubins.h"
-#include "trajectory/dubins_steer.h"
+
 
 // double LTL_SamplingDubins::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
 //     double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[1] - states_2[1], 2));
@@ -155,8 +155,8 @@ bool LTL_SamplingDubins::if_in_region (std::vector<double> state, Region region)
     }
 }
 
-std::vector<double> LTL_SamplingDubins::step_from_to (SampleNode parent_sample, std::vector<double> sampled_state, double EPSILON) {
-    DubinsSteer::SteerData dubins_steer_data;
+std::vector<double> LTL_SamplingDubins::step_from_to (SampleNode parent_sample, std::vector<double> sampled_state, DubinsSteer::SteerData& dubins_steer_data, double EPSILON) {
+    // DubinsSteer::SteerData dubins_steer_data;
     dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(parent_sample.get_state(), sampled_state, radius_L, radius_R);
     if (dubins_steer_data.traj_length < EPSILON) {
         // traj_point_wise = dubins_steer_data.traj_point_wise;
@@ -171,8 +171,10 @@ std::vector<double> LTL_SamplingDubins::step_from_to (SampleNode parent_sample, 
             }
         }
         std::vector<double> new_state = dubins_steer_data.traj_point_wise[id];
-        // std::vector<std::vector<double>> new_traj(dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.begin() + id);
+        std::vector<std::vector<double>> new_traj(dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.begin() + id);
         // traj_point_wise = new_traj;
+        dubins_steer_data.traj_point_wise = new_traj;
+        dubins_steer_data.traj_length = dubins_steer_data.traj_len_map[id];
 
         // double theta = atan2(sampled_state[1] - parent_sample.get_state()[1], sampled_state[0] - parent_sample.get_state()[0]);
         // std::vector<double> new_state = {parent_sample.get_state()[0] + EPSILON*cos(theta), parent_sample.get_state()[1] + EPSILON*sin(theta)};
@@ -286,19 +288,20 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<double> sampled_position = sample_state(ba_act);
-        std::vector<std::vector<double>> traj_point_wise;
+        DubinsSteer::SteerData dubins_steer_data;
+        // std::vector<std::vector<double>> traj_point_wise;
         SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, radius_L, radius_R);
         // std::cout << "===== size: " << parent_sample.get_state().size() << std::endl;
         // std::cout << "paraent node x: " << parent_sample.get_state()[0] << ", paraent node y: " << parent_sample.get_state()[1] << std::endl;
-        std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, EPSILON);
+        std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, dubins_steer_data, EPSILON);
         // std::cout << "new sample state x: " << new_sample_state[0] << ", new sample state y: " << new_sample_state[1] << std::endl;
         
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, RADIUS, radius_L, radius_R);
+        // SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, RADIUS, radius_L, radius_R);
         
         // DubinsSteer::SteerData dubins_steer_data_new = DubinsSteer::GetDubinsTrajectoryPointWise(chosen_parent_sample.get_state(), new_sample_state, radius_L, radius_R);
         // traj_point_wise = dubins_steer_data_new.traj_point_wise;
-        // SampleNode& chosen_parent_sample = parent_sample;
+        SampleNode& chosen_parent_sample = parent_sample;
 
 
         SampleNode new_node;
@@ -310,14 +313,15 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
 
         new_node.set_state(new_sample_state);
         new_node.set_cost(chosen_parent_sample.get_cost() + get_dist_dubins(chosen_parent_sample.get_state(), new_sample_state, radius_L, radius_R));
+        new_node.set_cost(chosen_parent_sample.get_cost() + dubins_steer_data.traj_length);
         // std::cout << "parent ba state: " << new_ba << std::endl;
         new_node.set_parent_ba(chosen_parent_sample.get_ba());
         new_node.set_parent_id(chosen_parent_sample.get_id());
-        new_node.set_traj(traj_point_wise);
+        new_node.set_traj(dubins_steer_data.traj_point_wise);
 
         all_space_.insert_sample(new_node, new_ba);
 
-        all_space_.rewire_dubins(new_id, new_ba, RADIUS, radius_L, radius_R);
+        // all_space_.rewire_dubins(new_id, new_ba, RADIUS, radius_L, radius_R);
 
         /// Vis for debug
         sampling::sample_data node_data;
@@ -361,10 +365,13 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
         while (current_ba != init_ba || current_id != 0) {
             
             SampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
-            
+            std::vector<std::vector<double>> temp = current_node.get_traj();
+            std::reverse(temp.begin(), temp.end());
             std::vector<double> path_node = current_node.get_state();
             path_nodes_sq.push_back(path_node);
             
+            path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
+
             current_ba = current_node.get_parent_ba();
             current_id = current_node.get_parent_id();
             
@@ -372,11 +379,11 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     }
     // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************"  << std::endl;
     std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
-    for (int i = 0; i < path_nodes_sq.size() - 1; i++) {
-        DubinsSteer::SteerData dubins_steer_data;
-        dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(path_nodes_sq[i], path_nodes_sq[i + 1], radius_L, radius_R);
-        path_.insert( path_.end(), dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.end() );
-    }
-
-    return path_;
+    // for (int i = 0; i < path_nodes_sq.size() - 1; i++) {
+    //     DubinsSteer::SteerData dubins_steer_data;
+    //     dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(path_nodes_sq[i], path_nodes_sq[i + 1], radius_L, radius_R);
+    //     path_.insert( path_.end(), dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.end() );
+    // }
+    return path_nodes_sq;
+    // return path_;
 }

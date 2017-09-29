@@ -5,6 +5,7 @@
 
 #include <lcm/lcm-cpp.hpp>
 #include "lcmtypes/srcl_msgs.hpp"
+#include "trajectory/dubins_steer.h"
 
 using namespace srcl;
 
@@ -36,7 +37,7 @@ private:
     std::vector<int> sample_from_ba(BAStruct buchi, SampleSpace &sample_space);
     void buchi_post (BAStruct &ba, std::vector<int> indep_set);
     bool if_in_region (std::vector<double> state, Region region);
-    std::vector<double> step_from_to (SampleNode parent_sample, std::vector<double> sampled_state, double EPSILON);
+    std::vector<double> step_from_to (SampleNode parent_sample, std::vector<double> sampled_state, DubinsSteer::SteerData& dubins_steer_data, double EPSILON);
     int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions);
     std::vector<double> sample_state (std::vector<int> ba_act);
 public:
