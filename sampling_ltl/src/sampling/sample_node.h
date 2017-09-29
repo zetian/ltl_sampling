@@ -39,6 +39,9 @@ public:
 
     int get_parent_ba();
     void set_parent_ba(int parent_ba);
+    
+    std::vector<std::vector<double>> get_traj();
+    void set_traj(std::vector<std::vector<double>> traj);
 
     std::vector<std::pair<int, uint64_t>>& get_children_id();
     void set_children_id(std::vector<std::pair<int, uint64_t>> children);
@@ -56,7 +59,7 @@ private:
     int ba_state_;
     std::map<int, SampleNode> sample_node_id_map_; 
     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
-    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_l, double radius_r);
+    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R);
 public:
     void insert_sample(SampleNode new_sample);
     SampleNode& get_sample(uint64_t id);
@@ -65,9 +68,9 @@ public:
     int num_samples();
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
-    SampleNode& get_parent_dubins(std::vector<double> state, double radius_l, double radius_r);
+    SampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
-    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_l, double radius_r);
+    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_L, double radius_R);
     
     // void rewire(uint64_t rewire_sample_id, double RADIUS);
 

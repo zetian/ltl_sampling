@@ -13,7 +13,7 @@
 namespace DubinsSteer {
 	typedef struct{
 		std::vector<std::vector<double>> traj_point_wise;
-		// std::vector<double> traj_piece_map;
+		std::vector<double> traj_len_map;
 		double traj_length;
 		std::vector<double> z_new;
 	}SteerData;

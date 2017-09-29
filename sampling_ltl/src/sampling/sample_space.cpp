@@ -19,8 +19,8 @@ double SampleSpace::get_dist(std::vector<double> states_1, std::vector<double> s
     return dist;
 }
 
-double SampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_l, double radius_r) {
-    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_l, radius_r);
+double SampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R) {
+    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_L, radius_R);
     return min_length;
 }
 
@@ -96,13 +96,13 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, double RADIU
 }
 
 
-void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, double RADIUS, double radius_l, double radius_r) {
+void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, double RADIUS, double radius_L, double radius_R) {
     SampleNode &new_sample = sample_space_ltl_map_.find(new_sample_ba)->second.get_sample(new_sample_id);
     std::vector<SampleNode>& all_sub_samples = sample_space_ltl_map_.find(new_sample_ba)->second.get_all_samples();
     for (int i = 0; i < all_sub_samples.size(); i++) {
         if (all_sub_samples[i].get_id() != new_sample.get_parent_id() &&
-            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_l, radius_r) < RADIUS &&
-            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_l, radius_r) + new_sample.get_cost() < 
+            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_L, radius_R) < RADIUS &&
+            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_L, radius_R) + new_sample.get_cost() < 
             all_sub_samples[i].get_cost() ) {
             
                 SampleNode &rewire_sample = all_sub_samples[i];
@@ -116,7 +116,7 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, doubl
                 rewire_sample.set_parent_ba(new_sample_ba);
                 rewire_sample.set_parent_id(new_sample_id);
                 double old_cost_of_rewire = rewire_sample.get_cost();
-                rewire_sample.set_cost(new_sample.get_cost() + get_dist_dubins(rewire_sample.get_state(), new_sample.get_state(), radius_l, radius_r));
+                rewire_sample.set_cost(new_sample.get_cost() + get_dist_dubins(rewire_sample.get_state(), new_sample.get_state(), radius_L, radius_R));
                 double decreased_cost = old_cost_of_rewire - rewire_sample.get_cost();
                 new_sample.add_children_id(rewire_sample_id);
 

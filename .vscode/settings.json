@@ -68,6 +68,7 @@
         "geometry": "cpp",
         "__nullptr": "cpp",
         "numeric": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "string_view": "cpp"
     }
 }

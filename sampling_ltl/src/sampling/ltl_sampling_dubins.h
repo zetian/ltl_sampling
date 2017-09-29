@@ -19,8 +19,8 @@ private:
     // std::vector<std::string> buchi_regions_;
     double EPSILON = 6;
     double RADIUS = 12;
-    double radius_l = 5;
-    double radius_r = 5;
+    double radius_L = 5;
+    double radius_R = 5;
     std::vector<std::vector<double>> path_;
 
     BAStruct ba_;
@@ -31,7 +31,7 @@ private:
     // std::vector<SubSampleSpace> sub_sample_space_;
     // std::map<int, SubSampleSpace> sample_space_ltl_map_;
     // double get_dist(std::vector<double> states_1, std::vector<double> states_2);
-    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_l, double radius_r);
+    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R);
     double fRand(double fMin, double fMax);
     std::vector<int> sample_from_ba(BAStruct buchi, SampleSpace &sample_space);
     void buchi_post (BAStruct &ba, std::vector<int> indep_set);

@@ -52,6 +52,16 @@ void SampleNode::set_parent_ba(int parent_ba){
     parent_ba_ = parent_ba;
 }
 
+std::vector<std::vector<double>> SampleNode::get_traj() {
+    return traj_point_wise_;
+}
+
+void SampleNode::set_traj(std::vector<std::vector<double>> traj) {
+    traj_point_wise_ = traj;
+}
+
+
+
 std::vector<std::pair<int, uint64_t>>& SampleNode::get_children_id(){
     return children_;
 }
@@ -71,8 +81,8 @@ double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double
     return dist;
 }
 
-double SubSampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_l, double radius_r) {
-    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_l, radius_r);
+double SubSampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R) {
+    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_L, radius_R);
     return min_length;
 }
 
@@ -129,7 +139,7 @@ SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     return parent_sample;
 }
 
-SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_l, double radius_r) {
+SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_L, double radius_R) {
     SampleNode &parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {
     //     SampleNode parent_sample = sample_nodes_.front();
@@ -138,7 +148,7 @@ SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double 
     for (int i = 0; i < sample_nodes_.size(); i++) {
         // std::vector<double> parent_states = sample_nodes_[i].get_states();
         // double dist = SubSampleSpace::get_dist(parent_states, states);
-        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_l, radius_r) < get_dist_dubins(parent_sample.get_state(), state, radius_l, radius_r)) {
+        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R)) {
             parent_sample = sample_nodes_[i];
         }
     }
@@ -150,33 +160,53 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
     // if (!sample_nodes_.empty()) {
     //     SampleNode parent_sample = sample_nodes_.front();
     // }
-    
+    double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_state(), state);
     for (int i = 0; i < sample_nodes_.size(); i++) {
         // std::vector<double> parent_states = sample_nodes_[i].get_states();
         // double dist = SubSampleSpace::get_dist(parent_states, states);
         if (get_dist(sample_nodes_[i].get_state(), state) < RADIUS &&
-            get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < 
-            parent_sample.get_cost() + get_dist(parent_sample.get_state(), state)) {
+            get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < new_cost) {
             new_parent_sample = sample_nodes_[i];
+            new_cost = get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost();
         }
     }
     return new_parent_sample;
 }
 
-SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_l, double radius_r) {
+SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_L, double radius_R) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {
     //     SampleNode parent_sample = sample_nodes_.front();
     // }
-    
+        
     for (int i = 0; i < sample_nodes_.size(); i++) {
         // std::vector<double> parent_states = sample_nodes_[i].get_states();
         // double dist = SubSampleSpace::get_dist(parent_states, states);
-        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_l, radius_r) < RADIUS &&
-            get_dist_dubins(sample_nodes_[i].get_state(), state, radius_l, radius_r) + sample_nodes_[i].get_cost() < 
-            parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_l, radius_r)) {
-            new_parent_sample = sample_nodes_[i];
+        // DubinsSteer::SteerData dubins_steer_data_new;
+        // DubinsSteer::SteerData dubins_steer_data_old;
+        // DubinsSteer::SteerData dubins_steer_data_new = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
+        // dubins_steer_data_old = DubinsSteer::GetDubinsTrajectoryPointWise(parent_sample.get_state(), state, radius_L, radius_R);
+        double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R);
+        // if (dubins_steer_data_new.traj_length < RADIUS &&
+        //     dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost() < new_cost) {
+        //         new_cost = dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost();
+        //         traj_point_wise = dubins_steer_data_new.traj_point_wise;
+        //         new_parent_sample = sample_nodes_[i];
+        // }
+
+        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < RADIUS &&
+                get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost() < new_cost) {
+                new_parent_sample = sample_nodes_[i];
+                new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
         }
+
+        // if (dubins_steer_data_new.traj_length < RADIUS &&
+        //     dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost() < 
+        //     parent_sample.get_cost() + dubins_steer_data_old.traj_length) {
+        //         // traj_point_wise.clear();
+        //         // traj_point_wise = dubins_steer_data_new.traj_point_wise;
+        //         new_parent_sample = sample_nodes_[i];
+        // }
     }
     return new_parent_sample;
 }

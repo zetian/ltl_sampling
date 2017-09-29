@@ -261,7 +261,7 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 
 	DubinsSteer::SteerData steer_data;
 	std::vector<std::vector<double>> traj_point_wise;
-	// std::vector<double> traj_piece_map;
+	std::vector<double> traj_len_map;
 	std::vector<double> configuration_f;
 	configuration_f = GetConfigurationF(z_0, z_f);
 	std::vector<std::vector<double> > traj_desc(3, std::vector<double>(7, INFINITY));
@@ -341,7 +341,7 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 	int num_points_3 = 0;
 	int num_points_4 = 0;
 	std::vector<int> num_indx_range;
-
+	double travLength = 0.0;
 	for (int np = 0; np < 3; np++){
 		std::vector<double> t_spec = traj_desc[np];
 		int temp = t_spec[0];
@@ -378,14 +378,19 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				}
 				num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				std::vector<double> a_par = LinSpace(0, L, num_points_4);
-				for (auto it = a_par.begin();it != a_par.end(); it++){
-					std::vector<double> temp = {x_s + (*it)*cos(yaw_s), y_s + (*it)*sin(yaw_s), 1};
+				// for (auto it = a_par.begin();it != a_par.end(); it++){
+				for (int i = 0; i < a_par.size(); i++){
+					std::vector<double> temp = {x_s + a_par[i]*cos(yaw_s), y_s + a_par[i]*sin(yaw_s), 1};
+					// std::vector<double> temp = {x_s + (*it)*cos(yaw_s), y_s + (*it)*sin(yaw_s), 1};
 					traj_point_wise.push_back(temp);
+					double temp_len = travLength + L*(i - num_points_3)/num_points_4;
+					traj_len_map.push_back(temp_len);
 				}
 				num_points_3 = num_indx_range.back() + 1;
 				x_0 = x_0 + L*cos(yaw_s);
 				y_0 = y_0 + L*sin(yaw_s);
 				yaw_0 = yaw_s;
+				travLength = travLength + L;
 				break;
 			}
 			case 1:{
@@ -427,20 +432,25 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				std::vector<double> a_par = LinSpace(yaw_s + dirn*M_PI/2, yaw_f + dirn*M_PI/2, num_points_4);
 
-				for (auto it = a_par.begin();it != a_par.end(); it++){
-					std::vector<double> temp = {x_c + r_crv*cos(*it), y_c + r_crv*sin(*it), (*it) - dirn*M_PI/2};
+				// for (auto it = a_par.begin();it != a_par.end(); it++){
+				for (int i = 0; i < a_par.size(); i++){
+					std::vector<double> temp = {x_c + r_crv*cos(a_par[i]), y_c + r_crv*sin(a_par[i]), a_par[i] - dirn*M_PI/2};
 					traj_point_wise.push_back(temp);
+					double temp_len = travLength + std::abs(yaw_f - yaw_s)*r_crv*(i - num_points_3)/num_points_4;
+					traj_len_map.push_back(temp_len);
 				}
 				num_points_3 = num_indx_range.back() + 1;
 				x_0 = x_c + r_crv*cos(yaw_f + dirn*M_PI/2);
 				y_0 = y_c + r_crv*sin(yaw_f + dirn*M_PI/2);
 				yaw_0 = yaw_f;
+				travLength = travLength + std::abs(yaw_f - yaw_s)*r_crv;
 				break;
 			}
 		}
 	}
 	steer_data.traj_length = min_length;
 	steer_data.traj_point_wise = traj_point_wise;
+	steer_data.traj_len_map = traj_len_map;
 	return steer_data;
 }
 
