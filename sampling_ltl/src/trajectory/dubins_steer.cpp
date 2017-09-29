@@ -380,7 +380,7 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				std::vector<double> a_par = LinSpace(0, L, num_points_4);
 				// for (auto it = a_par.begin();it != a_par.end(); it++){
 				for (int i = 0; i < a_par.size(); i++){
-					std::vector<double> temp = {x_s + a_par[i]*cos(yaw_s), y_s + a_par[i]*sin(yaw_s), 1};
+					std::vector<double> temp = {x_s + a_par[i]*cos(yaw_s), y_s + a_par[i]*sin(yaw_s), yaw_s};
 					// std::vector<double> temp = {x_s + (*it)*cos(yaw_s), y_s + (*it)*sin(yaw_s), 1};
 					traj_point_wise.push_back(temp);
 					double temp_len = travLength + L*(i - num_points_3)/num_points_4;
