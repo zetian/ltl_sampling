@@ -19,6 +19,10 @@ class SamplingVis(object):
     # fig = plt.figure(figsize=(10, 10))
     path_x = []
     path_y = []
+    path_x_test = []
+    path_y_test = []
+
+
 
     def __init__(self, size_x, size_y):
         self.size_x = size_x
@@ -49,6 +53,13 @@ class SamplingVis(object):
         print("Length of path is: " + str(len(msg.state_x)))
         self.path_x = msg.state_x
         self.path_y = msg.state_y
+
+    def path_handler_test(self, channel, data):
+        msg = path_data.decode(data)
+        print("Received message on channel \"%s\"" % channel)
+        print("Length of path is: " + str(len(msg.state_x)))
+        self.path_x_test = msg.state_x
+        self.path_y_test = msg.state_y
     
     
     # def region_draw(self, channel, data):
@@ -74,6 +85,7 @@ class SamplingVis(object):
             currentAxis.add_patch(draw_rect)
 
         plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
+        plt.plot(self.path_x_test, self.path_y_test, color = 'blue', linewidth = 2)
         plt.axis([0,self.size_x, 0, self.size_y])
         plt.axes().set_aspect('equal')
         
@@ -86,6 +98,7 @@ def main():
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("PATH", sample_vis.path_handler)
+    subscription = lc.subscribe("PATH_TEST", sample_vis.path_handler_test)
     # subscription = lc.subscribe("DRAW_REGION", sample_vis.region_draw)
     subscription = lc.subscribe("DRAW_SAMPLE", sample_vis.samples_draw)
     

@@ -47,7 +47,7 @@ public:
     void set_init_state(std::vector<double> init_state);
     void start_sampling(int iteration);
     std::vector<std::vector<double>> get_path();
-
+    std::vector<std::vector<double>> get_path_test();
     // void read_region()
     // SubSampleSpace& get_sub_space(int num_ba);
     // void insert_sample(SampleNode new_sample, int sub_space_id);

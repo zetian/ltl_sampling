@@ -100,6 +100,26 @@ int main()
         path_data_.state_y[i] = path[i][1];
     }
     // std::cout << "Length of the solution path: " << path.size() << std::endl;
+    std::vector<std::vector<double>> path_test = ltl_sampling_dubins.get_path_test();
+    
+    sampling::path_data path_data_test;
+    path_data_test.num_state = path_test.size();
+    path_data_test.state_x.resize(path_data_test.num_state);
+    path_data_test.state_y.resize(path_data_test.num_state);
+    for (int i = 0; i < path_test.size(); i++) {
+        
+        path_data_test.state_x[i] = path_test[i][0];
+        
+        path_data_test.state_y[i] = path_test[i][1];
+    }    
+
+    lcm.publish("PATH_TEST", &path_data_test);
+    sampling::sample_draw draw_test;
+    draw_test.if_draw = true;
+    // lcm.publish("DRAW_REGION", &draw);
+    // lcm.publish("DRAW_SAMPLE", &draw_test);
+
+
     lcm.publish("PATH", &path_data_);
     sampling::sample_draw draw;
     draw.if_draw = true;

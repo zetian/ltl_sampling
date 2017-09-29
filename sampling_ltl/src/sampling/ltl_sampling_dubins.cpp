@@ -324,10 +324,10 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
         // all_space_.rewire_dubins(new_id, new_ba, RADIUS, radius_L, radius_R);
 
         /// Vis for debug
-        sampling::sample_data node_data;
-        node_data.state[0] = new_sample_state[0];
-        node_data.state[1] = new_sample_state[1];
-        lcm.publish("SAMPLE", &node_data);
+        // sampling::sample_data node_data;
+        // node_data.state[0] = new_sample_state[0];
+        // node_data.state[1] = new_sample_state[1];
+        // lcm.publish("SAMPLE", &node_data);
 
         // std::cout << "new ba state: " << new_ba << std::endl;
         // if (new_ba == ba_.acc_state_idx.front()) {
@@ -341,6 +341,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
 }
 
 std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
+    lcm::LCM lcm;
     bool find_path = false;
     int current_ba = ba_.acc_state_idx.front();
     int init_ba = ba_.init_state_idx;
@@ -360,15 +361,26 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     // std::cout << "last id " << current_id << std::endl;
     if (find_path) {
         SampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
+        sampling::sample_data node_data;
+        node_data.state[0] = min_cost_sample.get_state()[0];
+        node_data.state[1] = min_cost_sample.get_state()[1];
+        lcm.publish("SAMPLE", &node_data);
+
         std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
         current_id = min_cost_sample.get_id();
         while (current_ba != init_ba || current_id != 0) {
             
             SampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
+
+            sampling::sample_data node_data;
+            node_data.state[0] = current_node.get_state()[0];
+            node_data.state[1] = current_node.get_state()[1];
+            lcm.publish("SAMPLE", &node_data);
+
             std::vector<std::vector<double>> temp = current_node.get_traj();
             std::reverse(temp.begin(), temp.end());
-            std::vector<double> path_node = current_node.get_state();
-            path_nodes_sq.push_back(path_node);
+            // std::vector<double> path_node = current_node.get_state();
+            // path_nodes_sq.push_back(path_node);
             
             path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
 
@@ -386,4 +398,53 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     // }
     return path_nodes_sq;
     // return path_;
+}
+
+std::vector<std::vector<double>> LTL_SamplingDubins::get_path_test() {
+    bool find_path = false;
+    int current_ba = ba_.acc_state_idx.front();
+    int init_ba = ba_.init_state_idx;
+
+    std::vector<std::vector<double>> path_nodes_sq;
+
+    if (all_space_.get_sub_space(current_ba).num_samples() > 0) {
+        find_path = true;
+    }
+    else {
+        return path_;
+    }
+    
+    double total_cost = INT_MAX;
+    uint64_t current_id = 1;
+    // std::cout << "last ba id: " << acc_ba << std::endl;
+    // std::cout << "last id " << current_id << std::endl;
+    if (find_path) {
+        SampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
+        path_nodes_sq.push_back(min_cost_sample.get_state());
+        std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
+        current_id = min_cost_sample.get_id();
+        while (current_ba != init_ba || current_id != 0) {
+            
+            SampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
+            // std::vector<std::vector<double>> temp = current_node.get_traj();
+            // std::reverse(temp.begin(), temp.end());
+            std::vector<double> path_node = current_node.get_state();
+            path_nodes_sq.push_back(path_node);
+            
+            // path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
+
+            current_ba = current_node.get_parent_ba();
+            current_id = current_node.get_parent_id();
+            
+        }
+    }
+    // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************"  << std::endl;
+    std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
+    for (int i = 0; i < path_nodes_sq.size() - 1; i++) {
+        DubinsSteer::SteerData dubins_steer_data;
+        dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(path_nodes_sq[i], path_nodes_sq[i + 1], radius_L, radius_R);
+        path_.insert( path_.end(), dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.end() );
+    }
+    // return path_nodes_sq;
+    return path_;
 }
