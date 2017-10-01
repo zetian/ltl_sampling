@@ -6,8 +6,11 @@
 int main()
 {
 	std::vector<std::vector<double> > traj_desc(3, std::vector<double>(7, INFINITY));
-	std::vector<double> z_0 = {0, 0, 0};
-	std::vector<double> z_f = {5, 5, M_PI/2};
+	// std::vector<double> z_0 = {0, 0, 0};
+	// std::vector<double> z_f = {5, 5, M_PI/2};
+	std::vector<double> z_0 = {32.9858, 44.5592, 2.28927};
+	std::vector<double> z_f = {41.3234, 54.6644, 0.324527};
+
 	double radius_L = 5;
 	double radius_R = 5;
 	double min_length;
