@@ -371,10 +371,10 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     // std::cout << "last id " << current_id << std::endl;
     if (find_path) {
         SampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
-        sampling::sample_data node_data;
-        node_data.state[0] = min_cost_sample.get_state()[0];
-        node_data.state[1] = min_cost_sample.get_state()[1];
-        lcm.publish("SAMPLE", &node_data);
+        // sampling::sample_data node_data;
+        // node_data.state[0] = min_cost_sample.get_state()[0];
+        // node_data.state[1] = min_cost_sample.get_state()[1];
+        // lcm.publish("SAMPLE", &node_data);
 
         std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
         current_id = min_cost_sample.get_id();
@@ -406,22 +406,22 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************"  << std::endl;
         std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
 
-        for (int i = 0; i < count.size(); i++) {
-            count[i] = path_nodes_sq.size() - count[i];
-        }
+        // for (int i = 0; i < count.size(); i++) {
+        //     count[i] = path_nodes_sq.size() - count[i];
+        // }
 
         // std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
-        std::cout << "========================PIECE BY PIECE=====================================" << std::endl;
-        for (int i = 0; i < path_nodes_sq.size(); i++) {
-            if(std::find(count.begin(), count.end(), i) != count.end()) {
-                std::cout << "========================PIECE BY PIECE=====================================" << std::endl;
-            }
-            std::cout << "x: " << path_nodes_sq[i][0] << ", y: " << path_nodes_sq[i][1] << ", yaw: " << path_nodes_sq[i][2] << std::endl;
-            sampling::sample_data node_data;
-            node_data.state[0] = path_nodes_sq[i][0];
-            node_data.state[1] = path_nodes_sq[i][1];
-            lcm.publish("SAMPLE", &node_data);
-        }
+        // std::cout << "========================PIECE BY PIECE=====================================" << std::endl;
+        // for (int i = 0; i < path_nodes_sq.size(); i++) {
+        //     // if(std::find(count.begin(), count.end(), i) != count.end()) {
+        //     //     std::cout << "========================PIECE BY PIECE=====================================" << std::endl;
+        //     // }
+        //     // std::cout << "x: " << path_nodes_sq[i][0] << ", y: " << path_nodes_sq[i][1] << ", yaw: " << path_nodes_sq[i][2] << std::endl;
+        //     sampling::sample_data node_data;
+        //     node_data.state[0] = path_nodes_sq[i][0];
+        //     node_data.state[1] = path_nodes_sq[i][1];
+        //     lcm.publish("SAMPLE", &node_data);
+        // }
     
     } 
     // for (int i = 0; i < path_nodes_sq.size() - 1; i++) {
@@ -487,8 +487,8 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path_test() {
             int parent_ba = current_node.get_parent_ba();
             uint64_t parent_id = current_node.get_parent_id();
             SampleNode parent_node =  all_space_.get_sub_space(parent_ba).get_sample(parent_id);
-            std::cout << i << ":: parent: x: " << parent_node.get_state()[0] << ", y: " << parent_node.get_state()[1] << ", yaw: " << parent_node.get_state()[2] << std::endl;
-            std::cout << i << ":: self: x: " << current_node.get_state()[0] << ", y: " << current_node.get_state()[1] << ", yaw: " << current_node.get_state()[2] << std::endl;
+            // std::cout << i << ":: parent: x: " << parent_node.get_state()[0] << ", y: " << parent_node.get_state()[1] << ", yaw: " << parent_node.get_state()[2] << std::endl;
+            // std::cout << i << ":: self: x: " << current_node.get_state()[0] << ", y: " << current_node.get_state()[1] << ", yaw: " << current_node.get_state()[2] << std::endl;
             
         }
     }

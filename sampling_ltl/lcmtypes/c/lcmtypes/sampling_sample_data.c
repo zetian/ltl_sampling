@@ -18,7 +18,7 @@ uint64_t __sampling_sample_data_hash_recursive(const __lcm_hash_ptr *p)
 
     __lcm_hash_ptr cp;
     cp.parent =  p;
-    cp.v = (void*)__sampling_sample_data_get_hash;
+    cp.v = __sampling_sample_data_get_hash;
     (void) cp;
 
     uint64_t hash = (uint64_t)0x5c4b2f699a665926LL

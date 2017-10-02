@@ -69,6 +69,7 @@
         "__nullptr": "cpp",
         "numeric": "cpp",
         "*.ipp": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "__tuple": "cpp"
     }
 }
