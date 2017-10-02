@@ -84,7 +84,7 @@ int main()
     
 
     ltl_sampling_dubins.set_init_state(init_state);
-    int interation = 1000;
+    int interation = 500;
 
     ltl_sampling_dubins.start_sampling(interation);
     std::vector<std::vector<double>> path = ltl_sampling_dubins.get_path();

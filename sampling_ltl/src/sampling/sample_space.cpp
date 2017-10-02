@@ -104,8 +104,10 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, doubl
             get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_L, radius_R) < RADIUS &&
             get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_L, radius_R) + new_sample.get_cost() < 
             all_sub_samples[i].get_cost() ) {
-            
+                
+               
                 SampleNode &rewire_sample = all_sub_samples[i];
+                DubinsSteer::SteerData dubins_steer_data_new = DubinsSteer::GetDubinsTrajectoryPointWise(rewire_sample.get_state(), new_sample.get_state(), radius_L, radius_R);
                 uint64_t old_parent_id = rewire_sample.get_parent_id();
                 int old_parent_ba = rewire_sample.get_parent_ba();
 
@@ -119,6 +121,8 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, doubl
                 rewire_sample.set_cost(new_sample.get_cost() + get_dist_dubins(rewire_sample.get_state(), new_sample.get_state(), radius_L, radius_R));
                 double decreased_cost = old_cost_of_rewire - rewire_sample.get_cost();
                 new_sample.add_children_id(rewire_sample_id);
+                new_sample.set_traj(dubins_steer_data_new.traj_point_wise);
+
 
                 std::queue<std::pair <int, uint64_t>> Q_cost_update;
                 std::vector<std::pair<int, uint64_t>> current_children = rewire_sample.get_children_id();

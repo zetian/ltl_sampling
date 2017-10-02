@@ -3,57 +3,10 @@
 #include <iostream>
 #include <cmath>
 
-std::vector<double> LinSpace_test(double a, double b, int n) {
-	std::vector<double> array;
-	// std::cout << "NUMBER is: " << n << std::endl; 
-	if (n==1){
-		array.push_back(a);
-		array.push_back(b);
-		return array;
-	}
-   // if (a > b) {
-   // 	std::swap(a, b);
-   // }
-	double step = (b-a) / (n-1);
-	// std::cout << "in linspace: " << step << std::endl; 
-	// while(a <= b) {
-	// 	array.push_back(a);
-   //     a += step;           // could recode to better handle rounding errors
-   //     // std::cout << step << std::endl; 
-   // }
-   
-   if (a <= b) {
-	   double step = (b-a) / (n-1);
-	   // std::cout << "in linspace: " << step << std::endl; 
-	   while(a <= b) {
-		   array.push_back(a);
-		   a += step;           // could recode to better handle rounding errors
-		  // std::cout << step << std::endl; 
-	  }
-	  array.push_back(b);
-	  
-   }
-   else {
-	   double step = (a-b) / (n-1);
-	   // std::cout << "in linspace: " << step << std::endl; 
-	   while(b <= a) {
-		   array.push_back(a);
-		   a -= step;           // could recode to better handle rounding errors
-		  // std::cout << step << std::endl; 
-	  }
-	  array.push_back(b);
-   }
-
-   return array;
-}
 
 
 int main()
 {
-	std::vector<double> test_lin = LinSpace_test(1, 0, 10);
-	for (int i = 0; i < test_lin.size(); i++) {
-		std::cout << test_lin[i] << std::endl;
-	}
 	std::vector<std::vector<double> > traj_desc(3, std::vector<double>(7, INFINITY));
 	// std::vector<double> z_0 = {0, 0, 0};
 	// std::vector<double> z_f = {5, 5, M_PI/2};

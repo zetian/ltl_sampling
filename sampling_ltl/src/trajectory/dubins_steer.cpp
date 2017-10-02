@@ -31,6 +31,8 @@
  }
 
  std::vector<double> LinSpace(double a, double b, int n) {
+
+	// std::cout << "a:" << a << ", b: " << b << ", n: " << n << std::endl;
 	std::vector<double> array;
 	// std::cout << "NUMBER is: " << n << std::endl; 
 	if (n==1){
@@ -38,22 +40,21 @@
 		array.push_back(b);
 		return array;
 	}
-   // if (a > b) {
-   // 	std::swap(a, b);
-   // }
-	double step = (b-a) / (n-1);
-	// std::cout << "in linspace: " << step << std::endl; 
-	// while(a <= b) {
-	// 	array.push_back(a);
-   //     a += step;           // could recode to better handle rounding errors
-   //     // std::cout << step << std::endl; 
-   // }
+
+	if (std::abs(a - b) < 1e-3) {	
+		for (int i = 0; i < n; i++){
+			array.push_back(a);
+		}
+		return array;
+	}
+	// double step = (b-a) / (n-1);
    
-   if (a <= b) {
+   if (a < b) {
 	   double step = (b-a) / (n-1);
 	   // std::cout << "in linspace: " << step << std::endl; 
-	   while(a <= b) {
+	   while(a < b) {
 		   array.push_back(a);
+		//    std::cout << "````````````````````"  << step << std::endl;
 		   a += step;           // could recode to better handle rounding errors
 		  // std::cout << step << std::endl; 
 	  }
@@ -63,7 +64,8 @@
    else {
 		double step = (a-b) / (n-1);
 		// std::cout << "in linspace: " << step << std::endl; 
-		while(b <= a) {
+		while(b < a) {
+			// std::cout << "````````````````````" << step <<std::endl;
 			array.push_back(a);
 			a -= step;           // could recode to better handle rounding errors
 		// std::cout << step << std::endl; 

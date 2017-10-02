@@ -2,7 +2,7 @@
 #include <cmath>
 #include <climits>
 #include "sampling/sample_node.h"
-#include "trajectory/dubins_steer.h"
+
 
 SampleNode::SampleNode(uint64_t id, std::vector<double> state){
     id_ = id;
@@ -173,7 +173,7 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
     return new_parent_sample;
 }
 
-SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_L, double radius_R) {
+SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, double RADIUS, double radius_L, double radius_R) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {
     //     SampleNode parent_sample = sample_nodes_.front();
@@ -184,21 +184,27 @@ SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std
         // double dist = SubSampleSpace::get_dist(parent_states, states);
         // DubinsSteer::SteerData dubins_steer_data_new;
         // DubinsSteer::SteerData dubins_steer_data_old;
-        // DubinsSteer::SteerData dubins_steer_data_new = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
+        // DubinsSteer::SteerData dubins_steer_data_new;
+        //  = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
         // dubins_steer_data_old = DubinsSteer::GetDubinsTrajectoryPointWise(parent_sample.get_state(), state, radius_L, radius_R);
         double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R);
         // if (dubins_steer_data_new.traj_length < RADIUS &&
         //     dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost() < new_cost) {
         //         new_cost = dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost();
-        //         traj_point_wise = dubins_steer_data_new.traj_point_wise;
+        //         // traj_point_wise = dubins_steer_data_new.traj_point_wise;
         //         new_parent_sample = sample_nodes_[i];
+        //         dubins_steer_data = dubins_steer_data_new;
         // }
 
         if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < RADIUS &&
                 get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost() < new_cost) {
                 new_parent_sample = sample_nodes_[i];
+
+                dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
+                
                 new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
         }
+        
 
         // if (dubins_steer_data_new.traj_length < RADIUS &&
         //     dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost() < 
@@ -208,6 +214,8 @@ SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std
         //         new_parent_sample = sample_nodes_[i];
         // }
     }
+    
+    // dubins_steer_data =  DubinsSteer::GetDubinsTrajectoryPointWise(new_parent_sample.get_state(), state, radius_L, radius_R);
     return new_parent_sample;
 }
 

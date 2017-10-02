@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <utility>
+#include "trajectory/dubins_steer.h"
 
 
 class SampleNode {
@@ -70,7 +71,7 @@ public:
     SampleNode& get_parent(std::vector<double> state);
     SampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
-    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, double RADIUS, double radius_L, double radius_R);
+    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, double RADIUS, double radius_L, double radius_R);
     
     // void rewire(uint64_t rewire_sample_id, double RADIUS);
 
