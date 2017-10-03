@@ -19,6 +19,25 @@ $ sudo apt-get install cmake
 ```
 $ sudo apt-get install libopencv-dev python-opencv
 ```
+* lcm
+
+Download the source code from [website](https://github.com/lcm-proj/lcm).
+
+'''
+$ git clone https://github.com/lcm-proj/lcm lcm
+$ cd lcm
+$ ./bootstrap.sh
+$ ./configure
+$ make
+$ sudo make install
+'''
+
+Post install
+
+'''
+$ export LCM_INSTALL_DIR=/usr/local/lib
+$ echo $LCM_INSTALL_DIR > /etc/ld.so.conf.d/lcm.conf
+'''
 
 * Spot
 

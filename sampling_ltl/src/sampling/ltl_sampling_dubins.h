@@ -13,14 +13,20 @@ public:
     LTL_SamplingDubins(){};
     ~LTL_SamplingDubins(){};
 private:
-    double work_space_size_x_ = 100;
-    double work_space_size_y_ = 100;
+    // double work_space_size_x_ = 100;
+    // double work_space_size_y_ = 100;
+    double work_space_size_x_;
+    double work_space_size_y_;
     std::string ltl_formula_;
     // std::vector<std::string> buchi_regions_;
-    double EPSILON = 6;
-    double RADIUS = 12;
-    double radius_L = 10;
-    double radius_R = 10;
+    // double EPSILON_ = 6;
+    // double RADIUS_ = 12;
+    // double radius_L_ = 10;
+    // double radius_R_ = 10;
+    double EPSILON_;
+    double RADIUS_;
+    double radius_L_;
+    double radius_R_;
     std::vector<std::vector<double>> path_;
 
     BAStruct ba_;
@@ -43,6 +49,7 @@ private:
 public:
     void read_formula(std::string ltl_formula, std::vector<std::string> buchi_regions, std::vector<int> indep_set);
     void init_workspace(double work_space_size_x,double work_space_size_y);
+    void init_parameter(double EPSILON, double RADIUS, double radius_L, double radius_R);
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void set_init_state(std::vector<double> init_state);
