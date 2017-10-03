@@ -155,7 +155,24 @@ SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double 
     return parent_sample;
 }
 
-SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS) {
+
+// static bool SubSampleSpace::collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle){
+//     int SAMPLE_NUM = 10;
+//     if (traj.size() < SAMPLE_NUM) {
+//         SAMPLE_NUM = traj.size();
+//     }
+//     vector<int> generated_values;
+//     int num = rand() % traj.size();
+//     while(contains(generatedValues, num)) //You'll need a function to check whether the num is in this vector
+//     {
+//       num = rand() % tam;
+//     }
+// }
+
+
+
+
+SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {
     //     SampleNode parent_sample = sample_nodes_.front();
@@ -167,13 +184,16 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
         if (get_dist(sample_nodes_[i].get_state(), state) < RADIUS &&
             get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < new_cost) {
             new_parent_sample = sample_nodes_[i];
+            if (Region::collision_check_simple(sample_nodes_[i].get_state(), state, obstacles)) {
+                continue;
+            }
             new_cost = get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost();
         }
     }
     return new_parent_sample;
 }
 
-SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, double RADIUS, double radius_L, double radius_R) {
+SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {
     //     SampleNode parent_sample = sample_nodes_.front();
@@ -201,7 +221,9 @@ SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std
                 new_parent_sample = sample_nodes_[i];
 
                 dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
-                
+                if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
+                    continue;
+                }
                 new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
         }
         

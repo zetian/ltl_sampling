@@ -18,6 +18,6 @@ public:
     SubSampleSpace& get_sub_space(int num_ba);
     void insert_sample(SampleNode new_sample, int sub_space_id);
     uint64_t total_sample_num();
-    void rewire(uint64_t rewire_sample_id, int rewire_sample_ba, double RADIUS);
-    void rewire_dubins(uint64_t rewire_sample_id, int rewire_sample_ba, double RADIUS, double radius_L, double radius_R);
+    void rewire(uint64_t rewire_sample_id, int rewire_sample_ba, std::vector<Region> obstacles, double RADIUS);
+    void rewire_dubins(uint64_t rewire_sample_id, int rewire_sample_ba, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
 };

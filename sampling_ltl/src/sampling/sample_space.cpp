@@ -50,7 +50,7 @@ uint64_t SampleSpace::total_sample_num() {
     return total_num;
 }
 
-void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, double RADIUS) {
+void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, std::vector<Region> obstacles, double RADIUS) {
     SampleNode &new_sample = sample_space_ltl_map_.find(new_sample_ba)->second.get_sample(new_sample_id);
     std::vector<SampleNode>& all_sub_samples = sample_space_ltl_map_.find(new_sample_ba)->second.get_all_samples();
     for (int i = 0; i < all_sub_samples.size(); i++) {
@@ -60,6 +60,10 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, double RADIU
             all_sub_samples[i].get_cost() ) {
             
                 SampleNode &rewire_sample = all_sub_samples[i];
+                if (Region::collision_check_simple(rewire_sample.get_state(), new_sample.get_state(), obstacles)) {
+                    continue;
+                }
+
                 uint64_t old_parent_id = rewire_sample.get_parent_id();
                 int old_parent_ba = rewire_sample.get_parent_ba();
 
@@ -96,7 +100,7 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, double RADIU
 }
 
 
-void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, double RADIUS, double radius_L, double radius_R) {
+void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
     SampleNode &new_sample = sample_space_ltl_map_.find(new_sample_ba)->second.get_sample(new_sample_id);
     std::vector<SampleNode>& all_sub_samples = sample_space_ltl_map_.find(new_sample_ba)->second.get_all_samples();
     for (int i = 0; i < all_sub_samples.size(); i++) {
@@ -108,6 +112,9 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, doubl
                
                 SampleNode &rewire_sample = all_sub_samples[i];
                 DubinsSteer::SteerData dubins_steer_data_new = DubinsSteer::GetDubinsTrajectoryPointWise(rewire_sample.get_state(), new_sample.get_state(), radius_L, radius_R);
+                if (Region::collision_check_dubins(dubins_steer_data_new.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
+                    continue;
+                }
                 uint64_t old_parent_id = rewire_sample.get_parent_id();
                 int old_parent_ba = rewire_sample.get_parent_ba();
 

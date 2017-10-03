@@ -15,6 +15,7 @@ class Region(object):
 
 class SamplingVis(object):
     regions = []
+    obstacles = []
     all_samples = []
     # fig = plt.figure(figsize=(10, 10))
     path_x = []
@@ -46,6 +47,15 @@ class SamplingVis(object):
         print("   region position x: " + str(msg.position_x[0]) + " to " + str(msg.position_x[1]))
         print("   region position y: " + str(msg.position_y[0]) + " to " + str(msg.position_y[1]))
         self.regions.append(region)
+    
+    def obstacle_handler(self, channel, data):
+        # self.all_samples = []
+        msg = region_data.decode(data)
+        region = Region(msg.position_x, msg.position_y)
+        print("Received message on channel \"%s\"" % channel)
+        print("   region position x: " + str(msg.position_x[0]) + " to " + str(msg.position_x[1]))
+        print("   region position y: " + str(msg.position_y[0]) + " to " + str(msg.position_y[1]))
+        self.obstacles.append(region)
 
     def path_handler(self, channel, data):
         msg = path_data.decode(data)
@@ -83,6 +93,11 @@ class SamplingVis(object):
             draw_rect = patches.Rectangle((rect.position_x[0],rect.position_y[0]), rect.position_x[1] - rect.position_x[0],rect.position_y[1] - rect.position_y[0],linewidth=1,edgecolor='orange',facecolor='orange')
             currentAxis = plt.gca()
             currentAxis.add_patch(draw_rect)
+        
+        for rect in self.obstacles:
+            draw_rect = patches.Rectangle((rect.position_x[0],rect.position_y[0]), rect.position_x[1] - rect.position_x[0],rect.position_y[1] - rect.position_y[0],linewidth=1,edgecolor='grey',facecolor='grey')
+            currentAxis = plt.gca()
+            currentAxis.add_patch(draw_rect)
 
         plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
         # plt.plot(self.path_x_test, self.path_y_test, color = 'blue', linewidth = 2)
@@ -96,6 +111,7 @@ def main():
     lc = lcm.LCM()
     sample_vis = SamplingVis(100, 100)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
+    subscription = lc.subscribe("OBSTACLE", sample_vis.obstacle_handler)
     subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("PATH", sample_vis.path_handler)
     # subscription = lc.subscribe("PATH_TEST", sample_vis.path_handler_test)

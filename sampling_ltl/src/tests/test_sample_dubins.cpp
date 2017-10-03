@@ -81,10 +81,28 @@ int main()
     r_data.position_y[1] =  position_y.second;
     lcm.publish("REGION", &r_data);
     // all_regions_.regions[2] = r_data;
+
+    position_x = std::make_pair(35, 62);
+    position_y = std::make_pair(35, 40);
+    ltl_sampling_dubins.set_obstacle(position_x, position_y);
+    r_data.position_x[0] =  position_x.first;
+    r_data.position_x[1] =  position_x.second;
+    r_data.position_y[0] =  position_y.first;
+    r_data.position_y[1] =  position_y.second;
+    lcm.publish("OBSTACLE", &r_data);
+
+    position_x = std::make_pair(15, 40);
+    position_y = std::make_pair(65, 70);
+    ltl_sampling_dubins.set_obstacle(position_x, position_y);
+    r_data.position_x[0] =  position_x.first;
+    r_data.position_x[1] =  position_x.second;
+    r_data.position_y[0] =  position_y.first;
+    r_data.position_y[1] =  position_y.second;
+    lcm.publish("OBSTACLE", &r_data);
     
 
     ltl_sampling_dubins.set_init_state(init_state);
-    int interation = 500;
+    int interation = 1000;
 
     ltl_sampling_dubins.start_sampling(interation);
     std::vector<std::vector<double>> path = ltl_sampling_dubins.get_path();

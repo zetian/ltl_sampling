@@ -1,5 +1,4 @@
 #include "sampling/sample_space.h"
-#include "sampling/region.h"
 #include "trans_sys/spot_hoa_interpreter.h"
 #include "trans_sys/buchi_automaton.h"
 
@@ -24,6 +23,8 @@ private:
     BAStruct ba_;
     SampleSpace all_space_;
     std::map<int, Region> all_interest_regions_;
+    std::vector<Region> all_obstacles_;
+
     // lcm::LCM lcm;
     // int num_ba_;
     // std::vector<SubSampleSpace> sub_sample_space_;
@@ -40,6 +41,7 @@ public:
     void read_formula(std::string ltl_formula, std::vector<std::string> buchi_regions, std::vector<int> indep_set);
     void init_workspace(double work_space_size_x,double work_space_size_y);
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
+    void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void set_init_state(std::vector<double> init_state);
     void start_sampling(int iteration);
     std::vector<std::vector<double>> get_path();

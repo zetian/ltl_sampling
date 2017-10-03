@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include "trajectory/dubins_steer.h"
+#include "sampling/region.h"
 
 
 class SampleNode {
@@ -70,9 +71,11 @@ public:
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
     SampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
-    SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, double RADIUS);
-    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, double RADIUS, double radius_L, double radius_R);
-    
+    // static bool collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle);
+    SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS);
+    // SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, double RADIUS, double radius_L, double radius_R);
+    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
+        
     // void rewire(uint64_t rewire_sample_id, double RADIUS);
 
 };

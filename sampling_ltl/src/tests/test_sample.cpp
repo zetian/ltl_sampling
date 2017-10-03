@@ -17,7 +17,6 @@
 
 // #include "sampling/sample_node.h"
 #include "sampling/sample_space.h"
-#include "sampling/region.h"
 
 #include <lcm/lcm-cpp.hpp>
 #include "lcmtypes/srcl_msgs.hpp"

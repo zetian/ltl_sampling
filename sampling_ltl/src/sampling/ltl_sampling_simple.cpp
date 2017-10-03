@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <bitset>
 #include <climits>
-
 #include "sampling/ltl_sampling_simple.h"
 
 double LTL_SamplingSimple::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
@@ -245,6 +244,12 @@ void LTL_SamplingSimple::set_interest_region(std::pair <double, double> position
     all_interest_regions_[interest_id] = interest_region;
 }
 
+void LTL_SamplingSimple::set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y){
+    Region obstacle;
+    obstacle.set_position(position_x, position_y);
+    all_obstacles_.push_back(obstacle);
+}
+
 void LTL_SamplingSimple::set_init_state(std::vector<double> init_state) {
     all_space_.set_space(ba_.state_num);
     int init_ba = ba_.init_state_idx;
@@ -270,9 +275,13 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         // std::cout << "paraent node x: " << parent_sample.get_state()[0] << ", paraent node y: " << parent_sample.get_state()[1] << std::endl;
         std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, EPSILON);
         // std::cout << "new sample state x: " << new_sample_state[0] << ", new sample state y: " << new_sample_state[1] << std::endl;
-        
+        if (Region::collision_check_simple(parent_sample.get_state(), new_sample_state, all_obstacles_) ){
+            continue;
+        }
+
+
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, RADIUS);
+        SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS);
         
         SampleNode new_node;
         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
@@ -288,13 +297,13 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         new_node.set_parent_id(chosen_parent_sample.get_id());
         all_space_.insert_sample(new_node, new_ba);
 
-        all_space_.rewire(new_id, new_ba, RADIUS);
+        all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS);
 
         /// Vis for debug
-        sampling::sample_data node_data;
-        node_data.state[0] = new_sample_state[0];
-        node_data.state[1] = new_sample_state[1];
-        lcm.publish("SAMPLE", &node_data);
+        // sampling::sample_data node_data;
+        // node_data.state[0] = new_sample_state[0];
+        // node_data.state[1] = new_sample_state[1];
+        // lcm.publish("SAMPLE", &node_data);
 
         // std::cout << "new ba state: " << new_ba << std::endl;
         // if (new_ba == ba_.acc_state_idx.front()) {
