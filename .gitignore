@@ -5,7 +5,7 @@ Debug
 */build
 /build
 *~
-.vscode
+*.vscode
 .autotools
 .cproject
 .settings/language.settings.xml
