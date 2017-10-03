@@ -1,4 +1,4 @@
-# SRCL Aurora Project
+# Sampling Based Route Planning with Linear Temporal Logic Specifications
 
 ## 1. Development Environment
 
@@ -68,12 +68,12 @@ $ sudo apt-get install terminator
 ```
 
 ## 2. Set Up Workspace
-You can set up your workspace at any location you prefer. Here I'm using "~/Workspace/srcl/srcl_aurora" as an example.
+You can set up your workspace at any location you prefer. Here I'm using "~/Workspace/sampling_ltl" as an example.
 ```
 $ mkdir -p ~/Workspace/srcl/srcl_aurora
-$ cd ~/Workspace/srcl/srcl_aurora
+$ cd ~/Workspace/sampling_ltl
 $ git init
-$ git remote add origin https://bitbucket.org/rvcowlagi/srcl_aurora
+$ git remote add origin https://github.com/zetian/ltl_sampling
 $ git pull origin master
 ```
 Now you have downloaded code in the master branch to your machine. You can start by creating your development branch from the current master branch. For example:
@@ -88,7 +88,7 @@ You can use any preferred text editors/IDEs to write code. Two methods are provi
 First create a "build" folder to contain all temporary files created during the building process so that they don't mix with the source code.
 
 ```
-$ cd ~/Workspace/srcl/srcl_aurora
+$ cd ~/Workspace/sampling_ltl
 $ mkdir build
 $ cd build
 ```
@@ -97,7 +97,7 @@ Then you can invoke cmake to generate a makefile project or an eclipse project s
 
 * Command line
 ```
-$ cmake ../cpp-ltl-hcost/
+$ cmake ..
 $ make
 ```
 

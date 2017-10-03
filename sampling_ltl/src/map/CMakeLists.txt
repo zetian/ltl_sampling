@@ -9,11 +9,11 @@ find_package(OpenCV REQUIRED)
 # Add libraries
 set(MAP_LIB_SRC
     #map_manager.cpp
-    image_utils.cpp
-    map_utils.cpp
-    sgrid_builder.cpp
-    graph_builder.cpp
-    square_grid.cpp
+    #image_utils.cpp
+    #map_utils.cpp
+    #sgrid_builder.cpp
+    #graph_builder.cpp
+    #square_grid.cpp
 )
 add_library(map STATIC ${MAP_LIB_SRC})
 target_link_libraries(map ${OpenCV_LIBS})

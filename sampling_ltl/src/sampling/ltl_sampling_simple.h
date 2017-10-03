@@ -1,6 +1,6 @@
 #include "sampling/sample_space.h"
 #include "trans_sys/spot_hoa_interpreter.h"
-#include "trans_sys/buchi_automaton.h"
+// #include "trans_sys/buchi_automaton.h"
 
 #include <lcm/lcm-cpp.hpp>
 #include "lcmtypes/srcl_msgs.hpp"

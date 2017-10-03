@@ -23,8 +23,9 @@
 #include <spot/twa/bddprint.hh>
 #include <spot/misc/bddlt.hh>
 #include <spot/misc/minato.hh>
-
-#include "trans_sys/buchi_automaton.h"
+#include "trans_sys/spot_hoa_interpreter.h"
+// #include "trans_sys/buchi_automaton.h"
+#include "map/task_region.h"
 
 using namespace srcl;
 
