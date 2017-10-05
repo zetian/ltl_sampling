@@ -151,23 +151,3 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::
         }
     }
 }
-
-
-
-// void SubSampleSpace::rewire(uint64_t new_sample_id, double RADIUS) {
-//     SampleNode &new_sample = sample_node_id_map_.find(new_sample_id)->second;
-    // for (int i = 0; i < sample_nodes_.size(); i++) {
-    //     if (sample_nodes_[i].get_id() != new_sample.get_parent_id() &&
-    //         get_dist(sample_nodes_[i].get_state(), new_sample.get_state()) < RADIUS &&
-    //         get_dist(sample_nodes_[i].get_state(), new_sample.get_state()) + new_sample.get_cost() < 
-    //         sample_nodes_[i].get_cost() ) {
-            
-    //         SampleNode &rewire_sample = sample_nodes_[i];
-    //         uint64_t old_parent_id = rewire_sample.get_parent_id();
-    //         int old_parent_ba = rewire_sample.get_parent_ba();
-
-
-    //     }
-    // }
-
-// }

@@ -155,23 +155,6 @@ SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double 
     return parent_sample;
 }
 
-
-// static bool SubSampleSpace::collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle){
-//     int SAMPLE_NUM = 10;
-//     if (traj.size() < SAMPLE_NUM) {
-//         SAMPLE_NUM = traj.size();
-//     }
-//     vector<int> generated_values;
-//     int num = rand() % traj.size();
-//     while(contains(generatedValues, num)) //You'll need a function to check whether the num is in this vector
-//     {
-//       num = rand() % tam;
-//     }
-// }
-
-
-
-
 SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     // if (!sample_nodes_.empty()) {

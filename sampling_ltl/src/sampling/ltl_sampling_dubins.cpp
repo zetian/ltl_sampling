@@ -5,12 +5,6 @@
 
 #include "sampling/ltl_sampling_dubins.h"
 
-
-// double LTL_SamplingDubins::get_dist(std::vector<double> states_1, std::vector<double> states_2) {
-//     double dist = sqrt(pow(states_1[0] - states_2[0], 2) + pow(states_1[1] - states_2[1], 2));
-//     return dist;
-// }
-
 double LTL_SamplingDubins::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double RADIUS_L_, double RADIUS_R_) {
     double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, RADIUS_L_, RADIUS_R_);
     return min_length;
@@ -158,10 +152,10 @@ bool LTL_SamplingDubins::if_in_region (std::vector<double> state, Region region)
 std::vector<double> LTL_SamplingDubins::step_from_to (SampleNode parent_sample, std::vector<double> sampled_state, DubinsSteer::SteerData& dubins_steer_data, double EPSILON_) {
     // DubinsSteer::SteerData dubins_steer_data;
     dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(parent_sample.get_state(), sampled_state, radius_L_, radius_R_);
-    if (dubins_steer_data.traj_point_wise.size() < 30) {
-        std::cout << "something wrong" << std::endl;
-        return std::vector<double>();
-    }
+    // if (dubins_steer_data.traj_point_wise.size() < 30) {
+    //     std::cout << "something wrong" << std::endl;
+    //     return std::vector<double>();
+    // }
     if (dubins_steer_data.traj_length < EPSILON_) {
         // traj_point_wise = dubins_steer_data.traj_point_wise;
         return sampled_state;
@@ -387,6 +381,7 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
         find_path = true;
     }
     else {
+        std::cout << "No feasible path found. " << std::endl;
         return path_;
     }
     
@@ -404,7 +399,7 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
         std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
         current_id = min_cost_sample.get_id();
 
-        std::vector<int> count;
+        // std::vector<int> count;
         while (current_ba != init_ba || current_id != 0) {
             
             SampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
@@ -415,8 +410,8 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
             // lcm.publish("SAMPLE", &node_data);
 
             std::vector<std::vector<double>> temp = current_node.get_traj();
-            int count_num = temp.size() + path_nodes_sq.size();
-            count.push_back(count_num);
+            // int count_num = temp.size() + path_nodes_sq.size();
+            // count.push_back(count_num);
             std::reverse(temp.begin(), temp.end());
             // std::vector<double> path_node = current_node.get_state();
             // path_nodes_sq.push_back(path_node);
@@ -458,66 +453,66 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     // return path_;
 }
 
-std::vector<std::vector<double>> LTL_SamplingDubins::get_path_test() {
-    bool find_path = false;
-    int current_ba = ba_.acc_state_idx.front();
-    int init_ba = ba_.init_state_idx;
+// std::vector<std::vector<double>> LTL_SamplingDubins::get_path_test() {
+//     bool find_path = false;
+//     int current_ba = ba_.acc_state_idx.front();
+//     int init_ba = ba_.init_state_idx;
 
-    std::vector<std::vector<double>> path_nodes_sq;
+//     std::vector<std::vector<double>> path_nodes_sq;
 
-    if (all_space_.get_sub_space(current_ba).num_samples() > 0) {
-        find_path = true;
-    }
-    else {
-        return path_;
-    }
+//     if (all_space_.get_sub_space(current_ba).num_samples() > 0) {
+//         find_path = true;
+//     }
+//     else {
+//         return path_;
+//     }
     
-    double total_cost = INT_MAX;
-    uint64_t current_id = 1;
-    // std::cout << "last ba id: " << acc_ba << std::endl;
-    // std::cout << "last id " << current_id << std::endl;
-    if (find_path) {
-        std::vector<SampleNode> path_sample;
-        SampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
-        path_nodes_sq.push_back(min_cost_sample.get_state());
-        // path_sample.push_back(min_cost_sample);
-        std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
-        current_id = min_cost_sample.get_id();
-        while (current_ba != init_ba || current_id != 0) {
+//     double total_cost = INT_MAX;
+//     uint64_t current_id = 1;
+//     // std::cout << "last ba id: " << acc_ba << std::endl;
+//     // std::cout << "last id " << current_id << std::endl;
+//     if (find_path) {
+//         std::vector<SampleNode> path_sample;
+//         SampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
+//         path_nodes_sq.push_back(min_cost_sample.get_state());
+//         // path_sample.push_back(min_cost_sample);
+//         std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
+//         current_id = min_cost_sample.get_id();
+//         while (current_ba != init_ba || current_id != 0) {
             
-            SampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
-            // std::vector<std::vector<double>> temp = current_node.get_traj();
-            // std::reverse(temp.begin(), temp.end());
-            std::vector<double> path_node = current_node.get_state();
-            path_nodes_sq.push_back(path_node);
-            path_sample.push_back(current_node);
-            // path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
+//             SampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
+//             // std::vector<std::vector<double>> temp = current_node.get_traj();
+//             // std::reverse(temp.begin(), temp.end());
+//             std::vector<double> path_node = current_node.get_state();
+//             path_nodes_sq.push_back(path_node);
+//             path_sample.push_back(current_node);
+//             // path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
 
-            current_ba = current_node.get_parent_ba();
-            current_id = current_node.get_parent_id();
+//             current_ba = current_node.get_parent_ba();
+//             current_id = current_node.get_parent_id();
             
-        }
+//         }
     
-        // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************"  << std::endl;
-        std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
-        std::reverse(path_sample.begin(), path_sample.end());
-        for (int i = 0; i < path_nodes_sq.size() - 1; i++) {
-            DubinsSteer::SteerData dubins_steer_data;
-            dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(path_nodes_sq[i], path_nodes_sq[i + 1], radius_L_, radius_R_);
-            path_.insert( path_.end(), dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.end() );
-        }
+//         // std::cout << "WWWWWWWWWWWWWWWWWWWWWWWFFFFFFFF************************"  << std::endl;
+//         std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
+//         std::reverse(path_sample.begin(), path_sample.end());
+//         for (int i = 0; i < path_nodes_sq.size() - 1; i++) {
+//             DubinsSteer::SteerData dubins_steer_data;
+//             dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(path_nodes_sq[i], path_nodes_sq[i + 1], radius_L_, radius_R_);
+//             path_.insert( path_.end(), dubins_steer_data.traj_point_wise.begin(), dubins_steer_data.traj_point_wise.end() );
+//         }
 
-        for (int i = 1; i < path_sample.size(); i++) {
-            SampleNode current_node = path_sample[i];
-            int parent_ba = current_node.get_parent_ba();
-            uint64_t parent_id = current_node.get_parent_id();
-            SampleNode parent_node =  all_space_.get_sub_space(parent_ba).get_sample(parent_id);
-            // std::cout << i << ":: parent: x: " << parent_node.get_state()[0] << ", y: " << parent_node.get_state()[1] << ", yaw: " << parent_node.get_state()[2] << std::endl;
-            // std::cout << i << ":: self: x: " << current_node.get_state()[0] << ", y: " << current_node.get_state()[1] << ", yaw: " << current_node.get_state()[2] << std::endl;
+//         for (int i = 1; i < path_sample.size(); i++) {
+//             SampleNode current_node = path_sample[i];
+//             int parent_ba = current_node.get_parent_ba();
+//             uint64_t parent_id = current_node.get_parent_id();
+//             SampleNode parent_node =  all_space_.get_sub_space(parent_ba).get_sample(parent_id);
+//             // std::cout << i << ":: parent: x: " << parent_node.get_state()[0] << ", y: " << parent_node.get_state()[1] << ", yaw: " << parent_node.get_state()[2] << std::endl;
+//             // std::cout << i << ":: self: x: " << current_node.get_state()[0] << ", y: " << current_node.get_state()[1] << ", yaw: " << current_node.get_state()[2] << std::endl;
             
-        }
-    }
+//         }
+//     }
 
-    // return path_nodes_sq;
-    return path_;
-}
+//     // return path_nodes_sq;
+//     return path_;
+// }

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <random>
 #include "sampling/region.h"
 
 void Region::set_region_interest(int interest) {
@@ -22,14 +23,6 @@ std::pair<double, double> Region::get_y_position() {
     return position_y_;
 }
 
-// bool Region::contains(std::vector<int> container_vector, int num) {
-//     if(std::find(container_vector.begin(), container_vector.end(), num) != container_vector.end()) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-//     return true;
-// }
 
 bool Region::collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
     // int SAMPLE_NUM = 15;
