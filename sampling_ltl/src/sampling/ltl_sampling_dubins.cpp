@@ -215,7 +215,7 @@ void LTL_SamplingDubins::read_formula(std::string ltl_formula, std::vector<std::
     ba_ = ltl2ba_lib.GetBuchi(ltl_formula, buchi_regions);
     buchi_post(ba_, indep_set);
 }
-void LTL_SamplingDubins::init_workspace(double work_space_size_x,double work_space_size_y) {
+void LTL_SamplingDubins::init_workspace(double work_space_size_x, double work_space_size_y) {
     work_space_size_x_ = work_space_size_x;
     work_space_size_y_ = work_space_size_y;
 }
@@ -451,6 +451,17 @@ std::vector<std::vector<double>> LTL_SamplingDubins::get_path() {
     // }
     return path_nodes_sq;
     // return path_;
+}
+
+double LTL_SamplingDubins::get_path_length(){
+
+    if (all_space_.get_sub_space(ba_.acc_state_idx.front()).num_samples() > 0) {
+        SampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
+        return min_cost_sample.get_cost();
+    }
+    else {
+        return INT_MAX;
+    }
 }
 
 // std::vector<std::vector<double>> LTL_SamplingDubins::get_path_test() {

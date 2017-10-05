@@ -49,3 +49,9 @@ target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIE
 
 add_executable(test_sample_dubins test_sample_dubins.cpp)
 target_link_libraries(test_sample_dubins transsys trajectory sampling ${LCM_LIBRARIES})
+
+add_executable(test_cbba test_cbba.cpp)
+target_link_libraries(test_cbba transsys trajectory sampling ${LCM_LIBRARIES})
+
+add_executable(cbba_example cbba_example.cpp)
+target_link_libraries(cbba_example transsys)

@@ -38,7 +38,8 @@ int main()
     buchi_regions.push_back("p0");
     buchi_regions.push_back("p1");
     buchi_regions.push_back("p2");
-    std::vector<int> indep_set = {0, 1, 2};
+    // std::vector<int> indep_set = {0, 1, 2};
+    std::vector<int> indep_set = {};
 
     double work_space_size_x = 100;
     double work_space_size_y = 100;
@@ -103,7 +104,7 @@ int main()
     ltl_sampling_dubins.set_init_state(init_state);
 
     // Set the number of iterations
-    int iterations = 500;
+    int iterations = 1000;
 
     // Start sampling searching
     ltl_sampling_dubins.start_sampling(iterations);

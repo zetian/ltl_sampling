@@ -24,6 +24,7 @@ set(SAMPLING_LIB_SRC
 	sample_space.cpp
 	ltl_sampling_simple.cpp
 	ltl_sampling_dubins.cpp
+	cbba_sampling.cpp
 	region.cpp
 )
 add_library(sampling STATIC ${SAMPLING_LIB_SRC})

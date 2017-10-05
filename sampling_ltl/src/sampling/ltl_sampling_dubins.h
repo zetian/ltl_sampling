@@ -51,5 +51,6 @@ public:
     void set_init_state(std::vector<double> init_state);
     void start_sampling(int iteration);
     std::vector<std::vector<double>> get_path();
+    double get_path_length();
     // std::vector<std::vector<double>> get_path_test();
 };
