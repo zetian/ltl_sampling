@@ -63,8 +63,10 @@ class SamplingVis(object):
         print("Length of path is: " + str(len(msg.state_x)))
         # self.path_x = msg.state_x
         # self.path_y = msg.state_y
-        self.path_x.extend(msg.state_x)
-        self.path_y.extend(msg.state_y)
+        # self.path_x.extend(msg.state_x)
+        # self.path_y.extend(msg.state_y)
+        self.path_x.append(msg.state_x)
+        self.path_y.append(msg.state_y)
 
     def path_handler_test(self, channel, data):
         msg = path_data.decode(data)
@@ -101,7 +103,10 @@ class SamplingVis(object):
             currentAxis = plt.gca()
             currentAxis.add_patch(draw_rect)
 
-        plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
+        for x in range(0, len(self.path_x)):
+            plt.plot(self.path_x[x], self.path_y[x], color = 'black', linewidth = 2)
+        
+        # plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
         # plt.plot(self.path_x_test, self.path_y_test, color = 'blue', linewidth = 2)
         plt.axis([0,self.size_x, 0, self.size_y])
         plt.axes().set_aspect('equal')
