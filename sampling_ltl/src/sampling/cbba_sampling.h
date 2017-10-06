@@ -36,6 +36,8 @@ private:
     double radius_R_;
     LTLFormula Global_LTL_;
     std::vector<std::string> buchi_regions_;
+    std::vector<int> indep_set_;
+
     int num_tasks_;
     int max_bundle_length;
     std::vector<Region> all_interest_regions_;
@@ -47,6 +49,7 @@ private:
 public:
     void set_global_ltl(LTLFormula formula);
     void set_buchi_regions(std::vector<std::string> buchi_regions);
+    void set_indep_set(std::vector<int> indep_set);
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void init_workspace(double work_space_size_x, double work_space_size_y);

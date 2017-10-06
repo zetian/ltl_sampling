@@ -44,24 +44,6 @@ int main(int argc, char** argv )
 	LTLDecomposition::get_liveness_properties(Global_LTL, liveness);
 	
 	Global_LTL = LTLDecomposition::GlobalLTLDecomposition(Global_LTL);
-	
-	// std::cout <<"!!!!~~~~~~" << Global_LTL.LTL_expression.sub_LTL_expression[0] << std::endl;
-	// auto buchi_region = LTLDecomposition::ObtainBuchiRegion({safty + liveness});
-	// // std::cout <<"~~~~~" << buchi_region[0][0] << buchi_region[0][1] <<  buchi_region[0][2] << std::endl;
-	// std::vector<int> indep_set;
-    // // std::vector<std::string> buchi_regions = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
-    // std::vector<std::string> indep_set_str = buchi_region.front();
-    // for (int i = 0; i < indep_set_str.size(); i++) {
-	// 	indep_set_str[i].erase(indep_set_str[i].begin());
-	// 	indep_set.push_back(std::stoi(indep_set_str[i]));
-    // }
-	// std::cout <<"~~~lalal~~" << indep_set[0] << indep_set[1] <<  indep_set[2] << std::endl;
-	// std::vector<std::vector<std::string>> ObtainBuchiRegion(std::vector<std::string> expressions);
-
-	// std::cout << "~~~~" << std::endl;
-	//std::string ltl_formula_up = LTLDecomposition::subtask_recreator(bundle,Global_LTL);
-
-
 
 	/*** 4. Initialize agents ***/
 	std::vector<float> y_0;
@@ -84,8 +66,20 @@ int main(int argc, char** argv )
 	// 	    cbba_Agent(2,{1,0,1,1},y_0,z_0,y_his_0,z_his_0),
 	// 		cbba_Agent(3,{0,1,1,1},y_0,z_0,y_his_0,z_his_0)};
 	std::vector<cbba_Agent> all_agent = {cbba_Agent(0,{1,1},y_0,z_0,y_his_0,z_his_0), cbba_Agent(1,{1,1},y_0,z_0,y_his_0,z_his_0)};
-	all_agent[0].init_state_ = {20, 10, M_PI/2};
-	all_agent[1].init_state_ = {80, 10, M_PI/2};
+	// all_agent[0].init_state_ = {20, 10, M_PI/2};
+    // all_agent[1].init_state_ = {80, 10, M_PI/2};
+    
+
+    sampling::sample_data node_data;
+    all_agent[0].init_state_ = {20, 10, M_PI/2};
+    node_data.state[0] = all_agent[0].init_state_[0];
+    node_data.state[1] = all_agent[0].init_state_[1];
+    lcm.publish("SAMPLE", &node_data);
+
+    all_agent[1].init_state_ = {80, 10, M_PI/2};
+    node_data.state[0] = all_agent[1].init_state_[0];
+    node_data.state[1] = all_agent[1].init_state_[1];
+    lcm.publish("SAMPLE", &node_data);
 
 	int num_tasks = Global_LTL.task_info.size();
 	// Initialize the awards
@@ -103,6 +97,7 @@ int main(int argc, char** argv )
     buchi_regions.push_back("p0");
     buchi_regions.push_back("p1");
     buchi_regions.push_back("p2");
+    std::vector<int> indep_set = {0, 1, 2};
 
 	// LTL_SamplingDubins ltl_sampling_dubins;
 	CBBA_sampling cbba_sampling;
@@ -113,6 +108,7 @@ int main(int argc, char** argv )
 
 	cbba_sampling.set_global_ltl(Global_LTL);
     cbba_sampling.set_buchi_regions(buchi_regions);
+    cbba_sampling.set_indep_set(indep_set);
 	cbba_sampling.init_workspace(work_space_size_x, work_space_size_y);
     cbba_sampling.init_parameter(EPSILON, RADIUS, radius_L, radius_R);
 

@@ -91,7 +91,7 @@ LTLFormula LTLDecomposition::GlobalLTLDecomposition(LTLFormula formula){
 	std::vector<std::string> sub_expression_Liveness = LTLDecomposition::Decomposition(formula.LTL_expression_Liveness);
 
 	std::vector<std::vector<std::string>> sub_buchi_regions_total = LTLDecomposition::ObtainBuchiRegion(sub_expression_Liveness);
-	std::cout << sub_buchi_regions_total[0][0] << std::endl;
+	// std::cout << sub_buchi_regions_total[0][0] << std::endl;
 	for (auto idx = sub_buchi_regions_total.begin(); idx != sub_buchi_regions_total.end(); idx++){
 		
 		for (auto idx1 = formula.task_info.begin();idx1 != formula.task_info.end(); idx1++){
@@ -214,7 +214,10 @@ std::string LTLDecomposition::subtask_recreator(std::vector<int> bundle,LTLFormu
 
 	if(bundle.size() == 1){
 			std::cout << "There is no need to recreate the subtask" << std::endl;
+			// std::cout << "Liveness~@#!@#!@#!@#!: " << formula.LTL_expression.sub_LTL_expression_Liveness.size() << std::endl;
+			// std::cout << "bundle~@#!@#!@#!@#!: " << bundle[0] << std::endl;
 			SubtaskFromBundle = formula.LTL_expression.sub_LTL_expression_Liveness[bundle[0]];
+			// std::cout << "~========================DEBUG after=============================" << std::endl;
 	}
 
 	else if(bundle.size() > 1){

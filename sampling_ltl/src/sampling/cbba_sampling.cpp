@@ -18,6 +18,10 @@ void CBBA_sampling::set_buchi_regions(std::vector<std::string> buchi_regions){
     buchi_regions_ = buchi_regions;
 }
 
+void CBBA_sampling::set_indep_set(std::vector<int> indep_set){
+    indep_set_ = indep_set;
+}
+
 void CBBA_sampling::set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id) {
     Region interest_region;
     interest_region.set_position(position_x, position_y);
@@ -56,17 +60,17 @@ double CBBA_sampling::path_length_calculation(std::string ltl_new, cbba_Agent& a
     // Set up the class
     LTL_SamplingDubins ltl_sampling_dubins;
     // std::vector<std::string> buchi_regions;
-    std::vector<int> indep_set;
-	std::vector<std::string> buchi_regions_indep = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
+    // std::vector<int> indep_set;
+	// std::vector<std::string> buchi_regions_indep = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
 	
-    std::vector<std::string> indep_set_str = buchi_regions_indep;
-    for (int i = 0; i < indep_set_str.size(); i++) {
-        indep_set_str[i].erase(indep_set_str[i].begin());
-		indep_set.push_back(std::stoi(indep_set_str[i]));
-	}
+    // std::vector<std::string> indep_set_str = buchi_regions_indep;
+    // for (int i = 0; i < indep_set_str.size(); i++) {
+    //     indep_set_str[i].erase(indep_set_str[i].begin());
+	// 	indep_set.push_back(std::stoi(indep_set_str[i]));
+	// }
 
 	// std::cout << "======================debug===========================" << std::endl;
-    ltl_sampling_dubins.read_formula(ltl_new, buchi_regions_, indep_set);
+    ltl_sampling_dubins.read_formula(ltl_new, buchi_regions_, indep_set_);
     ltl_sampling_dubins.init_workspace(work_space_size_x_, work_space_size_y_);
     ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, radius_L_, radius_R_);
     for (int i = 0; i < all_interest_regions_.size(); i++) {
@@ -605,7 +609,7 @@ void CBBA_sampling::bundle_add_for_sampling(){
 			// std::cout << "The agent is" << Index <<std::endl;
 			// award_update_manually();
 
-
+            
 			desired_Index = CBBA_sampling::desired_task_finder((*it_ag));
 			//std::cout << "The desired task index is" << desired_Index << std::endl;
 			if (desired_Index == -1)
@@ -741,10 +745,13 @@ std::vector<int> CBBA_sampling::award_update_for_sampling(cbba_Agent& agent){
 		// Calculate the Astar length for each possible insert position
 		// std::cout << "============debug==============" << std::endl;
 		for (int i = 0; i < path_copy.size(); i++){
-			std::string ltl_updated = LTLDecomposition::subtask_recreator(path_copy[i], Global_LTL_);
-			c_award.push_back(CBBA_sampling::path_length_calculation(ltl_updated, agent));
-		}
+            std::string ltl_updated = LTLDecomposition::subtask_recreator(path_copy[i], Global_LTL_);
 
+            // std::cout << "~========================DEBUG before=============================" << std::endl;
+            c_award.push_back(CBBA_sampling::path_length_calculation(ltl_updated, agent));
+            // std::cout << "~========================DEBUG after=============================" << std::endl;
+		}
+        
 		float c_award_min = 1000;
 		for (int i = 0; i < c_award.size(); i++)
 			if (c_award[i] <= c_award_min){
@@ -820,14 +827,14 @@ void CBBA_sampling::get_solution(){
 
         std::cout << "For agent " << agent.Index << ", local LTL is: " << ltl_new << std::endl;
 
-        std::vector<int> indep_set;
-        std::vector<std::string> buchi_regions_indep = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
-        std::vector<std::string> indep_set_str = buchi_regions_indep;
-        for (int j = 0; j < indep_set_str.size(); j++) {
-            indep_set_str[j].erase(indep_set_str[j].begin());
-            indep_set.push_back(std::stoi(indep_set_str[j]));
-        }
-        ltl_sampling_dubins.read_formula(ltl_new, buchi_regions_, indep_set);
+        // std::vector<int> indep_set;
+        // std::vector<std::string> buchi_regions_indep = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
+        // std::vector<std::string> indep_set_str = buchi_regions_indep;
+        // for (int j = 0; j < indep_set_str.size(); j++) {
+        //     indep_set_str[j].erase(indep_set_str[j].begin());
+        //     indep_set.push_back(std::stoi(indep_set_str[j]));
+        // }
+        ltl_sampling_dubins.read_formula(ltl_new, buchi_regions_, indep_set_);
         ltl_sampling_dubins.init_workspace(work_space_size_x_, work_space_size_y_);
         ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, radius_L_, radius_R_);
         for (int i = 0; i < all_interest_regions_.size(); i++) {

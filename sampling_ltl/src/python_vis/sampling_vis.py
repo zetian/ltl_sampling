@@ -17,7 +17,7 @@ class SamplingVis(object):
     regions = []
     obstacles = []
     all_samples = []
-    # fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 10))
     path_x = []
     path_y = []
     path_x_test = []
@@ -105,7 +105,8 @@ class SamplingVis(object):
 
         for x in range(0, len(self.path_x)):
             plt.plot(self.path_x[x], self.path_y[x], color = 'black', linewidth = 2)
-        
+        self.path_x = []
+        self.path_y = []
         # plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
         # plt.plot(self.path_x_test, self.path_y_test, color = 'blue', linewidth = 2)
         plt.axis([0,self.size_x, 0, self.size_y])
@@ -116,7 +117,8 @@ class SamplingVis(object):
 
 def main():
     lc = lcm.LCM()
-    sample_vis = SamplingVis(100, 100)
+    sample_vis = SamplingVis(150, 150)
+    subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("OBSTACLE", sample_vis.obstacle_handler)
     subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)

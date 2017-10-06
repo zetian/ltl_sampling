@@ -299,7 +299,7 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
 
         all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS);
 
-        /// Vis for debug
+        // // Vis for debug
         // sampling::sample_data node_data;
         // node_data.state[0] = new_sample_state[0];
         // node_data.state[1] = new_sample_state[1];
