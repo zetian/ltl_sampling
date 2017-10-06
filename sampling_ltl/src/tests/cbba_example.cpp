@@ -71,10 +71,14 @@ int main(int argc, char** argv )
 	std::vector<std::vector<float>> y_his_0 = {y_0};
 	std::vector<std::vector<int>> z_his_0 = {z_0};
 
-	std::vector<cbba_Agent> agent = {cbba_Agent(0,15,{1,0,1,0},y_0,z_0,y_his_0,z_his_0),
-			cbba_Agent(1,14,{0,1,0,1},y_0,z_0,y_his_0,z_his_0),
-		    cbba_Agent(2,210,{1,0,1,1},y_0,z_0,y_his_0,z_his_0),
-		    cbba_Agent(3,209,{0,1,1,1},y_0,z_0,y_his_0,z_his_0)};
+	// std::vector<cbba_Agent> agent = {cbba_Agent(0,15,{1,0,1,0},y_0,z_0,y_his_0,z_his_0),
+	// 		cbba_Agent(1,14,{0,1,0,1},y_0,z_0,y_his_0,z_his_0),
+	// 	    cbba_Agent(2,210,{1,0,1,1},y_0,z_0,y_his_0,z_his_0),
+	// 		cbba_Agent(3,209,{0,1,1,1},y_0,z_0,y_his_0,z_his_0)};
+	std::vector<cbba_Agent> agent = {cbba_Agent(0,{1,0,1,0},y_0,z_0,y_his_0,z_his_0),
+			cbba_Agent(1,{0,1,0,1},y_0,z_0,y_his_0,z_his_0),
+		    cbba_Agent(2,{1,0,1,1},y_0,z_0,y_his_0,z_his_0),
+		    cbba_Agent(3,{0,1,1,1},y_0,z_0,y_his_0,z_his_0)};
 
 	// Initialize the awards
 	for (int i = 0; i < 4; i++)

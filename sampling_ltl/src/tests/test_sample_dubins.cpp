@@ -32,15 +32,15 @@ int main()
 
     // Read formula
     // std::string ltl_formula = "<> (p2 && <> (p1 && (<> p0)))";
-    std::string ltl_formula = "<> p0 && <> p1 && <> p2";
-    // std::string ltl_formula = "(<> p0)";
+    // std::string ltl_formula = "<> p0 && <> p1 && <> p2";
+    std::string ltl_formula = "([]!p0)";
     std::vector<std::string> buchi_regions;
     buchi_regions.push_back("p0");
     buchi_regions.push_back("p1");
     buchi_regions.push_back("p2");
-    // std::vector<int> indep_set = {0, 1, 2};
-    std::vector<int> indep_set = {};
-
+    std::vector<int> indep_set = {0, 1, 2};
+    // std::vector<int> indep_set = {};
+    
     double work_space_size_x = 100;
     double work_space_size_y = 100;
     // Initial state
@@ -51,7 +51,7 @@ int main()
     ltl_sampling_dubins.read_formula(ltl_formula, buchi_regions, indep_set);
     ltl_sampling_dubins.init_workspace(work_space_size_x, work_space_size_y);
     ltl_sampling_dubins.init_parameter(EPSILON, RADIUS, radius_L, radius_R);
-
+    
     // Add region of interests
     std::pair <double, double> position_x (20, 35);
     std::pair <double, double> position_y (30, 45);
@@ -105,7 +105,7 @@ int main()
 
     // Set the number of iterations
     int iterations = 1000;
-
+    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
     // Start sampling searching
     ltl_sampling_dubins.start_sampling(iterations);
 

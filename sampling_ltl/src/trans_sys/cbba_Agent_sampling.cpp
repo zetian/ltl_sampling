@@ -19,16 +19,16 @@
 #include <vector>
 #include <algorithm>
 
-#include "trans_sys/ltl_formula_sampling.h"
+// #include "trans_sys/ltl_formula_sampling.h"
 #include "trans_sys/cbba_Agent_sampling.h"
 
 using namespace srcl;
 
-cbba_Agent::cbba_Agent(int id,int startID,std::vector<int> com,
+cbba_Agent::cbba_Agent(int id,std::vector<int> com,
 		std::vector<float> y,std::vector<int> z,std::vector<std::vector<float>> y_his,std::vector<std::vector<int>> z_his)
 {
 	Index = id;
-	start_nodes_id_ = startID;
+	// start_nodes_id_ = startID;
 	communication = com;
 	Iter = 0;
 	cbba_bundle = {};

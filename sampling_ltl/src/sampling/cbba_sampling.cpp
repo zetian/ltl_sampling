@@ -10,7 +10,8 @@ CBBA_sampling::CBBA_sampling(){
 
 void CBBA_sampling::set_global_ltl(LTLFormula formula){
     Global_LTL_ = formula;
-    num_tasks_ = Global_LTL_.task_info.size();
+	num_tasks_ = Global_LTL_.task_info.size();
+	max_bundle_length = num_tasks_;
 }
 
 void CBBA_sampling::set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id) {
@@ -33,6 +34,13 @@ void CBBA_sampling::init_workspace(double work_space_size_x, double work_space_s
     work_space_size_y_ = work_space_size_y;
 }
 
+void CBBA_sampling::init_parameter(double EPSILON, double RADIUS, double radius_L, double radius_R){
+    EPSILON_ = EPSILON;
+    RADIUS_ = RADIUS;
+    radius_L_ = radius_L;
+    radius_R_ = radius_R;
+}
+
 void CBBA_sampling::add_agent(cbba_Agent agent){
     all_agent_.push_back(agent);
     num_agent_++;
@@ -45,12 +53,15 @@ double CBBA_sampling::path_length_calculation(std::string ltl_new, cbba_Agent& a
     LTL_SamplingDubins ltl_sampling_dubins;
     // std::vector<std::string> buchi_regions;
     std::vector<int> indep_set;
-    std::vector<std::string> buchi_regions = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
+	std::vector<std::string> buchi_regions = LTLDecomposition::ObtainBuchiRegion({ltl_new}).front();
+	
     std::vector<std::string> indep_set_str = buchi_regions;
     for (int i = 0; i < indep_set_str.size(); i++) {
         indep_set_str[i].erase(indep_set_str[i].begin());
 		indep_set.push_back(std::stoi(indep_set_str[i]));
-    }
+	}
+
+	// std::cout << "======================debug===========================" << std::endl;
     ltl_sampling_dubins.read_formula(ltl_new, buchi_regions, indep_set);
     ltl_sampling_dubins.init_workspace(work_space_size_x_, work_space_size_y_);
     ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, radius_L_, radius_R_);
@@ -69,13 +80,16 @@ double CBBA_sampling::path_length_calculation(std::string ltl_new, cbba_Agent& a
     ltl_sampling_dubins.set_init_state(agent.init_state_);
     
     // Set the number of iterations
-    int iterations = 1000;
+    int iterations = 300;
     
-    // Start sampling searching
+	// Start sampling searching
+	std::cout << "Start searching: " << ltl_new << " for agent " << agent.Index << std::endl;
     ltl_sampling_dubins.start_sampling(iterations);
 
 
 	double path_length = ltl_sampling_dubins.get_path_length();
+
+	std::cout << "sub task path length is: " << path_length << std::endl;
 
 	return path_length;
 };
@@ -103,6 +117,7 @@ void CBBA_sampling::neighbor_finder()
 // Let agent communicate with its neighbors
 void CBBA_sampling::communicate()
 {
+	std::cout << "communicating ... " << std::endl;
 	CBBA_sampling::neighbor_finder();
 	// sender: itself k
 	// receiver: i
@@ -126,7 +141,7 @@ void CBBA_sampling::communicate()
 							all_agent_[(*it_ag).neighbors[i]].cbba_y[j] = (*it_ag).history.y_history.back()[j];
 						}
 					    // Equal score: require to break the tie
-						else if(abs((*it_ag).history.y_history.back()[j] - all_agent_[(*it_ag).neighbors[i]].cbba_y[j]) <= eps){
+						else if(std::abs((*it_ag).history.y_history.back()[j] - all_agent_[(*it_ag).neighbors[i]].cbba_y[j]) <= eps){
 							// select the winner of task j as the agent with smaller index
 							if (all_agent_[(*it_ag).neighbors[i]].cbba_z[j] > (*it_ag).history.z_history.back()[j]){
 								//std::cout << "case 2" << std::endl;
@@ -258,7 +273,7 @@ void CBBA_sampling::communicate()
 								all_agent_[(*it_ag).neighbors[i]].cbba_y[j] = (*it_ag).history.y_history.back()[j];
 							}
 							// If we have a tie: break the tie by selecting the agent with smaller index as the winner
-							else if (abs((*it_ag).history.y_history.back()[j] - all_agent_[(*it_ag).neighbors[i]].cbba_y[j]) <= eps){
+							else if (std::abs((*it_ag).history.y_history.back()[j] - all_agent_[(*it_ag).neighbors[i]].cbba_y[j]) <= eps){
 								if (all_agent_[(*it_ag).neighbors[i]].cbba_z[j] > (*it_ag).history.z_history.back()[j]){
 									// Update
 									//std::cout << "case 9" << std::endl;
@@ -328,7 +343,7 @@ void CBBA_sampling::communicate()
 									all_agent_[(*it_ag).neighbors[i]].cbba_y[j] = (*it_ag).history.y_history.back()[j];
 								}
 								// If we have tie, break the tie by selecting the agent as the winner with smaller index
-								else if (abs((*it_ag).history.y_history.back()[j] - all_agent_[(*it_ag).neighbors[i]].cbba_y[j]) <= eps){
+								else if (std::abs((*it_ag).history.y_history.back()[j] - all_agent_[(*it_ag).neighbors[i]].cbba_y[j]) <= eps){
 									if (all_agent_[(*it_ag).neighbors[i]].cbba_z[j] > (*it_ag).history.z_history.back()[j]){
 										//std::cout << "case 16" << std::endl;
 										all_agent_[(*it_ag).neighbors[i]].cbba_z[j] = (*it_ag).history.z_history.back()[j];
@@ -427,7 +442,7 @@ void CBBA_sampling::available_tasks_finder(cbba_Agent& agent_sig){
 
 		if(agent_sig.cbba_award[j] - agent_sig.cbba_y[j] > eps)
 			condition_1 = 1;
-		else if (abs(agent_sig.cbba_award[j] - agent_sig.cbba_y[j]) <= eps)
+		else if (std::abs(agent_sig.cbba_award[j] - agent_sig.cbba_y[j]) <= eps)
 			if (agent_sig.Index < agent_sig.cbba_z[j])
 				condition_2 = 1;
 
@@ -466,7 +481,7 @@ int CBBA_sampling::desired_task_finder(cbba_Agent& agent_sig){
 
 // Remove the task from bundle and all the tasks added after it
 void CBBA_sampling::bundle_remove(){
-	//std::cout << "bundle remove" << std::endl;
+	std::cout << "bundle removing ... " << std::endl;
 
 	for (auto it_ag = all_agent_.begin(); it_ag != all_agent_.end(); it_ag++){
 		bool outbidForTask = 0;
@@ -552,6 +567,7 @@ void CBBA_sampling::path_remove(){
 }
 
 void CBBA_sampling::bundle_add_for_sampling(){
+	std::cout << "bundle adding ... " << std::endl;
 
 	for (auto it_ag = all_agent_.begin(); it_ag != all_agent_.end(); it_ag++){
 		bool bundleFull = -1;
@@ -655,8 +671,10 @@ bool CBBA_sampling::success_checker(){
 
 
 std::vector<int> CBBA_sampling::award_update_for_sampling(cbba_Agent& agent){
+	std::cout << "updating award for agent " << agent.Index << "..." << std::endl;
+	
 	// Calculate the length of path for current cbba_path
-	float length_path_origin = 0.0;
+	// float length_path_origin = 0.0;
 
 	// if (!cbba_path.empty()){
 	// 	std::string ltl_new = LTLDecomposition::subtask_recreator(cbba_path,Global_LTL);
@@ -717,8 +735,9 @@ std::vector<int> CBBA_sampling::award_update_for_sampling(cbba_Agent& agent){
 //			std::cout << std::endl;
 
 		// Calculate the Astar length for each possible insert position
+		// std::cout << "============debug==============" << std::endl;
 		for (int i = 0; i < path_copy.size(); i++){
-			std::string ltl_updated = LTLDecomposition::subtask_recreator(path_copy[i],Global_LTL_);
+			std::string ltl_updated = LTLDecomposition::subtask_recreator(path_copy[i], Global_LTL_);
 			c_award.push_back(CBBA_sampling::path_length_calculation(ltl_updated, agent));
 		}
 

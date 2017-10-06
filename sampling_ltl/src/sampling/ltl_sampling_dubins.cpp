@@ -25,6 +25,12 @@ std::vector<int> LTL_SamplingDubins::sample_from_ba(BAStruct buchi, SampleSpace 
     }
     // srand(time(NULL));
     int size_buchi = buchi.state_num;
+    int temp = buchi.acc_state_idx.front();
+    // std::cout << "accept buchi: " << temp << std::endl;
+    if (size_buchi == 1) {
+        return {temp, temp};
+    }
+    // std::cout << "size_buchi: " << size_buchi << std::endl;
     std::vector<uint32_t> ba_accept_state = buchi.acc_state_idx;
     int new_ba_sample = rand() % (size_buchi);
     // std::cout << "AAAAAA random!!! AAAAAAAAAAA:   " << new_ba_sample << std::endl;
@@ -65,6 +71,7 @@ std::vector<int> LTL_SamplingDubins::sample_from_ba(BAStruct buchi, SampleSpace 
     }
     while (new_ba_candidate.empty())
     {
+        // std::cout << "~~~~~!!!!" << std::endl;
         std::vector<int> new_temp_candidate;
         for (int i = 0; i < temp_candidate.size(); i++)
         {
@@ -98,6 +105,9 @@ std::vector<int> LTL_SamplingDubins::sample_from_ba(BAStruct buchi, SampleSpace 
 }
 
 void LTL_SamplingDubins::buchi_post (BAStruct &ba, std::vector<int> indep_set) {
+    if (indep_set.size() == 1){
+        return;
+    }
     std::bitset<32> indep_bitset;
     for (auto it = indep_set.begin(); it != indep_set.end(); it++) {
         indep_bitset.set(*it, 1);
@@ -300,9 +310,14 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
     uint64_t first_acc_state_id;
     lcm::LCM lcm;
     for (int i = 0; i < iteration; i++) {
+        // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+        // std::cout << "iteration: " << i << std::endl;
+        
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<double> sampled_position = sample_state(ba_act);
         DubinsSteer::SteerData dubins_steer_data;
+
+        // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
         // std::vector<std::vector<double>> traj_point_wise;
         SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, radius_L_, radius_R_);
         // std::cout << "===== size: " << parent_sample.get_state().size() << std::endl;

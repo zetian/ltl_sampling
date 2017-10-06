@@ -4,6 +4,7 @@
 #include <tuple>
 #include <algorithm>
 #include <bitset>
+#include <cmath>
 
 #include "trans_sys/cbba_Agent_sampling.h"
 #include "trans_sys/ltl_formula_sampling.h"
@@ -35,7 +36,7 @@ private:
     double radius_R_;
     LTLFormula Global_LTL_;
     int num_tasks_;
-    int max_bundle_length = num_tasks_;
+    int max_bundle_length;
     std::vector<Region> all_interest_regions_;
     std::map<int, Region> all_interest_regions_map_;
     std::vector<Region> all_obstacles_;
@@ -47,6 +48,7 @@ public:
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void init_workspace(double work_space_size_x, double work_space_size_y);
+    void init_parameter(double EPSILON, double RADIUS, double radius_L, double radius_R);
     void add_agent(cbba_Agent agent);
 
     std::vector<int> award_update_for_sampling(cbba_Agent& agent);

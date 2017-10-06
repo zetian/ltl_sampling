@@ -42,7 +42,7 @@ class cbba_Agent
 {
 public:
 	// Constructor
-	cbba_Agent(int id,int startID,std::vector<int> com,
+	cbba_Agent(int id, std::vector<int> com,
 			std::vector<float> y,std::vector<int> z,std::vector<std::vector<float>> y_his,std::vector<std::vector<int>> z_his);
 
 	// Destructor
