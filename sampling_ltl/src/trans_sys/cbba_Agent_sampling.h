@@ -70,6 +70,8 @@ public:
 	// The assignment of task
 	std::vector<int> cbba_x;
 
+	std::vector<std::vector<double>> traj_;
+
 	Memo history;
 
 	// Communication Topology

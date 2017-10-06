@@ -61,8 +61,10 @@ class SamplingVis(object):
         msg = path_data.decode(data)
         print("Received message on channel \"%s\"" % channel)
         print("Length of path is: " + str(len(msg.state_x)))
-        self.path_x = msg.state_x
-        self.path_y = msg.state_y
+        # self.path_x = msg.state_x
+        # self.path_y = msg.state_y
+        self.path_x.extend(msg.state_x)
+        self.path_y.extend(msg.state_y)
 
     def path_handler_test(self, channel, data):
         msg = path_data.decode(data)

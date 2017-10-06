@@ -26,7 +26,7 @@ private:
 
     double eps = 0;
     // int max_bundle_length = M;
-
+    int iteration_cbba_ = 500;
 
     double work_space_size_x_;
     double work_space_size_y_;
@@ -35,6 +35,7 @@ private:
     double radius_L_;
     double radius_R_;
     LTLFormula Global_LTL_;
+    std::vector<std::string> buchi_regions_;
     int num_tasks_;
     int max_bundle_length;
     std::vector<Region> all_interest_regions_;
@@ -45,6 +46,7 @@ private:
 
 public:
     void set_global_ltl(LTLFormula formula);
+    void set_buchi_regions(std::vector<std::string> buchi_regions);
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void init_workspace(double work_space_size_x, double work_space_size_y);
@@ -62,5 +64,6 @@ public:
 	void bundle_add_for_sampling();
 	bool success_checker();
     void start_cbba();
+    void get_solution();
 
 };

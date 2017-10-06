@@ -34,11 +34,12 @@ int main(int argc, char** argv )
 	// Global_LTL.task_info = {{"p2",2},{"p3",3},{"p4",4},
 			// {"p5",5},{"p6",6},{"p7",7},{"p8",8}};
 			
-	Global_LTL.task_info = {{"p1",0},{"p2",1}};
+	Global_LTL.task_info = {{"p0",0}, {"p1",1}, {"p2",2}};
 	
 	// Decompose the global LTL_expression
-	std::string safty = "([]!p0)";
-	std::string liveness = "(<>p1) && (<>p2)";
+    // std::string safty = "([]!p0)";
+    std::string safty = "";
+	std::string liveness = "(<>p0) && (<>p1) && (<>p2)";
 	LTLDecomposition::get_safety_properties(Global_LTL, safty);
 	LTLDecomposition::get_liveness_properties(Global_LTL, liveness);
 	
@@ -93,9 +94,15 @@ int main(int argc, char** argv )
 			all_agent[i].cbba_award.push_back(-1);
 		}
 	}
-	    
-			
+    
 
+
+
+
+    std::vector<std::string> buchi_regions;
+    buchi_regions.push_back("p0");
+    buchi_regions.push_back("p1");
+    buchi_regions.push_back("p2");
 
 	// LTL_SamplingDubins ltl_sampling_dubins;
 	CBBA_sampling cbba_sampling;
@@ -105,7 +112,7 @@ int main(int argc, char** argv )
 	}
 
 	cbba_sampling.set_global_ltl(Global_LTL);
-
+    cbba_sampling.set_buchi_regions(buchi_regions);
 	cbba_sampling.init_workspace(work_space_size_x, work_space_size_y);
     cbba_sampling.init_parameter(EPSILON, RADIUS, radius_L, radius_R);
 
@@ -159,7 +166,11 @@ int main(int argc, char** argv )
 
 
 	cbba_sampling.start_cbba();
-
+    cbba_sampling.get_solution();
+    
+    sampling::sample_draw draw;
+    draw.if_draw = true;
+    lcm.publish("DRAW_SAMPLE", &draw);
 
 
 	/************************************************************************************************************/

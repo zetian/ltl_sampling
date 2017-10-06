@@ -51,6 +51,7 @@ public:
 
 
 public:
+	std::vector<std::string> all_buchi_region_;
 	std::string LTL_expression_Safety;
 	std::string LTL_expression_Liveness;
 

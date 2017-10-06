@@ -114,11 +114,16 @@ LTLFormula LTLDecomposition::GlobalLTLDecomposition(LTLFormula formula){
 				continue;
 
 
-	formula.LTL_expression_Safety.append(" && ");
+	if (!formula.LTL_expression_Safety.empty()){
+		formula.LTL_expression_Safety.append(" && ");
 	// Expression of Independent: Safety + Liveness
 	for(int i = 0; i < formula.LTL_expression.sub_LTL_expression_Liveness.size(); i++)
 		formula.LTL_expression.sub_LTL_expression.push_back(formula.LTL_expression_Safety+formula.LTL_expression.sub_LTL_expression_Liveness[i]);
-
+	}
+		else{
+	for(int i = 0; i < formula.LTL_expression.sub_LTL_expression_Liveness.size(); i++)
+		formula.LTL_expression.sub_LTL_expression.push_back(formula.LTL_expression.sub_LTL_expression_Liveness[i]);
+	}
 	// Update the number of Independent and Dependent tasks
 	formula.Num_Tasks = formula.LTL_expression.sub_LTL_expression.size();
 
@@ -217,14 +222,12 @@ std::string LTLDecomposition::subtask_recreator(std::vector<int> bundle,LTLFormu
 			if (j == bundle.size()-1 )
 				SubtaskFromBundle = formula.LTL_expression.sub_LTL_expression_Liveness[bundle[j]];
 			else{
-	//std::string mid_sub_LTL_expression_Liveness = sub_LTL_expression_Liveness[bundle[j]];
-	//mid_sub_LTL_expression_Liveness.erase(mid_sub_LTL_expression_Liveness.begin());
-	// mid_sub_LTL_expression_Liveness.pop_back();
-					if (formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]].size() == 1)
-						SubtaskFromBundle = "<> ( " + formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]].front() + " && " + SubtaskFromBundle + ")";
-					else {
-						for (int it_sub_task_idx = formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]].size()-1;it_sub_task_idx >= 0 ; it_sub_task_idx--)
-							SubtaskFromBundle = "<> ( " + formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]][it_sub_task_idx] + " && " + SubtaskFromBundle + ")";
+
+				if (formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]].size() == 1)
+					SubtaskFromBundle = "<> ( " + formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]].front() + " && " + SubtaskFromBundle + ")";
+				else {
+					for (int it_sub_task_idx = formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]].size()-1;it_sub_task_idx >= 0 ; it_sub_task_idx--)
+						SubtaskFromBundle = "<> ( " + formula.sub_buchi_regions.sub_buchi_regions_Liveness[bundle[j]][it_sub_task_idx] + " && " + SubtaskFromBundle + ")";
 					}
 					//SubtaskFromBundle = "( " + sub_LTL_expression_Liveness[bundle[j]] + " && " + SubtaskFromBundle + ")";
 			}
@@ -233,7 +236,11 @@ std::string LTLDecomposition::subtask_recreator(std::vector<int> bundle,LTLFormu
 	else
 		std::cout << "No task in the bundle" <<std::endl;
 
-	sub_task_bundled = formula.LTL_expression_Safety + SubtaskFromBundle;
+	if (!formula.LTL_expression_Safety.empty())
+		sub_task_bundled = formula.LTL_expression_Safety + SubtaskFromBundle;
+	else
+		sub_task_bundled = SubtaskFromBundle;
+
 	return sub_task_bundled;
 }
 
