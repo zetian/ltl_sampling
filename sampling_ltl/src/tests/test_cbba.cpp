@@ -34,7 +34,7 @@ int main(int argc, char** argv )
 	// Global_LTL.task_info = {{"p2",2},{"p3",3},{"p4",4},
 			// {"p5",5},{"p6",6},{"p7",7},{"p8",8}};
 			
-	Global_LTL.task_info = {{"p0",0},{"p1",1},{"p2",2}};
+	Global_LTL.task_info = {{"p1",0},{"p2",1}};
 	
 	// Decompose the global LTL_expression
 	std::string safty = "([]!p0)";
@@ -64,7 +64,8 @@ int main(int argc, char** argv )
 
 	/*** 4. Initialize agents ***/
 	std::vector<float> y_0;
-	std::vector<int> z_0;
+    std::vector<int> z_0;
+    std::cout << "Global_LTL.Num_Tasks: " <<Global_LTL.Num_Tasks <<std::endl;
 	for (int i = 0; i < Global_LTL.Num_Tasks; i++){
 		y_0.push_back(0);
 		z_0.push_back(-1);
