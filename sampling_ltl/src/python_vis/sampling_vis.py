@@ -118,7 +118,7 @@ class SamplingVis(object):
 
 def main():
     lc = lcm.LCM()
-    sample_vis = SamplingVis(100, 100)
+    sample_vis = SamplingVis(150, 150)
     # subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("OBSTACLE", sample_vis.obstacle_handler)

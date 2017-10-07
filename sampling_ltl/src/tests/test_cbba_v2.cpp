@@ -18,11 +18,11 @@ int main(int argc, char** argv )
 	srand(time(NULL));
 	lcm::LCM lcm;
 	
-	double EPSILON = 6;
-    double RADIUS = 12;
-    double radius_L = 20;
-	double radius_R = 20;
-	int iteration_cbba = 300;
+	double EPSILON = 8;
+    double RADIUS = 16;
+    double radius_L = 25;
+	double radius_R = 25;
+	int iteration_cbba = 1000;
 	double work_space_size_x = 150;
     double work_space_size_y = 150;
 	/************************************************************************************************************/
@@ -68,29 +68,29 @@ int main(int argc, char** argv )
 	// std::vector<cbba_Agent> all_agent = {cbba_Agent(0,{1,1},y_0,z_0,y_his_0,z_his_0), cbba_Agent(1,{1,1},y_0,z_0,y_his_0,z_his_0)};
     // sampling::sample_data node_data;
     all_agent[0].init_state_ = {10, 10, M_PI/2};
-    all_agent[0].radius_L_ = 20;
-    all_agent[0].radius_R_ = 20;
+    all_agent[0].radius_L_ = radius_L;
+    all_agent[0].radius_R_ = radius_R;
     // node_data.state[0] = all_agent[0].init_state_[0];
     // node_data.state[1] = all_agent[0].init_state_[1];
     // lcm.publish("SAMPLE", &node_data);
     
     all_agent[1].init_state_ = {140, 10, M_PI};
-    all_agent[1].radius_L_ = 20;
-    all_agent[1].radius_R_ = 20;
+    all_agent[1].radius_L_ = radius_L;
+    all_agent[1].radius_R_ = radius_R;
     // node_data.state[0] = all_agent[1].init_state_[0];
     // node_data.state[1] = all_agent[1].init_state_[1];
     // lcm.publish("SAMPLE", &node_data);
 
     all_agent[2].init_state_ = {10, 140, 0};
-    all_agent[2].radius_L_ = 20;
-    all_agent[2].radius_R_ = 20;
+    all_agent[2].radius_L_ = radius_L;
+    all_agent[2].radius_R_ = radius_R;
     // node_data.state[0] = all_agent[2].init_state_[0];
     // node_data.state[1] = all_agent[2].init_state_[1];
     // lcm.publish("SAMPLE", &node_data);
 
     all_agent[3].init_state_ = {140, 140, M_PI*3/2};
-    all_agent[3].radius_L_ = 20;
-    all_agent[3].radius_R_ = 20;
+    all_agent[3].radius_L_ = radius_L;
+    all_agent[3].radius_R_ = radius_R;
     // node_data.state[0] = all_agent[3].init_state_[0];
     // node_data.state[1] = all_agent[3].init_state_[1];
     // lcm.publish("SAMPLE", &node_data);

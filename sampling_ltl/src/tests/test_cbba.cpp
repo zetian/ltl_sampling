@@ -39,6 +39,7 @@ int main(int argc, char** argv )
 	// Decompose the global LTL_expression
     // std::string safty = "([]!p0)";
     std::string safty = "";
+	// std::string liveness = "(<>p0) && (<>p1 && (<>p2))";
 	std::string liveness = "(<>p0) && (<>p1) && (<>p2)";
 	LTLDecomposition::get_safety_properties(Global_LTL, safty);
 	LTLDecomposition::get_liveness_properties(Global_LTL, liveness);
