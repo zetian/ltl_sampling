@@ -22,7 +22,7 @@ int main(int argc, char** argv )
     double RADIUS = 10;
     double radius_L = 15;
 	double radius_R = 15;
-	
+	int iteration_cbba = 300;
 	double work_space_size_x = 100;
     double work_space_size_y = 100;
 	/************************************************************************************************************/
@@ -71,12 +71,16 @@ int main(int argc, char** argv )
     
 
     sampling::sample_data node_data;
-    all_agent[0].init_state_ = {20, 10, M_PI/2};
+	all_agent[0].init_state_ = {20, 10, M_PI/2};
+	all_agent[0].radius_L_ = 15;
+    all_agent[0].radius_R_ = 15;
     node_data.state[0] = all_agent[0].init_state_[0];
     node_data.state[1] = all_agent[0].init_state_[1];
     lcm.publish("SAMPLE", &node_data);
 
-    all_agent[1].init_state_ = {80, 10, M_PI/2};
+	all_agent[1].init_state_ = {80, 10, M_PI/2};
+	all_agent[1].radius_L_ = 15;
+    all_agent[1].radius_R_ = 15;
     node_data.state[0] = all_agent[1].init_state_[0];
     node_data.state[1] = all_agent[1].init_state_[1];
     lcm.publish("SAMPLE", &node_data);
@@ -88,9 +92,6 @@ int main(int argc, char** argv )
 			all_agent[i].cbba_award.push_back(-1);
 		}
 	}
-    
-
-
 
 
     std::vector<std::string> buchi_regions;
@@ -110,7 +111,7 @@ int main(int argc, char** argv )
     cbba_sampling.set_buchi_regions(buchi_regions);
     cbba_sampling.set_indep_set(indep_set);
 	cbba_sampling.init_workspace(work_space_size_x, work_space_size_y);
-    cbba_sampling.init_parameter(EPSILON, RADIUS, radius_L, radius_R);
+    cbba_sampling.init_parameter(iteration_cbba, EPSILON, RADIUS);
 
 	// Add region of interests
     std::pair <double, double> position_x (20, 35);

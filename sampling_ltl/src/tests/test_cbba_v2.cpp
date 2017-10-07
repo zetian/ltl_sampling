@@ -22,7 +22,7 @@ int main(int argc, char** argv )
     double RADIUS = 12;
     double radius_L = 20;
 	double radius_R = 20;
-	
+	int iteration_cbba = 300;
 	double work_space_size_x = 150;
     double work_space_size_y = 150;
 	/************************************************************************************************************/
@@ -66,26 +66,35 @@ int main(int argc, char** argv )
 		    cbba_Agent(2,{1,0,1,1},y_0,z_0,y_his_0,z_his_0),
 			cbba_Agent(3,{0,1,1,1},y_0,z_0,y_his_0,z_his_0)};
 	// std::vector<cbba_Agent> all_agent = {cbba_Agent(0,{1,1},y_0,z_0,y_his_0,z_his_0), cbba_Agent(1,{1,1},y_0,z_0,y_his_0,z_his_0)};
-    sampling::sample_data node_data;
+    // sampling::sample_data node_data;
     all_agent[0].init_state_ = {10, 10, M_PI/2};
-    node_data.state[0] = all_agent[0].init_state_[0];
-    node_data.state[1] = all_agent[0].init_state_[1];
-    lcm.publish("SAMPLE", &node_data);
+    all_agent[0].radius_L_ = 20;
+    all_agent[0].radius_R_ = 20;
+    // node_data.state[0] = all_agent[0].init_state_[0];
+    // node_data.state[1] = all_agent[0].init_state_[1];
+    // lcm.publish("SAMPLE", &node_data);
     
     all_agent[1].init_state_ = {140, 10, M_PI};
-    node_data.state[0] = all_agent[1].init_state_[0];
-    node_data.state[1] = all_agent[1].init_state_[1];
-    lcm.publish("SAMPLE", &node_data);
+    all_agent[1].radius_L_ = 20;
+    all_agent[1].radius_R_ = 20;
+    // node_data.state[0] = all_agent[1].init_state_[0];
+    // node_data.state[1] = all_agent[1].init_state_[1];
+    // lcm.publish("SAMPLE", &node_data);
 
     all_agent[2].init_state_ = {10, 140, 0};
-    node_data.state[0] = all_agent[2].init_state_[0];
-    node_data.state[1] = all_agent[2].init_state_[1];
-    lcm.publish("SAMPLE", &node_data);
+    all_agent[2].radius_L_ = 20;
+    all_agent[2].radius_R_ = 20;
+    // node_data.state[0] = all_agent[2].init_state_[0];
+    // node_data.state[1] = all_agent[2].init_state_[1];
+    // lcm.publish("SAMPLE", &node_data);
 
     all_agent[3].init_state_ = {140, 140, M_PI*3/2};
-    node_data.state[0] = all_agent[3].init_state_[0];
-    node_data.state[1] = all_agent[3].init_state_[1];
-    lcm.publish("SAMPLE", &node_data);
+    all_agent[3].radius_L_ = 20;
+    all_agent[3].radius_R_ = 20;
+    // node_data.state[0] = all_agent[3].init_state_[0];
+    // node_data.state[1] = all_agent[3].init_state_[1];
+    // lcm.publish("SAMPLE", &node_data);
+
 
 	int num_tasks = Global_LTL.task_info.size();
 	// Initialize the awards
@@ -116,8 +125,9 @@ int main(int argc, char** argv )
 	cbba_sampling.set_global_ltl(Global_LTL);
     cbba_sampling.set_buchi_regions(buchi_regions);
     cbba_sampling.set_indep_set(indep_set);
-	cbba_sampling.init_workspace(work_space_size_x, work_space_size_y);
-    cbba_sampling.init_parameter(EPSILON, RADIUS, radius_L, radius_R);
+    cbba_sampling.init_workspace(work_space_size_x, work_space_size_y);
+    
+    cbba_sampling.init_parameter(iteration_cbba, EPSILON, RADIUS);
 
 	// Add region of interests
     std::pair <double, double> position_x (0, 20);

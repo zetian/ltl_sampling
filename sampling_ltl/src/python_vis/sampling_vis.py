@@ -17,7 +17,7 @@ class SamplingVis(object):
     regions = []
     obstacles = []
     all_samples = []
-    fig = plt.figure(figsize=(10, 10))
+    # fig = plt.figure(figsize=(10, 10))
     path_x = []
     path_y = []
     path_x_test = []
@@ -40,7 +40,7 @@ class SamplingVis(object):
         self.all_samples.append(msg.state)
 
     def region_handler(self, channel, data):
-        self.all_samples = []
+        # self.all_samples = []
         msg = region_data.decode(data)
         region = Region(msg.position_x, msg.position_y)
         print("Received message on channel \"%s\"" % channel)
@@ -58,6 +58,7 @@ class SamplingVis(object):
         self.obstacles.append(region)
 
     def path_handler(self, channel, data):
+        # self.all_samples = []
         msg = path_data.decode(data)
         print("Received message on channel \"%s\"" % channel)
         print("Length of path is: " + str(len(msg.state_x)))
@@ -117,8 +118,8 @@ class SamplingVis(object):
 
 def main():
     lc = lcm.LCM()
-    sample_vis = SamplingVis(150, 150)
-    subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
+    sample_vis = SamplingVis(100, 100)
+    # subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("OBSTACLE", sample_vis.obstacle_handler)
     subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)

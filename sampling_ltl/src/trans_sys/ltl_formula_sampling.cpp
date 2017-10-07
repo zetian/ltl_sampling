@@ -94,13 +94,13 @@ LTLFormula LTLDecomposition::GlobalLTLDecomposition(LTLFormula formula){
 	// std::cout << sub_buchi_regions_total[0][0] << std::endl;
 	for (auto idx = sub_buchi_regions_total.begin(); idx != sub_buchi_regions_total.end(); idx++){
 		
-		for (auto idx1 = formula.task_info.begin();idx1 != formula.task_info.end(); idx1++){
+		// for (auto idx1 = formula.task_info.begin();idx1 != formula.task_info.end(); idx1++){
 			
-			if ((*idx)[0] == (*idx1).LTL_Target_ID)
+		// 	if ((*idx)[0] == (*idx1).LTL_Target_ID)
 				formula.sub_buchi_regions.sub_buchi_regions_Liveness.push_back(*idx);
-			else
-				continue;
-		}
+		// 	else
+		// 		continue;
+		// }
 	}
 		
 	
