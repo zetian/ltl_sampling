@@ -20,9 +20,9 @@ int main(int argc, char** argv )
 	
 	double EPSILON = 8;
     double RADIUS = 16;
-    double radius_L = 25;
-	double radius_R = 25;
-	int iteration_cbba = 1000;
+    double radius_L = 20;
+	double radius_R = 20;
+	int iteration_cbba = 800;
 	double work_space_size_x = 150;
     double work_space_size_y = 150;
 	/************************************************************************************************************/
