@@ -5,6 +5,7 @@ import matplotlib.patches as patches
 from sampling import sample_data
 from sampling import region_data
 from sampling import path_data
+from sampling import workspace_size_data
 
 class Region(object):
     def __init__(self, position_x, position_y):
@@ -17,20 +18,30 @@ class SamplingVis(object):
     regions = []
     obstacles = []
     all_samples = []
+    workspace_size_x = 0
+    workspace_size_y = 0
     # fig = plt.figure(figsize=(10, 10))
     path_x = []
     path_y = []
-    path_x_test = []
-    path_y_test = []
+    # path_x_test = []
+    # path_y_test = []
 
 
 
-    def __init__(self, size_x, size_y):
-        self.size_x = size_x
-        self.size_y = size_y
+    # def __init__(self, size_x, size_y):
+    #     self.size_x = size_x
+    #     self.size_y = size_y
 
     # def add_region(self, region):
     #     self.regions.append(region)
+
+    def workspace_size_handler(self, channel, data):
+        msg = workspace_size_data.decode(data)
+        print("Received message on channel \"%s\"" % channel)
+        print("   workspace x   = %s" % str(msg.size_x))
+        print("   workspace y   = %s" % str(msg.size_y))
+        self.workspace_size_x = msg.size_x
+        self.workspace_size_y = msg.size_y
         
     def sampling_node_handler(self, channel, data):
         msg = sample_data.decode(data)
@@ -69,12 +80,12 @@ class SamplingVis(object):
         self.path_x.append(msg.state_x)
         self.path_y.append(msg.state_y)
 
-    def path_handler_test(self, channel, data):
-        msg = path_data.decode(data)
-        print("Received message on channel \"%s\"" % channel)
-        print("Length of path is: " + str(len(msg.state_x)))
-        self.path_x_test = msg.state_x
-        self.path_y_test = msg.state_y
+    # def path_handler_test(self, channel, data):
+    #     msg = path_data.decode(data)
+    #     print("Received message on channel \"%s\"" % channel)
+    #     print("Length of path is: " + str(len(msg.state_x)))
+    #     self.path_x_test = msg.state_x
+    #     self.path_y_test = msg.state_y
     
     
     # def region_draw(self, channel, data):
@@ -110,7 +121,7 @@ class SamplingVis(object):
         self.path_y = []
         # plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
         # plt.plot(self.path_x_test, self.path_y_test, color = 'blue', linewidth = 2)
-        plt.axis([0,self.size_x, 0, self.size_y])
+        plt.axis([0,self.workspace_size_x, 0, self.workspace_size_y])
         plt.axes().set_aspect('equal')
         
         plt.show()
@@ -118,7 +129,8 @@ class SamplingVis(object):
 
 def main():
     lc = lcm.LCM()
-    sample_vis = SamplingVis(100, 100)
+    sample_vis = SamplingVis()
+    subscription = lc.subscribe("WORKSPACE", sample_vis.workspace_size_handler)
     # subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("OBSTACLE", sample_vis.obstacle_handler)

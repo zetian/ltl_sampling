@@ -10,7 +10,7 @@ CBBA_sampling::CBBA_sampling(){
 
 void CBBA_sampling::set_global_ltl(LTLFormula formula){
     Global_LTL_ = formula;
-	num_tasks_ = Global_LTL_.task_info.size();
+	num_tasks_ = formula.Num_Tasks;
 	max_bundle_length = num_tasks_;
 }
 

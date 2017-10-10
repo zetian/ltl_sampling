@@ -24,7 +24,12 @@ int main(int argc, char** argv )
 	double radius_R = 15;
 	int iteration_cbba = 300;
 	double work_space_size_x = 100;
-    double work_space_size_y = 100;
+	double work_space_size_y = 100;
+	
+    sampling::workspace_size_data space_data;
+    space_data.size_x = work_space_size_x;
+    space_data.size_y = work_space_size_y;
+    lcm.publish("WORKSPACE", &space_data);
 	/************************************************************************************************************/
 	/*********************************          Initialize: Map         *****************************************/
 	/************************************************************************************************************/
@@ -34,13 +39,13 @@ int main(int argc, char** argv )
 	// Global_LTL.task_info = {{"p2",2},{"p3",3},{"p4",4},
 			// {"p5",5},{"p6",6},{"p7",7},{"p8",8}};
 			
-	Global_LTL.task_info = {{"p0",0}, {"p1",1}, {"p2",2}};
+	// Global_LTL.task_info = {{"p0",0}, {"p1",1}, {"p2",2}};
 	
 	// Decompose the global LTL_expression
     // std::string safty = "([]!p0)";
     std::string safty = "";
-	// std::string liveness = "(<>p0) && (<>p1 && (<>p2))";
-	std::string liveness = "(<>p0) && (<>p1) && (<>p2)";
+	std::string liveness = "(<>p2) && (<>p0 && (<>p1))";
+	// std::string liveness = "(<>p0) && (<>p1) && (<>p2)";
 	LTLDecomposition::get_safety_properties(Global_LTL, safty);
 	LTLDecomposition::get_liveness_properties(Global_LTL, liveness);
 	
@@ -86,7 +91,7 @@ int main(int argc, char** argv )
     node_data.state[1] = all_agent[1].init_state_[1];
     lcm.publish("SAMPLE", &node_data);
 
-	int num_tasks = Global_LTL.task_info.size();
+	int num_tasks = Global_LTL.Num_Tasks;
 	// Initialize the awards
 	for (int i = 0; i < all_agent.size(); i++){
 		for (int j = 0; j < num_tasks; j++){

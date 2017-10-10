@@ -6,5 +6,6 @@
 #include "sampling/region_data.hpp"
 #include "sampling/sample_data.hpp"
 #include "sampling/sample_draw.hpp"
+#include "sampling/workspace_size_data.hpp"
 
 #endif

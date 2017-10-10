@@ -31,8 +31,8 @@ int main()
     double radius_R = 15;
 
     // Read formula
-    // std::string ltl_formula = "<> (p2 && <> (p1 && (<> p0)))";
-    std::string ltl_formula = "<> p0 && <> p1 && <> p2";
+    std::string ltl_formula = "<> (p2 && <> (p1 && (<> p0)))";
+    // std::string ltl_formula = "<> p0 && <> p1 && <> p2";
     // std::string ltl_formula = "([]!p0)";
     std::vector<std::string> buchi_regions;
     buchi_regions.push_back("p0");
@@ -43,6 +43,11 @@ int main()
     
     double work_space_size_x = 100;
     double work_space_size_y = 100;
+    sampling::workspace_size_data space_data;
+    space_data.size_x = work_space_size_x;
+    space_data.size_y = work_space_size_y;
+    lcm.publish("WORKSPACE", &space_data);
+
     // Initial state
     // std::vector<double> init_state = {99, 1, M_PI/4*3};
     std::vector<double> init_state = {50, 10, M_PI/2};
@@ -104,7 +109,7 @@ int main()
     ltl_sampling_dubins.set_init_state(init_state);
 
     // Set the number of iterations
-    int iterations = 1000;
+    int iterations = 2000;
     // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
     // Start sampling searching
     ltl_sampling_dubins.start_sampling(iterations);

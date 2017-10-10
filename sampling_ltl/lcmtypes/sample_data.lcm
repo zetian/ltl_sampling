@@ -1,5 +1,11 @@
 package sampling;
 
+struct workspace_size_data
+{
+    double size_x;
+    double size_y;
+}
+
 struct sample_data
 {
     double state[2];
