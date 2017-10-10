@@ -127,7 +127,7 @@ int main()
     
     /*** Set the number of iterations ***/
     // Solution towards to optimal when iterations -> infinite
-    int iterations = 1000;
+    int iterations = 1500;
 
     /*** Start sampling searching ***/
     stopwatch.tic();
@@ -137,7 +137,7 @@ int main()
     /*** Get result ***/
     std::vector<std::vector<double>> path = ltl_sampling_dubins.get_path();
 
-    // Visualize the result
+    // Publish the trajectory and visualize the result
     sampling::path_data path_data_;
     path_data_.num_state = path.size();
     path_data_.state_x.resize(path_data_.num_state);

@@ -1,4 +1,4 @@
-# Sampling Based Route Planning with Linear Temporal Logic Specifications
+# Route Planner - Aurora
 
 ## 1. Development Environment
 
@@ -14,11 +14,7 @@ $ sudo apt-get install build-essential
 $ sudo apt-get install git
 $ sudo apt-get install cmake
 ```
-* OpenCV
 
-```
-$ sudo apt-get install libopencv-dev python-opencv
-```
 * lcm
 
 Download the source code from [website](https://github.com/lcm-proj/lcm).
@@ -38,6 +34,7 @@ Post install
 $ export LCM_INSTALL_DIR=/usr/local/lib
 $ echo $LCM_INSTALL_DIR > /etc/ld.so.conf.d/lcm.conf
 ```
+
 
 * Spot
 
@@ -62,90 +59,46 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 $ sudo apt-get install libeigen3-dev
 ```
 
-* Eclipse (Optional)
-```
-$ sudo apt-get install default-jre
-$ cd ~/Downloads/
-$ wget -N http://eclipse.mirror.rafal.ca/technology/epp/downloads/release/mars/2/eclipse-cpp-mars-2-linux-gtk-x86_64.tar.gz
-$ tar xvf eclipse-cpp-mars-1-linux-gtk-x86_64.tar.gz
-$ sudo mv eclipse /opt/
-```
-
-* Eclipse CMAKE Plugin (Optional)
-
-You can install this Eclipse plugin from the following source to edit CMAKE files:
-```
-Name: CMAKE Editor
-Location: http://cmakeed.sourceforge.net/eclipse/
-```
-
-* Terminator (Optional)
-
-A more powerful alternative to the default terminal application.
-```
-$ sudo apt-get install terminator
-```
-
 ## 2. Set Up Workspace
-You can set up your workspace at any location you prefer. Here I'm using "~/Workspace/sampling_ltl" as an example.
+You can set up your workspace at any location you prefer. Here I'm using "~/Workspace/aurora-planner" as an example.
 ```
-$ mkdir -p ~/Workspace/srcl/srcl_aurora
-$ cd ~/Workspace/sampling_ltl
+$ mkdir -p ~/Workspace/aurora-planner
+$ cd ~/Workspace/aurora-planner
 $ git init
-$ git remote add origin https://github.com/zetian/ltl_sampling
+$ git remote add origin https://github.com/ace-lab-wpi/aurora-planner
 $ git pull origin master
-```
-Now you have downloaded code in the master branch to your machine. You can start by creating your development branch from the current master branch. For example:
-
-```
-$ git checkout -b rdu_dev
 ```
 
 ## 3. Build Project
-You can use any preferred text editors/IDEs to write code. Two methods are provided here to compile code:
-
-First create a "build" folder to contain all temporary files created during the building process so that they don't mix with the source code.
 
 ```
-$ cd ~/Workspace/sampling_ltl
+$ cd ~/Workspace/aurora-planner
 $ mkdir build
 $ cd build
-```
-
-Then you can invoke cmake to generate a makefile project or an eclipse project so that you can compile the code.
-
-* Command line
-```
 $ cmake ..
 $ make
 ```
 
-* Eclipse
+Edit the path variable for lcm, edit ~/.bashrc
 ```
-$ cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cpp-ltl-hcost/
-```
-Now you can import generated eclipse project located at build folder into eclipse and build the project. Make sure the "Copy projects into workspace" option is **unchecked** before you click the "Finish" button to import the project. Source files are located at "[Source Directory]".
-
-## 4. Build Documentation
-
-Doxygen is used to generate documentation for the C++ code. The configuration file locates at ./docs/doxygen.
-
-Install doxygen if you haven't.
+export AURORA_HOME=$HOME/Workspace/aurora-planner
+export PYTHONPATH=$AURORA_HOME/src/lcmtypes/python:$AURORA_HOME/src/lcmtypes/python/sampling:$PYTHONPATH
 
 ```
-$ sudo apt-get install doxygen
-```
 
-Then generate the documentation.
+## 4. Test the example
 
-```
-$ cd /docs/doxygen
-$ doxygen Doxyfile
-```
+Follow the test example in src/tests/test_sample_dubins.cpp. 
+Once you set up all the paremeters, tasks and environment, run src/python_vis/sampling_vis.py for visualization first, then run the test example, the result would looks like:
 
-## 5. Debug Eigen code with gdb
+<img src="/data/test_example.png" align="middle" height="500" >
 
-Refer to [doc](/Eigen_Debug.md).
+### Comments about the test example
+1. Orange parts are the region of interests(ROI), grey parts are obtacles.
+2. The task for this example is to visit all ROIs without considering the order.
+3. The size of the map in this example is 100*100, the minimun turning radius is 15 for the UAV.
+4. Set a large enough iterations to ensure a feasible solution, the solution towards optimal when iterations -> infinite.
+
 
 ## Reference:
 Git
