@@ -5,7 +5,6 @@
 #include <tuple>
 #include <algorithm>
 #include <bitset>
-// opencv
 
 #include "trans_sys/cbba_Agent_sampling.h"
 #include "trans_sys/ltl_formula_sampling.h"
@@ -40,8 +39,8 @@ int main(int argc, char** argv )
 	// Decompose the global LTL_expression
     // std::string safty = "([]!p0)";
     std::string safty = "";
-	std::string liveness = "(<>p2) && (<>p0 && (<>p1))";
-	// std::string liveness = "(<>p0) && (<>p1) && (<>p2)";
+	// std::string liveness = "(<>p2) && (<>p0 && (<>p1))";
+	std::string liveness = "(<>p0) && (<>p1) && (<>p2)";
 	LTLDecomposition::get_safety_properties(Global_LTL, safty);
 	LTLDecomposition::get_liveness_properties(Global_LTL, liveness);
 	

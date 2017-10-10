@@ -1,4 +1,4 @@
-# Route Planner - Aurora
+# Sampling base path planning with LTL specifications for multi-vehicles
 
 ## 1. Development Environment
 
@@ -60,19 +60,19 @@ $ sudo apt-get install libeigen3-dev
 ```
 
 ## 2. Set Up Workspace
-You can set up your workspace at any location you prefer. Here I'm using "~/Workspace/aurora-planner" as an example.
+You can set up your workspace at any location you prefer. Here I'm using "~/Workspace/ltl_sampling" as an example.
 ```
-$ mkdir -p ~/Workspace/aurora-planner
-$ cd ~/Workspace/aurora-planner
+$ mkdir -p ~/Workspace/ltl_sampling
+$ cd ~/Workspace/ltl_sampling
 $ git init
-$ git remote add origin https://github.com/ace-lab-wpi/aurora-planner
+$ git remote add origin https://github.com/zetian/ltl_sampling
 $ git pull origin master
 ```
 
 ## 3. Build Project
 
 ```
-$ cd ~/Workspace/aurora-planner
+$ cd ~/Workspace/ltl_sampling
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -81,24 +81,33 @@ $ make
 
 Edit the path variable for lcm, edit ~/.bashrc
 ```
-export AURORA_HOME=$HOME/Workspace/aurora-planner
+export AURORA_HOME=$HOME/Workspace/ltl_sampling
 export PYTHONPATH=$AURORA_HOME/src/lcmtypes/python:$AURORA_HOME/src/lcmtypes/python/sampling:$PYTHONPATH
 
 ```
 
 ## 4. Test the example
+### Single UAV case
 
 Follow the test example in src/tests/test_sample_dubins.cpp. 
 Once you set up all the paremeters, tasks and environment, run src/python_vis/sampling_vis.py for visualization first, then run the test example, the result would looks like:
 
 <img src="/data/test_example.png" align="middle" height="500" >
 
-### Comments about the test example
+#### Comments about the test example
 1. Orange parts are the region of interests(ROI), grey parts are obtacles.
 2. The task for this example is to visit all ROIs without considering the order.
 3. The size of the map in this example is 100*100, the minimun turning radius is 15 for the UAV.
 4. Set a large enough iterations to ensure a feasible solution, the solution towards optimal when iterations -> infinite.
 
+### Multiple UAV case
+
+Follow the test example in src/tests/test_cbba.cpp, the result looks like:
+<img src="/data/test_example_2.png" align="middle" height="500" >
+
+#### Comments about the test example
+1. There are 2 UAVs in this set up, both of them have a minimun turning radius 15.
+2. The environment and task is the same as before: visit all ROIs in the map without considering the order.
 
 ## Reference:
 Git
