@@ -26,7 +26,7 @@ std::pair<double, double> Region::get_y_position() {
 
 bool Region::collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
     // int SAMPLE_NUM = 15;
-    int SAMPLE_NUM =  traj.size()/3;
+    int SAMPLE_NUM =  traj.size()/2.5;
     // if (traj.size() < SAMPLE_NUM) {
     //     SAMPLE_NUM = traj.size();
     // }

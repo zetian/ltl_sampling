@@ -31,10 +31,7 @@
  }
 
  std::vector<double> LinSpace(double a, double b, int n) {
-
-	// std::cout << "a:" << a << ", b: " << b << ", n: " << n << std::endl;
 	std::vector<double> array;
-	// std::cout << "NUMBER is: " << n << std::endl; 
 	if (n==1){
 		array.push_back(a);
 		array.push_back(b);
@@ -47,28 +44,20 @@
 		}
 		return array;
 	}
-	// double step = (b-a) / (n-1);
-   
    if (a < b) {
 	   double step = (b-a) / (n-1);
-	   // std::cout << "in linspace: " << step << std::endl; 
 	   while(a < b) {
 		   array.push_back(a);
-		//    std::cout << "````````````````````"  << step << std::endl;
-		   a += step;           // could recode to better handle rounding errors
-		  // std::cout << step << std::endl; 
+		   a += step;
 	  }
 	  array.push_back(b);
 	  
    }
    else {
 		double step = (a-b) / (n-1);
-		// std::cout << "in linspace: " << step << std::endl; 
 		while(b < a) {
-			// std::cout << "````````````````````" << step <<std::endl;
 			array.push_back(a);
-			a -= step;           // could recode to better handle rounding errors
-		// std::cout << step << std::endl; 
+			a -= step;
 		}
 	array.push_back(b);
 	}
@@ -81,9 +70,6 @@ std::vector<double> GetConfigurationF(std::vector<double> z_0, std::vector<doubl
 	double y = z_f[1] - z_0[1];
 	double yaw_0 = z_0[2];
 	std::vector<double> configuration_f({x*cos(-yaw_0)-y*sin(-yaw_0),x*sin(-yaw_0)+y*cos(-yaw_0),mod2pi(z_f[2] - z_0[2])});
-	// std::vector<double> configuration_f({y*cos(-yaw_0)-x*sin(-yaw_0),y*sin(-yaw_0)+x*cos(-yaw_0),mod2pi(z_f[2] - z_0[2])});
-
-	// std::vector<double> configuration_f({x*cos(yaw_0)-y*sin(yaw_0),x*sin(yaw_0)+y*cos(yaw_0),mod2pi(z_f[2] - z_0[2])});
 	return configuration_f;
 }
 
@@ -111,7 +97,6 @@ OutputData DubinLRL(std::vector<double> configuration_f, double radius_L, double
 	output_data.b = b;
 	output_data.g = g;
 	output_data.length = length;
-	// std::cout << length << std::endl;
 	return output_data;
 }
 
@@ -139,7 +124,6 @@ OutputData DubinRLR(std::vector<double> configuration_f, double radius_L, double
 	output_data.b = b;
 	output_data.g = g;
 	output_data.length = length;
-	// std::cout << length << std::endl;
 	return output_data;
 }
 
@@ -164,7 +148,6 @@ OutputData DubinLSL(std::vector<double> configuration_f, double radius_L, double
 	output_data.s = s;
 	output_data.g = g;
 	output_data.length = length;
-	// std::cout << length << std::endl;
 	return output_data;
 }
 
@@ -192,7 +175,6 @@ OutputData DubinLSR(std::vector<double> configuration_f, double radius_L, double
 	output_data.s = s;
 	output_data.g = g;
 	output_data.length = length;
-	// std::cout << length << std::endl;
 	return output_data;
 }
 
@@ -220,7 +202,6 @@ OutputData DubinRSL(std::vector<double> configuration_f, double radius_L, double
 	output_data.s = s;
 	output_data.g = g;
 	output_data.length = length;
-	// std::cout << length << std::endl;
 	return output_data;
 }
 
@@ -246,7 +227,6 @@ OutputData DubinRSR(std::vector<double> configuration_f, double radius_L, double
 	output_data.s = s;
 	output_data.g = g;
 	output_data.length = length;
-	// std::cout << length << std::endl;
 	return output_data;
 }
 
@@ -262,7 +242,6 @@ std::vector<OutputData> asymDubins(std::vector<double> configuration_f, double r
 }
 
 double DubinsSteer::GetDubinsCurveLength(std::vector<double> z_0, std::vector<double> z_f, double radius_L, double radius_R){
-	// double temp_x = z_0[1]; z_0[1] = z_0[0]; z_0[0] = temp_x;
 	double min_length;
 	std::vector<double> configuration_f;
 	configuration_f = GetConfigurationF(z_0, z_f);
@@ -270,12 +249,9 @@ double DubinsSteer::GetDubinsCurveLength(std::vector<double> z_0, std::vector<do
 	all_output_data = asymDubins(configuration_f, radius_L, radius_R);
 	std::vector<double> all_length;
 	for (auto it = all_output_data.begin();it != all_output_data.end(); it++){
-		// std::cout << (*it).length << std::endl;
 		all_length.push_back((*it).length);
 	}
 	min_length = *std::min_element(all_length.begin(), all_length.end());
-	// int min_pos = distance(all_length.begin(),std::min_element(all_length.begin(),all_length.end()));
-	// std::cout << "min position is " << min_pos << std::endl;
 	return min_length;
 }
 
@@ -381,7 +357,6 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 	for (int np = 0; np < 3; np++){
 		std::vector<double> t_spec = traj_desc[np];
 		int temp_x = t_spec[0];
-		// std::cout << "case is :" << temp << std::endl;
 		switch(temp_x){
 
 			case 0:{
@@ -412,37 +387,15 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				for (int it = num_points_3; it < range_up; it++){
 					num_indx_range.push_back(it);
 				}
-
-				
-				
-
-
 				if (num_indx_range.empty()) {
 					num_points_4 = 0;
 				}
 				else {
 					num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				}
-
-
-				// std::cout << "case 0 num_points_4: " << num_points_4 << std::endl;
-				// num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				std::vector<double> a_par = LinSpace(0, L, num_points_4);
-				// if (np == 0) {
-				// 	std::cout << "a_par size: " << a_par.size() << std::endl;
-				// }
-
-
-				// std::cout << "case 0 L: " << L << std::endl;
-				// for (auto it = a_par.begin();it != a_par.end(); it++){
 				for (int i = 0; i < a_par.size(); i++){
-					// if (np == 0) {
-					// 	std::cout << "~~~~!~!~!~!~!" << std::endl;
-					// }
 					std::vector<double> temp = {x_s + a_par[i]*cos(yaw_s), y_s + a_par[i]*sin(yaw_s), yaw_s};
-					// std::cout << "np = " << np << ", piecewise x: " << temp[0] << "piecewise y: " << temp[1] << "piecewise yaw: " << temp[2] << std::endl; 
-
-					// std::vector<double> temp = {x_s + (*it)*cos(yaw_s), y_s + (*it)*sin(yaw_s), 1};
 					traj_point_wise.push_back(temp);
 					double temp_len = travLength + L*(i - num_points_3)/num_points_4;
 					traj_len_map.push_back(temp_len);
@@ -454,9 +407,6 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				else {
 					num_points_3 = num_indx_range.back() + 1;
 				}
-
-				// num_points_3 = num_indx_range.back() + 1;
-				// std::cout << "case 0 num_points_3: " << num_points_3 << std::endl;
 				x_0 = x_0 + L*cos(yaw_s);
 				y_0 = y_0 + L*sin(yaw_s);
 				yaw_0 = yaw_s;
@@ -507,38 +457,19 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				else {
 					num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				}
-				// std::cout << "case 1 num_points_4: " << num_points_4 << std::endl;
-
-				// num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				std::vector<double> a_par = LinSpace(yaw_s + dirn*M_PI/2, yaw_f + dirn*M_PI/2, num_points_4);
-				// if (np == 0) {
-				// 	std::cout << "yaw_s: " << yaw_s << std::endl;
-				// 	std::cout << "yaw_f: " << yaw_f << std::endl;
-				// 	std::cout << "a_par size: " << a_par.size() << std::endl;
-				// }
-
-				// for (auto it = a_par.begin();it != a_par.end(); it++){
 				for (int i = 0; i < a_par.size(); i++){
-					// if (np == 0) {
-					// 	std::cout << "~~~~!~!~!~!~!" << std::endl;
-					// }
 					std::vector<double> temp = {x_c + r_crv*cos(a_par[i]), y_c + r_crv*sin(a_par[i]), a_par[i] - dirn*M_PI/2};
 					traj_point_wise.push_back(temp);
-					// std::cout << "np = " << np << ", piecewise x: " << temp[0] << "piecewise y: " << temp[1] << "piecewise yaw: " << temp[2] << std::endl; 
-					
 					double temp_len = travLength + std::abs(yaw_f - yaw_s)*r_crv*(i - num_points_3)/num_points_4;
 					traj_len_map.push_back(temp_len);
 				}
-
 				if (num_indx_range.empty()) {
 					num_points_3 = 0;
 				}
 				else {
 					num_points_3 = num_indx_range.back() + 1;
 				}
-
-				// num_points_3 = num_indx_range.back() + 1;
-				// std::cout << "case 1 num_points_3: " << num_points_3 << std::endl;
 				x_0 = x_c + r_crv*cos(yaw_f + dirn*M_PI/2);
 				y_0 = y_c + r_crv*sin(yaw_f + dirn*M_PI/2);
 				yaw_0 = yaw_f;
@@ -553,8 +484,3 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 	steer_data.traj_len_map = traj_len_map;
 	return steer_data;
 }
-
-
-
-
-

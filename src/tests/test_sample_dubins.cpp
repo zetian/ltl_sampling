@@ -126,7 +126,8 @@ int main()
     lcm.publish("OBSTACLE", &r_data);
     
     /*** Set the number of iterations ***/
-    int iterations = 2000;
+    // Solution towards to optimal when iterations -> infinite
+    int iterations = 1000;
 
     /*** Start sampling searching ***/
     stopwatch.tic();

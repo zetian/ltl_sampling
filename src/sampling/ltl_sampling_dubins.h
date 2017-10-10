@@ -13,15 +13,9 @@ public:
     LTL_SamplingDubins(){};
     ~LTL_SamplingDubins(){};
 private:
-    // double work_space_size_x_ = 100;
-    // double work_space_size_y_ = 100;
     double work_space_size_x_;
     double work_space_size_y_;
     std::string ltl_formula_;
-    // double EPSILON_ = 6;
-    // double RADIUS_ = 12;
-    // double radius_L_ = 10;
-    // double radius_R_ = 10;
     double EPSILON_;
     double RADIUS_;
     double radius_L_;
@@ -52,5 +46,4 @@ public:
     void start_sampling(int iteration);
     std::vector<std::vector<double>> get_path();
     double get_path_length();
-    // std::vector<std::vector<double>> get_path_test();
 };

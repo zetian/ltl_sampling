@@ -71,34 +71,7 @@ public:
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
     SampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
-    // static bool collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS);
-    // SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, double RADIUS, double radius_L, double radius_R);
     SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
-        
-    // void rewire(uint64_t rewire_sample_id, double RADIUS);
 
 };
-
-// template <class SampleType> class SubSampleSpace{
-// // public:
-// //     SubSampleSpace(){};
-// //     ~SubSampleSpace(){};
-// private:
-//     std::vector<SampleType> sample_nodes_;
-//     int ba_state_;
-//     std::map<int, SampleType> sample_node_id_map_; 
-//     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
-// public:
-//     void insert_sample(SampleType new_sample);
-//     SampleType& get_sample(uint64_t id);
-//     std::vector<SampleType>& get_all_samples();
-//     SampleType& get_min_cost_sample();
-//     int num_samples();
-//     int get_ba_state();
-//     SampleType& get_parent(std::vector<double> state);
-//     SampleType& rechoose_parent(SampleType parent_sample, std::vector<double> state, double RADIUS);
-
-//     // void rewire(uint64_t rewire_sample_id, double RADIUS);
-
-// };

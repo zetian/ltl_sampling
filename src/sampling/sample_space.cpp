@@ -26,7 +26,6 @@ double SampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<do
 
 SubSampleSpace& SampleSpace::get_sub_space(int num_ba) {
     return sample_space_ltl_map_.find(num_ba)->second;
-    // return sample_space_ltl_map_[num_ba];
 }
 
 void SampleSpace::set_space(int num_ba) {
@@ -70,7 +69,6 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, std::vector<
                 std::vector<std::pair<int, uint64_t>>& children_from_old_parent = sample_space_ltl_map_.find(old_parent_ba)->second.get_sample(old_parent_id).get_children_id();
                 std::pair <int, uint64_t> rewire_sample_id (rewire_sample.get_ba(), rewire_sample.get_id());
                 children_from_old_parent.erase(std::remove(children_from_old_parent.begin(), children_from_old_parent.end(), rewire_sample_id), children_from_old_parent.end());
-                // std::make_pair(rewire_sample.get_ba(), rewire_sample.get_id())
                 rewire_sample.set_parent_ba(new_sample_ba);
                 rewire_sample.set_parent_id(new_sample_id);
                 double old_cost_of_rewire = rewire_sample.get_cost();
@@ -121,7 +119,6 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::
                 std::vector<std::pair<int, uint64_t>>& children_from_old_parent = sample_space_ltl_map_.find(old_parent_ba)->second.get_sample(old_parent_id).get_children_id();
                 std::pair <int, uint64_t> rewire_sample_id (rewire_sample.get_ba(), rewire_sample.get_id());
                 children_from_old_parent.erase(std::remove(children_from_old_parent.begin(), children_from_old_parent.end(), rewire_sample_id), children_from_old_parent.end());
-                // std::make_pair(rewire_sample.get_ba(), rewire_sample.get_id())
                 rewire_sample.set_parent_ba(new_sample_ba);
                 rewire_sample.set_parent_id(new_sample_id);
                 double old_cost_of_rewire = rewire_sample.get_cost();

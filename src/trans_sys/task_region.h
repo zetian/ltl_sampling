@@ -1,10 +1,3 @@
-/*
- * task_region.h
- *
- *  Created on: May 6, 2016
- *      Author: rdu
- */
-
 #ifndef SRC_H2C_TASK_REGION_H_
 #define SRC_H2C_TASK_REGION_H_
 

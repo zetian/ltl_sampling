@@ -125,13 +125,8 @@ SampleNode& SubSampleSpace::get_min_cost_sample() {
 
 SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     SampleNode &parent_sample = sample_nodes_.front();
-    // if (!sample_nodes_.empty()) {
-    //     SampleNode parent_sample = sample_nodes_.front();
-    // }
     
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        // std::vector<double> parent_states = sample_nodes_[i].get_states();
-        // double dist = SubSampleSpace::get_dist(parent_states, states);
         if (get_dist(sample_nodes_[i].get_state(), state) < get_dist(parent_sample.get_state(), state)) {
             parent_sample = sample_nodes_[i];
         }
@@ -141,13 +136,8 @@ SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
 
 SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_L, double radius_R) {
     SampleNode &parent_sample = sample_nodes_.front();
-    // if (!sample_nodes_.empty()) {
-    //     SampleNode parent_sample = sample_nodes_.front();
-    // }
     
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        // std::vector<double> parent_states = sample_nodes_[i].get_states();
-        // double dist = SubSampleSpace::get_dist(parent_states, states);
         if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R)) {
             parent_sample = sample_nodes_[i];
         }
@@ -157,13 +147,8 @@ SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double 
 
 SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS) {
     SampleNode &new_parent_sample = sample_nodes_.front();
-    // if (!sample_nodes_.empty()) {
-    //     SampleNode parent_sample = sample_nodes_.front();
-    // }
     double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_state(), state);
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        // std::vector<double> parent_states = sample_nodes_[i].get_states();
-        // double dist = SubSampleSpace::get_dist(parent_states, states);
         if (get_dist(sample_nodes_[i].get_state(), state) < RADIUS &&
             get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < new_cost) {
             new_parent_sample = sample_nodes_[i];
@@ -178,27 +163,8 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
 
 SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
     SampleNode &new_parent_sample = sample_nodes_.front();
-    // if (!sample_nodes_.empty()) {
-    //     SampleNode parent_sample = sample_nodes_.front();
-    // }
-        
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        // std::vector<double> parent_states = sample_nodes_[i].get_states();
-        // double dist = SubSampleSpace::get_dist(parent_states, states);
-        // DubinsSteer::SteerData dubins_steer_data_new;
-        // DubinsSteer::SteerData dubins_steer_data_old;
-        // DubinsSteer::SteerData dubins_steer_data_new;
-        //  = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
-        // dubins_steer_data_old = DubinsSteer::GetDubinsTrajectoryPointWise(parent_sample.get_state(), state, radius_L, radius_R);
         double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R);
-        // if (dubins_steer_data_new.traj_length < RADIUS &&
-        //     dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost() < new_cost) {
-        //         new_cost = dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost();
-        //         // traj_point_wise = dubins_steer_data_new.traj_point_wise;
-        //         new_parent_sample = sample_nodes_[i];
-        //         dubins_steer_data = dubins_steer_data_new;
-        // }
-
         if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < RADIUS &&
                 get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost() < new_cost) {
                 new_parent_sample = sample_nodes_[i];
@@ -209,35 +175,6 @@ SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std
                 }
                 new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
         }
-        
-
-        // if (dubins_steer_data_new.traj_length < RADIUS &&
-        //     dubins_steer_data_new.traj_length + sample_nodes_[i].get_cost() < 
-        //     parent_sample.get_cost() + dubins_steer_data_old.traj_length) {
-        //         // traj_point_wise.clear();
-        //         // traj_point_wise = dubins_steer_data_new.traj_point_wise;
-        //         new_parent_sample = sample_nodes_[i];
-        // }
     }
-    
-    // dubins_steer_data =  DubinsSteer::GetDubinsTrajectoryPointWise(new_parent_sample.get_state(), state, radius_L, radius_R);
     return new_parent_sample;
 }
-
-// void SubSampleSpace::rewire(uint64_t new_sample_id, double RADIUS) {
-//     SampleNode &new_sample = sample_node_id_map_.find(new_sample_id)->second;
-//     for (int i = 0; i < sample_nodes_.size(); i++) {
-//         if (sample_nodes_[i].get_id() != new_sample.get_parent_id() &&
-//             get_dist(sample_nodes_[i].get_state(), new_sample.get_state()) < RADIUS &&
-//             get_dist(sample_nodes_[i].get_state(), new_sample.get_state()) + new_sample.get_cost() < 
-//             sample_nodes_[i].get_cost() ) {
-            
-//             SampleNode &rewire_sample = sample_nodes_[i];
-//             uint64_t old_parent_id = rewire_sample.get_parent_id();
-//             int old_parent_ba = rewire_sample.get_parent_ba();
-
-
-//         }
-//     }
-
-// }
