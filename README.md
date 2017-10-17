@@ -1,4 +1,4 @@
-# Sampling base path planning with LTL specifications for multi-vehicles
+# Sampling base path planning with LTL specifications
 
 ## 1. Development Environment
 
