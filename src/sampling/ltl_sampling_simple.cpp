@@ -112,13 +112,13 @@ bool LTL_SamplingSimple::if_in_region (std::vector<double> state, Region region)
     }
 }
 
-std::vector<double> LTL_SamplingSimple::step_from_to (SampleNode parent_sample, std::vector<double> sampled_state, double EPSILON) {
-    if (get_dist(parent_sample.get_state(), sampled_state) < EPSILON) {
+std::vector<double> LTL_SamplingSimple::step_from_to (SampleNode parent_sample, std::vector<double> sampled_state) {
+    if (get_dist(parent_sample.get_state(), sampled_state) < EPSILON_) {
         return sampled_state;
     }
     else {
         double theta = atan2(sampled_state[1] - parent_sample.get_state()[1], sampled_state[0] - parent_sample.get_state()[0]);
-        std::vector<double> new_state = {parent_sample.get_state()[0] + EPSILON*cos(theta), parent_sample.get_state()[1] + EPSILON*sin(theta)};
+        std::vector<double> new_state = {parent_sample.get_state()[0] + EPSILON_*cos(theta), parent_sample.get_state()[1] + EPSILON_*sin(theta)};
         return new_state;
     }
 }
@@ -155,6 +155,11 @@ void LTL_SamplingSimple::read_formula(std::string ltl_formula, std::vector<std::
 void LTL_SamplingSimple::init_workspace(double work_space_size_x,double work_space_size_y) {
     work_space_size_x_ = work_space_size_x;
     work_space_size_y_ = work_space_size_y;
+}
+
+void LTL_SamplingSimple::init_parameter(double EPSILON, double RADIUS){
+    EPSILON_ = EPSILON;
+    RADIUS_ = RADIUS;
 }
 
 std::vector<double> LTL_SamplingSimple::sample_state(std::vector<int> ba_act) {
@@ -218,14 +223,14 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<double> sampled_position = sample_state(ba_act); 
         SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent(sampled_position);
-        std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, EPSILON);
+        std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position);
         if (Region::collision_check_simple(parent_sample.get_state(), new_sample_state, all_obstacles_) ){
             continue;
         }
 
 
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS);
+        SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);
         
         SampleNode new_node;
         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
@@ -240,7 +245,7 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         new_node.set_parent_id(chosen_parent_sample.get_id());
         all_space_.insert_sample(new_node, new_ba);
 
-        all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS);
+        all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
 
         // // Vis for debug
         // sampling::sample_data node_data;
