@@ -7,16 +7,16 @@
 
 using namespace acel;
 
-class LTL_SamplingSimple {
+class MultiSamplingSimple {
 public:
-    LTL_SamplingSimple(){};
-    ~LTL_SamplingSimple(){};
+    MultiSamplingSimple(){};
+    ~MultiSamplingSimple(){};
 private:
     double work_space_size_x_ = 100;
     double work_space_size_y_ = 100;
     std::string ltl_formula_;
-    double EPSILON_ = 6;
-    double RADIUS_ = 12;
+    double EPSILON = 6;
+    double RADIUS = 12;
     std::vector<std::vector<double>> path_;
 
     BAStruct ba_;
