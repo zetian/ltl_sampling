@@ -151,7 +151,5 @@ int main()
     draw.if_draw = true;
     lcm.publish("DRAW_SAMPLE", &draw);
 
-    
-
     return 0;
 }
