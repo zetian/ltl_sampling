@@ -15,6 +15,8 @@ public:
 
 private:
     std::vector<double> state_;
+    std::vector<std::vector<double>> all_state_;
+    std::map<int, std::vector<double>> all_state_map_;
     uint64_t id_;
     int ba_state_;
     double cost_;
@@ -22,6 +24,8 @@ private:
     int parent_ba_;
     std::vector<std::pair<int, uint64_t>> children_;
     std::vector<std::vector<double>> traj_point_wise_;
+    std::vector<std::vector<std::vector<double>>> all_traj_point_wise_;
+    std::map<int, std::vector<std::vector<double>>> all_traj_point_wise_map_;
 
 public:
     std::vector<double> get_state();
@@ -61,6 +65,7 @@ private:
     int ba_state_;
     std::map<int, MultiSampleNode> sample_node_id_map_; 
     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
+    double get_dist(MultiSampleNode multi_sample_1, MultiSampleNode multi_sample_2);
     double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R);
 public:
     void insert_sample(MultiSampleNode new_sample);
@@ -70,6 +75,7 @@ public:
     int num_samples();
     int get_ba_state();
     MultiSampleNode& get_parent(std::vector<double> state);
+    MultiSampleNode& get_parent(MultiSampleNode multi_sample);
     MultiSampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
     MultiSampleNode& rechoose_parent(MultiSampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS);
     MultiSampleNode& rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
