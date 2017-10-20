@@ -21,11 +21,11 @@ include_directories(${LCM_GENERATED_HEADER_PATH})
 # Add libraries
 set(SAMPLING_LIB_SRC
 	multi_sample_node.cpp
-	#sample_space.cpp
-	#ltl_sampling_simple.cpp
+	sample_space.cpp
+	multi_sampling_simple.cpp
 	#ltl_sampling_dubins.cpp
 	#cbba_sampling.cpp
-	region.cpp
+	#region.cpp
 )
 add_library(multi_sampling STATIC ${SAMPLING_LIB_SRC})
 target_link_libraries(multi_sampling transsys trajectory)

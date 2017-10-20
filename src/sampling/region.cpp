@@ -79,3 +79,27 @@ bool Region::collision_check_simple(std::vector<double> state_s, std::vector<dou
     }
     return false;
 }
+static bool collision_check_simple(std::vector<std::vector<double>> state_s, std::vector<std::vector<double>> state_f, std::vector<Region> obstacle){
+    int SAMPLE_NUM = 15;
+    std::vector<double> generated_values;
+    for(int i = 0; i < SAMPLE_NUM; i++) {
+        std::uniform_real_distribution<double> dist(0, 1);
+        std::mt19937 rng;
+        rng.seed(std::random_device{}());
+        double num = dist(rng);
+        generated_values.push_back(num);
+    }
+
+    for (int k = 0; k < state_s.size(); k++){
+        for (int i = 0; i < obstacle.size(); i++) {
+            for (int j = 0; j < SAMPLE_NUM; j++) {
+                double x = (state_f[k][0] - state_s[k][0])*generated_values[j] + state_s[k][0];
+                double y = (state_s[k][1] - state_f[k][1])/(state_s[k][0] - state_f[k][0])*(x - state_s[k][0]) + state_s[k][1];
+                if (x > obstacle[i].get_x_position().first && x < obstacle[i].get_x_position().second && y > obstacle[i].get_y_position().first && y < obstacle[i].get_y_position().second){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}

@@ -12,6 +12,18 @@ std::vector<double> MultiSampleNode::get_state(){
     return state_;
 }
 
+std::vector<std::vector<double>> MultiSampleNode::get_all_states(){
+    return all_state_;
+}
+
+std::map<int, std::vector<double>> MultiSampleNode::get_all_state_map(){
+    return all_state_map_;
+}
+
+void MultiSampleNode::set_all_states(std::vector<std::vector<double>> all_states){
+    all_state_ = all_states;
+}
+
 void MultiSampleNode::set_state(std::vector<double> state){
     state_ = state;
 }
@@ -80,6 +92,30 @@ double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double
     return dist;
 }
 
+double SubSampleSpace::get_dist(MultiSampleNode multi_sample_1, MultiSampleNode multi_sample_2){
+    std::vector<std::vector<double>> states_1 = multi_sample_1.get_all_states();
+    std::vector<std::vector<double>> states_2 = multi_sample_2.get_all_states();
+    if (states_1.size() != states_2.size()){
+        return -1;
+    }
+    double dist = 0;
+    for (int i = 0; i < states_1.size(); i++) {
+        dist = dist + sqrt(pow(states_1[i][0] - states_2[i][0], 2) + pow(states_1[i][1] - states_2[i][1], 2));
+    }
+    return dist;
+}
+
+double SubSampleSpace::get_dist(std::vector<std::vector<double>> states_1, std::vector<std::vector<double>> states_2){
+    if (states_1.size() != states_2.size()){
+        return -1;
+    }
+    double dist = 0;
+    for (int i = 0; i < states_1.size(); i++) {
+        dist = dist + sqrt(pow(states_1[i][0] - states_2[i][0], 2) + pow(states_1[i][1] - states_2[i][1], 2));
+    }
+    return dist;
+}
+
 double SubSampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R) {
     double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_L, radius_R);
     return min_length;
@@ -133,6 +169,18 @@ MultiSampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     return parent_sample;
 }
 
+MultiSampleNode& SubSampleSpace::get_parent(MultiSampleNode multi_sample){
+    MultiSampleNode &parent_sample = sample_nodes_.front();
+    
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        if (get_dist(sample_nodes_[i], multi_sample) < get_dist(parent_sample, multi_sample)) {
+            parent_sample = sample_nodes_[i];
+        }
+    }
+    return parent_sample;
+
+}
+
 MultiSampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_L, double radius_R) {
     MultiSampleNode &parent_sample = sample_nodes_.front();
     
@@ -144,17 +192,17 @@ MultiSampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, do
     return parent_sample;
 }
 
-MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS) {
+MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS) {
     MultiSampleNode &new_parent_sample = sample_nodes_.front();
-    double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_state(), state);
+    double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_all_states(), all_states);
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        if (get_dist(sample_nodes_[i].get_state(), state) < RADIUS &&
-            get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost() < new_cost) {
+        if (get_dist(sample_nodes_[i].get_all_states(), all_states) < RADIUS &&
+            get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost() < new_cost) {
             new_parent_sample = sample_nodes_[i];
-            if (Region::collision_check_simple(sample_nodes_[i].get_state(), state, obstacles)) {
+            if (Region::collision_check_simple(sample_nodes_[i].get_all_states(), all_states, obstacles)) {
                 continue;
             }
-            new_cost = get_dist(sample_nodes_[i].get_state(), state) + sample_nodes_[i].get_cost();
+            new_cost = get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost();
         }
     }
     return new_parent_sample;
