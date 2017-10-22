@@ -204,21 +204,21 @@ MultiSampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, do
     return parent_sample;
 }
 
-// MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS) {
-//     MultiSampleNode &new_parent_sample = sample_nodes_.front();
-//     double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_all_states(), all_states);
-//     for (int i = 0; i < sample_nodes_.size(); i++) {
-//         if (get_dist(sample_nodes_[i].get_all_states(), all_states) < RADIUS &&
-//             get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost() < new_cost) {
-//             new_parent_sample = sample_nodes_[i];
-//             if (Region::collision_check_simple(sample_nodes_[i].get_all_states(), all_states, obstacles)) {
-//                 continue;
-//             }
-//             new_cost = get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost();
-//         }
-//     }
-//     return new_parent_sample;
-// }
+MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS) {
+    MultiSampleNode &new_parent_sample = sample_nodes_.front();
+    double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_all_states(), all_states);
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        if (get_dist(sample_nodes_[i].get_all_states(), all_states) < RADIUS &&
+            get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost() < new_cost) {
+            new_parent_sample = sample_nodes_[i];
+            if (Region::collision_check_multi_simple(sample_nodes_[i].get_all_states(), all_states, obstacles)) {
+                continue;
+            }
+            new_cost = get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost();
+        }
+    }
+    return new_parent_sample;
+}
 
 // MultiSampleNode& SubSampleSpace::rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
 //     MultiSampleNode &new_parent_sample = sample_nodes_.front();

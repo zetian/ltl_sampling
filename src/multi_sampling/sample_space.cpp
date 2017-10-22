@@ -80,12 +80,12 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, std::vector<
     std::vector<MultiSampleNode>& all_sub_samples = sample_space_ltl_map_.find(new_sample_ba)->second.get_all_samples();
     for (int i = 0; i < all_sub_samples.size(); i++) {
         if (all_sub_samples[i].get_id() != new_sample.get_parent_id() &&
-            get_dist(all_sub_samples[i].get_state(), new_sample.get_state()) < RADIUS &&
-            get_dist(all_sub_samples[i].get_state(), new_sample.get_state()) + new_sample.get_cost() < 
+            get_dist(all_sub_samples[i].get_all_states(), new_sample.get_all_states()) < RADIUS &&
+            get_dist(all_sub_samples[i].get_all_states(), new_sample.get_all_states()) + new_sample.get_cost() < 
             all_sub_samples[i].get_cost() ) {
             
                 MultiSampleNode &rewire_sample = all_sub_samples[i];
-                if (Region::collision_check_simple(rewire_sample.get_state(), new_sample.get_state(), obstacles)) {
+                if (Region::collision_check_multi_simple(rewire_sample.get_all_states(), new_sample.get_all_states(), obstacles)) {
                     continue;
                 }
 
@@ -98,7 +98,7 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, std::vector<
                 rewire_sample.set_parent_ba(new_sample_ba);
                 rewire_sample.set_parent_id(new_sample_id);
                 double old_cost_of_rewire = rewire_sample.get_cost();
-                rewire_sample.set_cost(new_sample.get_cost() + get_dist(rewire_sample.get_state(), new_sample.get_state()));
+                rewire_sample.set_cost(new_sample.get_cost() + get_dist(rewire_sample.get_all_states(), new_sample.get_all_states()));
                 double decreased_cost = old_cost_of_rewire - rewire_sample.get_cost();
                 new_sample.add_children_id(rewire_sample_id);
 

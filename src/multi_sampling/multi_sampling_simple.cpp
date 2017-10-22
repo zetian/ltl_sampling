@@ -339,8 +339,8 @@ void MultiSamplingSimple::start_sampling(int iteration) {
         // std::cout << "~~~~~~" << std::endl;
 
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        // MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);
-        MultiSampleNode &chosen_parent_sample = parent_sample;
+        MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);
+        // MultiSampleNode &chosen_parent_sample = parent_sample;
         MultiSampleNode new_node;
         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
         new_node.set_id(new_id);
@@ -354,7 +354,7 @@ void MultiSamplingSimple::start_sampling(int iteration) {
         new_node.set_parent_id(chosen_parent_sample.get_id());
         all_space_.insert_sample(new_node, new_ba);
 
-        // all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
+        all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
 
         // // Vis for debug
         // sampling::sample_data node_data;
@@ -373,7 +373,7 @@ void MultiSamplingSimple::start_sampling(int iteration) {
     }
 }
 
-std::vector<std::vector<double>> MultiSamplingSimple::get_path() {
+std::vector<std::vector<std::vector<double>>> MultiSamplingSimple::get_path() {
     bool find_path = false;
     int current_ba = ba_.acc_state_idx.front();
     int init_ba = ba_.init_state_idx;
@@ -395,7 +395,7 @@ std::vector<std::vector<double>> MultiSamplingSimple::get_path() {
             
             MultiSampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
             
-            std::vector<double> path_node = current_node.get_state();
+            std::vector<std::vector<double>> path_node = current_node.get_all_states();
             path_.push_back(path_node);
             current_ba = current_node.get_parent_ba();
             current_id = current_node.get_parent_id();

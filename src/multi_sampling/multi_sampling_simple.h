@@ -18,7 +18,7 @@ private:
     std::string ltl_formula_;
     double EPSILON_ = 6;
     double RADIUS_ = 12;
-    std::vector<std::vector<double>> path_;
+    std::vector<std::vector<std::vector<double>>> path_;
 
     BAStruct ba_;
     SampleSpace all_space_;
@@ -48,5 +48,5 @@ public:
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void set_init_state(std::vector<std::vector<double>> init_all_states);
     void start_sampling(int iteration);
-    std::vector<std::vector<double>> get_path();
+    std::vector<std::vector<std::vector<double>>> get_path();
 };
