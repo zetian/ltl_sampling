@@ -23,7 +23,7 @@ set(MULTI_SAMPLING_LIB_SRC
 	multi_sample_node.cpp
 	sample_space.cpp
 	multi_sampling_simple.cpp
-	#ltl_sampling_dubins.cpp
+	multi_sampling_dubins.cpp
 	#cbba_sampling.cpp
 	#region.cpp
 )

@@ -103,3 +103,38 @@ bool Region::collision_check_multi_simple(std::vector<std::vector<double>> state
     }
     return false;
 }
+
+bool Region::collision_check_multi_dubins(std::vector<std::vector<std::vector<double>>> multi_traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
+    int SAMPLE_NUM =  multi_traj.size()/2.5;
+    // if (traj.size() < SAMPLE_NUM) {
+    //     SAMPLE_NUM = traj.size();
+    // }
+    if (SAMPLE_NUM < 5) {
+        SAMPLE_NUM = multi_traj.size();
+    }
+    std::vector<int> generated_values;
+    for (int i = 0; i < SAMPLE_NUM; i++){
+        int num = rand() % multi_traj.size();
+        // if(std::find(generated_values.begin(), generated_values.end(), num) != generated_values.end()) {
+        //     continue;
+        // }
+        generated_values.push_back(num);
+    }
+    for (int k = 0; k < multi_traj[0].size(); k++){
+        for (int i = 0; i < obstacle.size(); i++) {
+            for (int j = 0; j < generated_values.size(); j++){
+                double x = multi_traj[generated_values[j]][k][0];
+                double y = multi_traj[generated_values[j]][k][1];
+                if (x < 0 || x > work_space_size_x || y < 0 || y > work_space_size_y) {
+                    return true;
+                }
+                if (x > obstacle[i].get_x_position().first && x < obstacle[i].get_x_position().second && y > obstacle[i].get_y_position().first && y < obstacle[i].get_y_position().second){
+                    return true;
+                }
+            }
+        }
+    }
+    
+    
+    return false;
+}

@@ -23,8 +23,8 @@ private:
     uint64_t parent_id_;
     int parent_ba_;
     std::vector<std::pair<int, uint64_t>> children_;
-    std::vector<std::vector<double>> traj_point_wise_;
-    std::vector<std::vector<std::vector<double>>> all_traj_point_wise_;
+    std::vector<std::vector<std::vector<double>>> multi_traj_point_wise_;
+    // std::vector<std::vector<std::vector<double>>> all_traj_point_wise_;
     std::map<int, std::vector<std::vector<double>>> all_traj_point_wise_map_;
 
 public:
@@ -51,8 +51,8 @@ public:
     int get_parent_ba();
     void set_parent_ba(int parent_ba);
     
-    std::vector<std::vector<double>> get_traj();
-    void set_traj(std::vector<std::vector<double>> traj);
+    std::vector<std::vector<std::vector<double>>> get_multi_traj();
+    void set_multi_traj(std::vector<std::vector<std::vector<double>>> multi_traj);
 
     std::vector<std::pair<int, uint64_t>>& get_children_id();
     void set_children_id(std::vector<std::pair<int, uint64_t>> children);

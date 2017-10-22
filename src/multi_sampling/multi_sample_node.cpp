@@ -63,12 +63,12 @@ void MultiSampleNode::set_parent_ba(int parent_ba){
     parent_ba_ = parent_ba;
 }
 
-std::vector<std::vector<double>> MultiSampleNode::get_traj() {
-    return traj_point_wise_;
+std::vector<std::vector<std::vector<double>>> MultiSampleNode::get_multi_traj() {
+    return multi_traj_point_wise_;
 }
 
-void MultiSampleNode::set_traj(std::vector<std::vector<double>> traj) {
-    traj_point_wise_ = traj;
+void MultiSampleNode::set_multi_traj(std::vector<std::vector<std::vector<double>>> multi_traj) {
+    multi_traj_point_wise_ = multi_traj;
 }
 
 

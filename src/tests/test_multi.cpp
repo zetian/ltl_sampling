@@ -49,7 +49,7 @@ int main()
     // double EPSILON = (work_space_size_x + work_space_size_y)/2/20;
     double EPSILON = 6;
     // RADIUS is the radius of checking aera when sampling searching
-    double RADIUS = EPSILON*2*num_agents;
+    double RADIUS = EPSILON*2*num_agents*1.1;
     // radius_L is the left minimum turning radius
     double radius_L = 30;
     // radius_R is the right minimum turning radius
@@ -154,8 +154,6 @@ int main()
             path_data_.state_y[i] = path[i][k][1];
         }
         lcm.publish("PATH", &path_data_);
-        
-
     }
     sampling::sample_draw draw;
     draw.if_draw = true;
