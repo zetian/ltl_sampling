@@ -82,6 +82,7 @@ public:
     int get_ba_state();
     MultiSampleNode& get_parent(std::vector<double> state);
     MultiSampleNode& get_parent(MultiSampleNode multi_sample);
+    MultiSampleNode& get_parent(std::vector<std::vector<double>> multi_states);
     MultiSampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
     MultiSampleNode& rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS);
     MultiSampleNode& rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);

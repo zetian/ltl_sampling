@@ -19,7 +19,7 @@ include_directories(${LCM_GENERATED_HEADER_PATH})
 
 
 # Add libraries
-set(SAMPLING_LIB_SRC
+set(MULTI_SAMPLING_LIB_SRC
 	multi_sample_node.cpp
 	sample_space.cpp
 	multi_sampling_simple.cpp
@@ -27,8 +27,8 @@ set(SAMPLING_LIB_SRC
 	#cbba_sampling.cpp
 	#region.cpp
 )
-add_library(multi_sampling STATIC ${SAMPLING_LIB_SRC})
-target_link_libraries(multi_sampling transsys trajectory)
+add_library(multi_sampling STATIC ${MULTI_SAMPLING_LIB_SRC})
+target_link_libraries(multi_sampling sampling transsys trajectory)
 #add_library(transsys STATIC ${GRAPH_LIB_SRC})
 #target_link_libraries(transsys spot bddx)
 

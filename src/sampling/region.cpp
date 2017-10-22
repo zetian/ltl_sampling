@@ -79,7 +79,7 @@ bool Region::collision_check_simple(std::vector<double> state_s, std::vector<dou
     }
     return false;
 }
-static bool collision_check_simple(std::vector<std::vector<double>> state_s, std::vector<std::vector<double>> state_f, std::vector<Region> obstacle){
+bool Region::collision_check_multi_simple(std::vector<std::vector<double>> state_s, std::vector<std::vector<double>> state_f, std::vector<Region> obstacle){
     int SAMPLE_NUM = 15;
     std::vector<double> generated_values;
     for(int i = 0; i < SAMPLE_NUM; i++) {

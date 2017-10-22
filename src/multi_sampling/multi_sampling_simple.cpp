@@ -102,7 +102,14 @@ std::vector<int> MultiSamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace
     return act_q[r];
 }
 
+void MultiSamplingSimple::set_num_agent(int num_agent){
+    num_agent_ = num_agent;
+}
+
 void MultiSamplingSimple::buchi_post (BAStruct &ba, std::vector<int> indep_set) {
+    if (indep_set.size() == 1 || indep_set.size() == 0){
+        return;
+    }
     std::bitset<32> indep_bitset;
     for (auto it = indep_set.begin(); it != indep_set.end(); it++) {
         indep_bitset.set(*it, 1);
@@ -162,7 +169,6 @@ std::vector<std::vector<double>> MultiSamplingSimple::step_from_to (MultiSampleN
         }
         return all_new_states;
     }
-
 }
 
 
@@ -189,6 +195,34 @@ int MultiSamplingSimple::step_from_to_buchi (int paraent_ba, std::vector<double>
     // std::cout << "****************************************" << std::endl;
     return buchi_num;
 }
+
+int MultiSamplingSimple::step_from_to_buchi (int paraent_ba, std::vector<std::vector<double>> all_new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions){
+    std::bitset<32> bit_set;
+    int buchi_num = paraent_ba;
+    for (int k = 0; k < all_new_sample_state.size(); k++){
+        for (int i = 0; i < all_interest_regions.size(); i++) {
+            if (if_in_region(all_new_sample_state[k], all_interest_regions.find(i)->second)) {
+                bit_set.set(all_interest_regions.find(i)->second.get_region_interest());
+                break;
+            }
+        }
+    }
+    
+    int act = bit_set.to_ullong();
+    for (int i = 0; i < ba.trans_con[paraent_ba].size(); i++) {
+        if (std::find(ba.trans_con[paraent_ba][i].begin(), ba.trans_con[paraent_ba][i].end(), act) != ba.trans_con[paraent_ba][i].end()) {
+            buchi_num = i;
+            break;
+        }
+    }
+    // std::cout << "new ba: " << buchi_num << std::endl;
+    // std::cout << "(step_from_to_buchi function) out buchi state: " << buchi_num << std::endl;
+    // std::cout << "(step_from_to_buchi function) test bit set: " << bit_set << std::endl;
+    // std::cout << "(step_from_to_buchi function) test int: " << bit_set.to_ullong() << std::endl;
+    // std::cout << "****************************************" << std::endl;
+    return buchi_num;
+}
+
 
 void MultiSamplingSimple::read_formula(std::string ltl_formula, std::vector<std::string> buchi_regions, std::vector<int> indep_set) {
     SpotHoaInterpreter ltl2ba_lib;
@@ -233,6 +267,38 @@ std::vector<double> MultiSamplingSimple::sample_state(std::vector<int> ba_act) {
     return sampled_position;
 }
 
+std::vector<std::vector<double>> MultiSamplingSimple::multi_sample_state (std::vector<int> ba_act){
+    std::vector<std::vector<double>> multi_sampled_position;
+    for (int i = 0; i < num_agent_; i++){
+        double new_node_x = 0;
+        double new_node_y = 0;
+        if (ba_act[0] == ba_act[1]) {
+            new_node_x = fRand(0, work_space_size_x_);
+            new_node_y = fRand(0, work_space_size_y_);
+        }
+        else {
+            int interest_id = 0;
+            int act = ba_.trans_con[ba_act[0]][ba_act[1]].front();
+            std::bitset<32> act_bit = std::bitset<32>(act);
+            for (int i = 0; i < act_bit.size(); i++) {
+                if (act_bit.test(i)){
+                    interest_id = i;
+                    break;
+                }
+            }
+            double new_node_x_min = all_interest_regions_.find(interest_id)->second.get_x_position().first;
+            double new_node_x_max = all_interest_regions_.find(interest_id)->second.get_x_position().second;
+            double new_node_y_min = all_interest_regions_.find(interest_id)->second.get_y_position().first;
+            double new_node_y_max = all_interest_regions_.find(interest_id)->second.get_y_position().second;
+            new_node_x = fRand(new_node_x_min, new_node_x_max);
+            new_node_y = fRand(new_node_y_min, new_node_y_max);
+        }
+        std::vector<double> sampled_position = {new_node_x, new_node_y}; 
+        multi_sampled_position.push_back(sampled_position);
+    }
+    return multi_sampled_position;
+}
+
 void MultiSamplingSimple::set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id) {
     Region interest_region;
     interest_region.set_position(position_x, position_y);
@@ -246,66 +312,66 @@ void MultiSamplingSimple::set_obstacle(std::pair <double, double> position_x, st
     all_obstacles_.push_back(obstacle);
 }
 
-void MultiSamplingSimple::set_init_state(std::vector<double> init_state) {
+void MultiSamplingSimple::set_init_state(std::vector<std::vector<double>> init_all_states) {
     all_space_.set_space(ba_.state_num);
     int init_ba = ba_.init_state_idx;
     int acc_ba = ba_.acc_state_idx.front();
     MultiSampleNode init_node;
     init_node.set_id(0);
-    init_node.set_state(init_state);
+    init_node.set_all_states(init_all_states);
     init_node.set_ba(ba_.init_state_idx);
     init_node.set_cost(0.0);
     all_space_.insert_sample(init_node, init_ba);
 }
 
-// void MultiSamplingSimple::start_sampling(int iteration) {
-//     bool find_path = false;
-//     uint64_t first_acc_state_id;
-//     lcm::LCM lcm;
-//     for (int i = 0; i < iteration; i++) {
-//         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
-//         std::vector<double> sampled_position = sample_state(ba_act); 
-//         MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent(sampled_position);
-//         std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position);
-//         if (Region::collision_check_simple(parent_sample.get_state(), new_sample_state, all_obstacles_) ){
-//             continue;
-//         }
+void MultiSamplingSimple::start_sampling(int iteration) {
+    bool find_path = false;
+    uint64_t first_acc_state_id;
+    lcm::LCM lcm;
+    for (int i = 0; i < iteration; i++) {
+        std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
+        std::vector<std::vector<double>> sampled_position = multi_sample_state(ba_act); 
+        MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent(sampled_position);
+        std::vector<std::vector<double>> new_sample_state = step_from_to(parent_sample, sampled_position);
+        if (Region::collision_check_multi_simple(parent_sample.get_all_states(), new_sample_state, all_obstacles_) ){
+            continue;
+        }
+        // std::cout << "~~~~~~" << std::endl;
 
+        int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
+        // MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);
+        MultiSampleNode &chosen_parent_sample = parent_sample;
+        MultiSampleNode new_node;
+        uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
+        new_node.set_id(new_id);
+        new_node.set_ba(new_ba);
 
-//         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-//         MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);
-        
-//         MultiSampleNode new_node;
-//         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
-//         new_node.set_id(new_id);
-//         new_node.set_ba(new_ba);
+        chosen_parent_sample.add_children_id(std::make_pair(new_ba, new_id));
 
-//         chosen_parent_sample.add_children_id(std::make_pair(new_ba, new_id));
+        new_node.set_all_states(new_sample_state);
+        new_node.set_cost(chosen_parent_sample.get_cost() + get_dist(chosen_parent_sample.get_all_states(), new_sample_state));
+        new_node.set_parent_ba(chosen_parent_sample.get_ba());
+        new_node.set_parent_id(chosen_parent_sample.get_id());
+        all_space_.insert_sample(new_node, new_ba);
 
-//         new_node.set_state(new_sample_state);
-//         new_node.set_cost(chosen_parent_sample.get_cost() + get_dist(chosen_parent_sample.get_state(), new_sample_state));
-//         new_node.set_parent_ba(chosen_parent_sample.get_ba());
-//         new_node.set_parent_id(chosen_parent_sample.get_id());
-//         all_space_.insert_sample(new_node, new_ba);
+        // all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
 
-//         all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
+        // // Vis for debug
+        // sampling::sample_data node_data;
+        // node_data.state[0] = new_sample_state[0];
+        // node_data.state[1] = new_sample_state[1];
+        // lcm.publish("SAMPLE", &node_data);
 
-//         // // Vis for debug
-//         // sampling::sample_data node_data;
-//         // node_data.state[0] = new_sample_state[0];
-//         // node_data.state[1] = new_sample_state[1];
-//         // lcm.publish("SAMPLE", &node_data);
-
-//         // std::cout << "new ba state: " << new_ba << std::endl;
-//         // if (new_ba == ba_.acc_state_idx.front()) {
-//         //     // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
-//         //     std::cout << "Find a solution!!!" << std::endl;
-//         //     first_acc_state_id = new_id;
-//         //     find_path = true;
-//         //     break;
-//         // }
-//     }
-// }
+        // std::cout << "new ba state: " << new_ba << std::endl;
+        // if (new_ba == ba_.acc_state_idx.front()) {
+        //     // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
+        //     std::cout << "Find a solution!!!" << std::endl;
+        //     first_acc_state_id = new_id;
+        //     find_path = true;
+        //     break;
+        // }
+    }
+}
 
 std::vector<std::vector<double>> MultiSamplingSimple::get_path() {
     bool find_path = false;

@@ -79,6 +79,9 @@ std::vector<int> LTL_SamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace 
 }
 
 void LTL_SamplingSimple::buchi_post (BAStruct &ba, std::vector<int> indep_set) {
+    if (indep_set.size() == 1 || indep_set.size() == 0){
+        return;
+    }
     std::bitset<32> indep_bitset;
     for (auto it = indep_set.begin(); it != indep_set.end(); it++) {
         indep_bitset.set(*it, 1);

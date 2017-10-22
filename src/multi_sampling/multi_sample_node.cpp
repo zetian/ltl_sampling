@@ -181,6 +181,18 @@ MultiSampleNode& SubSampleSpace::get_parent(MultiSampleNode multi_sample){
 
 }
 
+MultiSampleNode& SubSampleSpace::get_parent(std::vector<std::vector<double>> multi_states){
+    MultiSampleNode &parent_sample = sample_nodes_.front();
+    
+    for (int i = 0; i < sample_nodes_.size(); i++) {
+        if (get_dist(sample_nodes_[i].get_all_states(), multi_states) < get_dist(parent_sample.get_all_states(), multi_states)) {
+            parent_sample = sample_nodes_[i];
+        }
+    }
+    return parent_sample;
+
+}
+
 MultiSampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_L, double radius_R) {
     MultiSampleNode &parent_sample = sample_nodes_.front();
     
@@ -192,36 +204,36 @@ MultiSampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, do
     return parent_sample;
 }
 
-MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS) {
-    MultiSampleNode &new_parent_sample = sample_nodes_.front();
-    double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_all_states(), all_states);
-    for (int i = 0; i < sample_nodes_.size(); i++) {
-        if (get_dist(sample_nodes_[i].get_all_states(), all_states) < RADIUS &&
-            get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost() < new_cost) {
-            new_parent_sample = sample_nodes_[i];
-            if (Region::collision_check_simple(sample_nodes_[i].get_all_states(), all_states, obstacles)) {
-                continue;
-            }
-            new_cost = get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost();
-        }
-    }
-    return new_parent_sample;
-}
+// MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS) {
+//     MultiSampleNode &new_parent_sample = sample_nodes_.front();
+//     double new_cost = parent_sample.get_cost() + get_dist(parent_sample.get_all_states(), all_states);
+//     for (int i = 0; i < sample_nodes_.size(); i++) {
+//         if (get_dist(sample_nodes_[i].get_all_states(), all_states) < RADIUS &&
+//             get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost() < new_cost) {
+//             new_parent_sample = sample_nodes_[i];
+//             if (Region::collision_check_simple(sample_nodes_[i].get_all_states(), all_states, obstacles)) {
+//                 continue;
+//             }
+//             new_cost = get_dist(sample_nodes_[i].get_all_states(), all_states) + sample_nodes_[i].get_cost();
+//         }
+//     }
+//     return new_parent_sample;
+// }
 
-MultiSampleNode& SubSampleSpace::rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
-    MultiSampleNode &new_parent_sample = sample_nodes_.front();
-    for (int i = 0; i < sample_nodes_.size(); i++) {
-        double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R);
-        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < RADIUS &&
-                get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost() < new_cost) {
-                new_parent_sample = sample_nodes_[i];
+// MultiSampleNode& SubSampleSpace::rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
+//     MultiSampleNode &new_parent_sample = sample_nodes_.front();
+//     for (int i = 0; i < sample_nodes_.size(); i++) {
+//         double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R);
+//         if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < RADIUS &&
+//                 get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost() < new_cost) {
+//                 new_parent_sample = sample_nodes_[i];
 
-                dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
-                if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
-                    continue;
-                }
-                new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
-        }
-    }
-    return new_parent_sample;
-}
+//                 dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
+//                 if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
+//                     continue;
+//                 }
+//                 new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
+//         }
+//     }
+//     return new_parent_sample;
+// }
