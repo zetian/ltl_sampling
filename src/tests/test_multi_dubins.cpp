@@ -71,8 +71,15 @@ int main()
     multi_sampling_ltl.read_formula(ltl_formula, buchi_regions, {});
 
     /*** Set the initial state of the UAV ***/
+    sampling::sample_data node_data;
     std::vector<double> init_state_1 = {20, 10, M_PI/2};
+    node_data.state[0] = init_state_1[0];
+    node_data.state[1] = init_state_1[1];
+    lcm.publish("SAMPLE", &node_data);
     std::vector<double> init_state_2 = {80, 10, M_PI/2};
+    node_data.state[0] = init_state_2[0];
+    node_data.state[1] = init_state_2[1];
+    lcm.publish("SAMPLE", &node_data);
     std::vector<std::vector<double>> init_all_states = {init_state_1, init_state_2};
     multi_sampling_ltl.set_init_state(init_all_states);
     
@@ -133,7 +140,7 @@ int main()
     
     /*** Set the number of iterations ***/
     // Solution towards to optimal when iterations -> infinite
-    int iterations = 3000;
+    int iterations = 2500;
 
     /*** Start sampling searching ***/
     stopwatch.tic();

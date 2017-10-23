@@ -47,7 +47,7 @@ int main(int argc, char** argv )
 
     /*** Set the number of iterations ***/
     // Solution towards to optimal when iterations -> infinite
-    int iteration_cbba = 1000;
+    int iteration_cbba = 500;
 	cbba_sampling.init_parameter(iteration_cbba, EPSILON, RADIUS);
 
     /*** Read formula ***/

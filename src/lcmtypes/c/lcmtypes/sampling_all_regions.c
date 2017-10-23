@@ -18,7 +18,7 @@ uint64_t __sampling_all_regions_hash_recursive(const __lcm_hash_ptr *p)
 
     __lcm_hash_ptr cp;
     cp.parent =  p;
-    cp.v = __sampling_all_regions_get_hash;
+    cp.v = (void*)__sampling_all_regions_get_hash;
     (void) cp;
 
     uint64_t hash = (uint64_t)0x5116c004e56bc0afLL

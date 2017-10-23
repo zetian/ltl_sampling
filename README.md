@@ -103,7 +103,7 @@ Once you set up all the paremeters, tasks and environment, run src/python_vis/sa
 ### Multiple UAV case
 
 Follow the test example in src/tests/test_cbba.cpp, the result looks like:
-<img src="/data/test_example_2.png" align="middle" height="500" >
+<img src="/data/cbba.png" align="middle" height="500" >
 
 #### Comments about the test example
 1. There are 2 UAVs in this set up, both of them have a minimun turning radius 15.
