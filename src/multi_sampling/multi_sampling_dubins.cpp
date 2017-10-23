@@ -409,52 +409,59 @@ void MultiSamplingDubins::start_sampling(int iteration) {
     }
 }
 
-// std::vector<std::vector<double>> MultiSamplingDubins::get_path() {
-//     lcm::LCM lcm;
-//     bool find_path = false;
-//     int current_ba = ba_.acc_state_idx.front();
-//     int init_ba = ba_.init_state_idx;
+std::vector<std::vector<std::vector<double>>> MultiSamplingDubins::get_path() {
+    lcm::LCM lcm;
+    bool find_path = false;
+    int current_ba = ba_.acc_state_idx.front();
+    int init_ba = ba_.init_state_idx;
 
-//     std::vector<std::vector<double>> path_nodes_sq;
-
-//     if (all_space_.get_sub_space(current_ba).num_samples() > 0) {
-//         find_path = true;
-//     }
-//     else {
-//         std::cout << "No feasible path found. " << std::endl;
-//         return path_;
-//     }
+    std::vector<std::vector<std::vector<double>>> path_nodes_sq;
+    path_nodes_sq.resize(num_agent_);
+    if (all_space_.get_sub_space(current_ba).num_samples() > 0) {
+        find_path = true;
+    }
+    else {
+        std::cout << "No feasible path found. " << std::endl;
+        return path_;
+    }
     
-//     double total_cost = INT_MAX;
-//     uint64_t current_id = 1;
-//     if (find_path) {
-//         MultiSampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
-//         // sampling::sample_data node_data;
-//         // node_data.state[0] = min_cost_sample.get_state()[0];
-//         // node_data.state[1] = min_cost_sample.get_state()[1];
-//         // lcm.publish("SAMPLE", &node_data);
+    double total_cost = INT_MAX;
+    uint64_t current_id = 1;
+    if (find_path) {
+        MultiSampleNode min_cost_sample = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample();
+        // sampling::sample_data node_data;
+        // node_data.state[0] = min_cost_sample.get_state()[0];
+        // node_data.state[1] = min_cost_sample.get_state()[1];
+        // lcm.publish("SAMPLE", &node_data);
 
-//         std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
-//         current_id = min_cost_sample.get_id();
-//         while (current_ba != init_ba || current_id != 0) {
-//             MultiSampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
-//             // sampling::sample_data node_data;
-//             // node_data.state[0] = current_node.get_state()[0];
-//             // node_data.state[1] = current_node.get_state()[1];
-//             // lcm.publish("SAMPLE", &node_data);
-//             std::vector<std::vector<double>> temp = current_node.get_traj();
-//             std::reverse(temp.begin(), temp.end());
-//             path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
-//             current_ba = current_node.get_parent_ba();
-//             current_id = current_node.get_parent_id();
+        std::cout << "Path cost is: " << min_cost_sample.get_cost() << std::endl;
+        current_id = min_cost_sample.get_id();
+        while (current_ba != init_ba || current_id != 0) {
+            MultiSampleNode current_node = all_space_.get_sub_space(current_ba).get_sample(current_id);
+            // sampling::sample_data node_data;
+            // node_data.state[0] = current_node.get_state()[0];
+            // node_data.state[1] = current_node.get_state()[1];
+            // lcm.publish("SAMPLE", &node_data);
+            std::vector<std::vector<std::vector<double>>> temp = current_node.get_multi_traj();
+            for (int k = 0; k < num_agent_; k++){
+                std::reverse(temp[k].begin(), temp[k].end());
+                path_nodes_sq[k].insert(path_nodes_sq[k].end(), temp[k].begin(), temp[k].end() );
+            }
+            // std::reverse(temp.begin(), temp.end());
+            // path_nodes_sq.insert( path_nodes_sq.end(), temp.begin(), temp.end() );
+            current_ba = current_node.get_parent_ba();
+            current_id = current_node.get_parent_id();
             
-//         }
-//         std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
+        }
+        for (int k = 0; k < num_agent_; k++){
+            std::reverse(path_nodes_sq[k].begin(), path_nodes_sq[k].end());
+        } 
+        // std::reverse(path_nodes_sq.begin(), path_nodes_sq.end());
     
-//     }
-//     path_ = path_nodes_sq;
-//     return path_nodes_sq;
-// }
+    }
+    path_ = path_nodes_sq;
+    return path_nodes_sq;
+}
 
 double MultiSamplingDubins::get_path_length(){
     if (all_space_.get_sub_space(ba_.acc_state_idx.front()).num_samples() > 0) {

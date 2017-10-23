@@ -21,7 +21,7 @@ private:
     double RADIUS_;
     double radius_L_;
     double radius_R_;
-    std::vector<std::vector<double>> path_;
+    std::vector<std::vector<std::vector<double>>> path_;
 
     BAStruct ba_;
     SampleSpace all_space_;
@@ -52,6 +52,6 @@ public:
     // void set_init_state(std::vector<double> init_state);
     void set_init_state(std::vector<std::vector<double>> init_all_states);
     void start_sampling(int iteration);
-    std::vector<std::vector<double>> get_path();
+    std::vector<std::vector<std::vector<double>>> get_path();
     double get_path_length();
 };
