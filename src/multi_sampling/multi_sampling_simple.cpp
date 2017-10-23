@@ -155,20 +155,36 @@ std::vector<double> MultiSamplingSimple::step_from_to (MultiSampleNode parent_sa
 }
 
 
+// std::vector<std::vector<double>> MultiSamplingSimple::step_from_to (MultiSampleNode parent_sample, std::vector<std::vector<double>> all_sampled_states){
+//     // std::vector<std::vector<double>> all_new_states;
+//     if (get_dist(parent_sample.get_all_states(), all_sampled_states) < EPSILON_) {
+//         return all_sampled_states;
+//     }
+//     else {
+//         std::vector<std::vector<double>> all_new_states;
+//         for (int i = 0; i < all_sampled_states.size(); i++){
+//             double theta = atan2(all_sampled_states[i][1] - parent_sample.get_all_states()[i][1], all_sampled_states[i][0] - parent_sample.get_all_states()[i][0]);
+//             std::vector<double> new_state = {parent_sample.get_all_states()[i][0] + EPSILON_*cos(theta), parent_sample.get_all_states()[i][1] + EPSILON_*sin(theta)};
+//             all_new_states.push_back(new_state);
+//         }
+//         return all_new_states;
+//     }
+// }
+
 std::vector<std::vector<double>> MultiSamplingSimple::step_from_to (MultiSampleNode parent_sample, std::vector<std::vector<double>> all_sampled_states){
+
     std::vector<std::vector<double>> all_new_states;
-    if (get_dist(parent_sample.get_all_states(), all_sampled_states) < EPSILON_) {
-        return all_sampled_states;
-    }
-    else {
-        std::vector<std::vector<double>> all_new_states;
-        for (int i = 0; i < all_sampled_states.size(); i++){
-            double theta = atan2(all_sampled_states[i][1] - parent_sample.get_all_states()[i][1], all_sampled_states[i][0] - parent_sample.get_all_states()[i][0]);
-            std::vector<double> new_state = {parent_sample.get_all_states()[i][0] + EPSILON_*cos(theta), parent_sample.get_all_states()[i][1] + EPSILON_*sin(theta)};
-            all_new_states.push_back(new_state);
+    for (int i = 0; i < all_sampled_states.size(); i++){
+        if (get_dist(parent_sample.get_all_states()[i], all_sampled_states[i]) < EPSILON_){
+            all_new_states.push_back(all_sampled_states[i]);
+            continue;
         }
-        return all_new_states;
+        double theta = atan2(all_sampled_states[i][1] - parent_sample.get_all_states()[i][1], all_sampled_states[i][0] - parent_sample.get_all_states()[i][0]);
+        std::vector<double> new_state = {parent_sample.get_all_states()[i][0] + EPSILON_*cos(theta), parent_sample.get_all_states()[i][1] + EPSILON_*sin(theta)};
+        all_new_states.push_back(new_state);
     }
+    return all_new_states;
+
 }
 
 

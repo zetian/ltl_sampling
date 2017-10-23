@@ -73,6 +73,7 @@ private:
     double get_dist(MultiSampleNode multi_sample_1, MultiSampleNode multi_sample_2);
     double get_dist(std::vector<std::vector<double>> states_1, std::vector<std::vector<double>> states_2);
     double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R);
+    double get_dist_dubins(std::vector<std::vector<double>> states_1, std::vector<std::vector<double>> states_2, double radius_L, double radius_R);
 public:
     void insert_sample(MultiSampleNode new_sample);
     MultiSampleNode& get_sample(uint64_t id);
@@ -84,7 +85,8 @@ public:
     MultiSampleNode& get_parent(MultiSampleNode multi_sample);
     MultiSampleNode& get_parent(std::vector<std::vector<double>> multi_states);
     MultiSampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
+    MultiSampleNode& get_parent_dubins(std::vector<std::vector<double>> multi_states, double radius_L, double radius_R);
     MultiSampleNode& rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS);
-    MultiSampleNode& rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
+    MultiSampleNode& rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<DubinsSteer::SteerData>& multi_dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
 
 };

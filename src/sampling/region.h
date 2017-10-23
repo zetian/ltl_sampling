@@ -1,3 +1,4 @@
+#include "trajectory/dubins_steer.h"
 #include <utility>
 #include <vector>
 class Region {
@@ -19,5 +20,6 @@ public:
     static bool collision_check_simple(std::vector<double> state_s, std::vector<double> state_f, std::vector<Region> obstacle);
     static bool collision_check_multi_simple(std::vector<std::vector<double>> state_s, std::vector<std::vector<double>> state_f, std::vector<Region> obstacle);
     static bool collision_check_multi_dubins(std::vector<std::vector<std::vector<double>>> multi_traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y);
-    
+    static bool collision_check_multi_dubins(std::vector<DubinsSteer::SteerData> multi_dubins_steer_data, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y);
+
 };
