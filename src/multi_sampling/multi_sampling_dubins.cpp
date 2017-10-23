@@ -409,6 +409,53 @@ void MultiSamplingDubins::start_sampling(int iteration) {
     }
 }
 
+void MultiSamplingDubins::start_sampling() {
+    bool find_path = false;
+    uint64_t first_acc_state_id;
+    lcm::LCM lcm;
+    while (!find_path){
+                // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+        // std::cout << "iteration: " << i << std::endl;
+        std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
+        std::vector<std::vector<double>> sampled_position = multi_sample_state(ba_act);
+        std::vector<DubinsSteer::SteerData> multi_dubins_steer_data;
+        MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, radius_L_, radius_R_);
+        std::vector<std::vector<double>> new_sample_state = step_from_to(parent_sample, sampled_position, multi_dubins_steer_data, EPSILON_);
+
+        if (Region::collision_check_multi_dubins(multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_)) {
+            continue;
+        } 
+        int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
+        MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, radius_L_, radius_R_);
+        // MultiSampleNode &chosen_parent_sample = parent_sample;
+        MultiSampleNode new_node;
+        uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
+        new_node.set_id(new_id);
+        new_node.set_ba(new_ba);
+        chosen_parent_sample.add_children_id(std::make_pair(new_ba, new_id));
+        new_node.set_all_states(new_sample_state);
+        double all_traj_length = 0;
+        std::vector<std::vector<std::vector<double>>> multi_traj_point_wise;
+        for (int i = 0; i < multi_dubins_steer_data.size(); i++){
+            all_traj_length = all_traj_length + multi_dubins_steer_data[i].traj_length;
+            multi_traj_point_wise.push_back(multi_dubins_steer_data[i].traj_point_wise);
+        }
+        new_node.set_cost(chosen_parent_sample.get_cost() + all_traj_length);
+        new_node.set_parent_ba(chosen_parent_sample.get_ba());
+        new_node.set_parent_id(chosen_parent_sample.get_id());
+
+        new_node.set_multi_traj(multi_traj_point_wise);
+
+        all_space_.insert_sample(new_node, new_ba);
+
+        all_space_.rewire_dubins(num_agent_, new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, radius_L_, radius_R_);
+
+        if (all_space_.get_sub_space(ba_.acc_state_idx.front()).num_samples() > 0) {
+            find_path = true;
+        }
+    }
+}
+
 std::vector<std::vector<std::vector<double>>> MultiSamplingDubins::get_path() {
     lcm::LCM lcm;
     bool find_path = false;
