@@ -43,7 +43,7 @@ int main()
     
     /*** Set all parameters ***/
     // Set num of agents
-    int num_agents = 4;
+    int num_agents = 2;
     multi_sampling_ltl.set_num_agent(num_agents);
     // EPSILON is the forward step size when sampling searching
     // double EPSILON = (work_space_size_x + work_space_size_y)/2/20;
@@ -58,19 +58,20 @@ int main()
 
     /*** Read formula ***/
     // "(<> p0) && (<> p1) && (<> p2)" means visit p0, p1 and p2 region of interests
-    std::string ltl_formula = "(<>p0) && (<>p1) && (<>p2) && (<>p3) && (<>p4) && (<>p5) && (<>p6) && (<>p7)";
+    // std::string ltl_formula = "(<>p0) && (<>p1) && (<>p2) && (<>p3) && (<>p4) && (<>p5) && (<>p6) && (<>p7)";
+    std::string ltl_formula = "(<>p0)";
     // "<> (p0 && <> (p1 && (<> p2)))" means visit p0, p1 and p2 region of interests and by this order
     // std::string ltl_formula = "<> (p2 && <> (p1 && (<> p0)))";
     // Wrap all region of interests (ROI) as input for reading formula
     std::vector<std::string> buchi_regions;
     buchi_regions.push_back("p0");
-    buchi_regions.push_back("p1");
-    buchi_regions.push_back("p2");
-    buchi_regions.push_back("p3");
-    buchi_regions.push_back("p4");
-    buchi_regions.push_back("p5");
-    buchi_regions.push_back("p6");
-    buchi_regions.push_back("p7");
+    // buchi_regions.push_back("p1");
+    // buchi_regions.push_back("p2");
+    // buchi_regions.push_back("p3");
+    // buchi_regions.push_back("p4");
+    // buchi_regions.push_back("p5");
+    // buchi_regions.push_back("p6");
+    // buchi_regions.push_back("p7");
     // indep_set store the ROI that independent to each other, in this case means p0, p1 and p2 have no intersections
     std::vector<int> indep_set = {0};
     multi_sampling_ltl.read_formula(ltl_formula, buchi_regions, {});
@@ -93,7 +94,8 @@ int main()
     node_data.state[0] = init_state_4[0];
     node_data.state[1] = init_state_4[1];
     lcm.publish("SAMPLE", &node_data);
-    std::vector<std::vector<double>> init_all_states = {init_state_1, init_state_2, init_state_3, init_state_4};
+    // std::vector<std::vector<double>> init_all_states = {init_state_1, init_state_2, init_state_3, init_state_4};
+    std::vector<std::vector<double>> init_all_states = {init_state_1, init_state_2};
     multi_sampling_ltl.set_init_state(init_all_states);
     
     /*** Set region of interests ***/
