@@ -356,6 +356,10 @@ void MultiSamplingDubins::start_sampling(int iteration) {
     uint64_t first_acc_state_id;
     lcm::LCM lcm;
     for (int i = 0; i < iteration; i++) {
+        if (i%100 == 0){
+            std::cout << "iteration: " << i << std::endl;
+        }
+            
         // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
         // std::cout << "iteration: " << i << std::endl;
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);

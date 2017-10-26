@@ -140,13 +140,13 @@ int main()
     
     /*** Set the number of iterations ***/
     // Solution towards to optimal when iterations -> infinite
-    int iterations = 2500;
+    int iterations = 5000;
 
     /*** Start sampling searching ***/
     stopwatch.tic();
     
     // multi_sampling_ltl.start_sampling(iterations);
-    multi_sampling_ltl.start_sampling();
+    multi_sampling_ltl.start_sampling(iterations);
     std::cout << "Time used for searching: " << stopwatch.toc() << std::endl;
 
     /*** Get result ***/

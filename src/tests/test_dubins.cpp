@@ -23,7 +23,7 @@ int main()
 	std::vector<std::vector<double>> test_traj_point_wise = dubins_steer_data.traj_point_wise;
 	std::vector<double> test_lens_map = dubins_steer_data.traj_len_map;
 	for (int i = 0; i < test_traj_point_wise.size(); i++) {
-		std::cout << "piece_wise " << i << ": " << test_traj_point_wise[i][0] << ", " << test_traj_point_wise[i][1] << ", " << test_traj_point_wise[i][2] << std::endl; 
+		std::cout << "piece_wise " << i << ": x: " << test_traj_point_wise[i][0] << ", y: " << test_traj_point_wise[i][1] << ", len: " << test_lens_map[i] << std::endl; 
 	}
 	// for (int i = 0; i < test_lens_map.size(); i++) {
 	// 	std::cout << "test_lens_map: " << test_lens_map[i] << std::endl; 
