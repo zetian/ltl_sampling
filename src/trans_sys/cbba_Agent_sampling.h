@@ -52,6 +52,7 @@ public:
 	// The index of agent (agent 0,1,...)
 	double radius_L_;
 	double radius_R_;
+	double ground_speed_ = 1;
 	std::vector<double> init_state_;
 	int Index;
 	int start_nodes_id_;

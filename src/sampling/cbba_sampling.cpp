@@ -79,7 +79,7 @@ double CBBA_sampling::path_length_calculation(std::string ltl_new, cbba_Agent& a
 	// std::cout << "======================debug===========================" << std::endl;
     ltl_sampling_dubins.read_formula(ltl_new, buchi_regions_, indep_set_);
     ltl_sampling_dubins.init_workspace(work_space_size_x_, work_space_size_y_);
-    ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, agent.radius_L_, agent.radius_R_);
+    ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, agent.radius_L_, agent.radius_R_, ground_speed_);
     for (int i = 0; i < all_interest_regions_.size(); i++) {
         std::pair <double, double> position_x = all_interest_regions_[i].get_x_position();
         std::pair <double, double> position_y = all_interest_regions_[i].get_y_position();
@@ -843,7 +843,7 @@ void CBBA_sampling::get_solution(){
         // }
         ltl_sampling_dubins.read_formula(ltl_new, buchi_regions_, indep_set_);
         ltl_sampling_dubins.init_workspace(work_space_size_x_, work_space_size_y_);
-        ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, agent.radius_L_, agent.radius_R_);
+        ltl_sampling_dubins.init_parameter(EPSILON_, RADIUS_, agent.radius_L_, agent.radius_R_, agent.ground_speed_);
         for (int i = 0; i < all_interest_regions_.size(); i++) {
             std::pair <double, double> position_x = all_interest_regions_[i].get_x_position();
             std::pair <double, double> position_y = all_interest_regions_[i].get_y_position();

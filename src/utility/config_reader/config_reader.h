@@ -18,14 +18,28 @@ public:
     ConfigReader(){}
     ConfigReader(std::string filename){
         std::ifstream ifs(filename, std::ifstream::in);
-        ifs >> *this;
-        ifs.close();
+        if (!ifs)
+        {
+            error_ = true;
+            std::cout << "Error: Can't open the file" << std::endl;
+            ifs.close();
+        }
+        else{
+            ifs >> *this;
+            ifs.close();
+        }
+        
     }
     ~ConfigReader(){}
 
 private:
+    bool error_ = false;
     std::map <std::string, std::string> data_;
 public:
+    bool CheckError(){
+        return error_;
+    }
+
     std::map <std::string, std::string> GetAllData(){
         return data_;
     }
@@ -42,6 +56,9 @@ public:
 
     double GetReal(std::string name, double default_value){
         std::string valstr = Get(name, "");
+        if (valstr == ""){
+            return default_value; 
+        }
         char* end = 0;
         double val = strtod(valstr.c_str(), &end);
         if (end > valstr.c_str() && val != HUGE_VAL){
@@ -55,6 +72,9 @@ public:
 
     int GetInteger(std::string name, int default_value){
         std::string valstr = Get(name, "");
+        if (valstr == ""){
+            return default_value; 
+        }
         char* end = 0;
         int val = strtol(valstr.c_str(), &end, 0);
         if (end != valstr.c_str() && val != HUGE_VAL){
@@ -68,6 +88,9 @@ public:
 
     bool GetBoolean(std::string name, bool default_value){
         std::string valstr = Get(name, "");
+        if (valstr == ""){
+            return default_value; 
+        }
         // Convert to lower case to make string comparisons case-insensitive
         std::transform(valstr.begin(), valstr.end(), valstr.begin(), ::tolower);
         if (valstr == "true" || valstr == "yes" || valstr == "on" || valstr == "1"){

@@ -22,6 +22,7 @@ private:
     int parent_ba_;
     std::vector<std::pair<int, uint64_t>> children_;
     std::vector<std::vector<double>> traj_point_wise_;
+    DubinsSteer::SteerData traj_data_;
 
 public:
     std::vector<double> get_state();
@@ -44,6 +45,9 @@ public:
     
     std::vector<std::vector<double>> get_traj();
     void set_traj(std::vector<std::vector<double>> traj);
+
+    void set_traj_data(DubinsSteer::SteerData traj_data);
+    DubinsSteer::SteerData get_traj_data();
 
     std::vector<std::pair<int, uint64_t>>& get_children_id();
     void set_children_id(std::vector<std::pair<int, uint64_t>> children);

@@ -7,6 +7,11 @@
 #include "trajectory/dubins_steer.h"
 
 using namespace acel;
+typedef struct{
+    double x;
+    double y;
+    double t;
+}WayPoint;
 
 class LTL_SamplingDubins {
 public:
@@ -20,7 +25,9 @@ private:
     double RADIUS_;
     double radius_L_;
     double radius_R_;
+    double ground_speed_;
     std::vector<std::vector<double>> path_;
+    std::vector<WayPoint> path_way_points_;
 
     BAStruct ba_;
     SampleSpace all_space_;
@@ -39,11 +46,12 @@ private:
 public:
     void read_formula(std::string ltl_formula, std::vector<std::string> buchi_regions, std::vector<int> indep_set);
     void init_workspace(double work_space_size_x,double work_space_size_y);
-    void init_parameter(double EPSILON, double RADIUS, double radius_L, double radius_R);
+    void init_parameter(double EPSILON, double RADIUS, double radius_L, double radius_R, double ground_speed);
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void set_init_state(std::vector<double> init_state);
     void start_sampling(int iteration);
     std::vector<std::vector<double>> get_path();
+    std::vector<WayPoint> get_waypoints();
     double get_path_length();
 };

@@ -50,8 +50,8 @@ target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIE
 add_executable(test_sample_dubins test_sample_dubins.cpp)
 target_link_libraries(test_sample_dubins transsys trajectory sampling ${LCM_LIBRARIES})
 
-add_executable(test_sample_dubins_v2 test_sample_dubins_v2.cpp)
-target_link_libraries(test_sample_dubins_v2 transsys trajectory sampling ${LCM_LIBRARIES})
+#add_executable(test_sample_dubins_v2 test_sample_dubins_v2.cpp)
+#target_link_libraries(test_sample_dubins_v2 transsys trajectory sampling ${LCM_LIBRARIES})
 
 add_executable(test_cbba test_cbba.cpp)
 target_link_libraries(test_cbba transsys trajectory sampling ${LCM_LIBRARIES})

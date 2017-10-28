@@ -50,7 +50,7 @@ int main()
     double radius_L = 30;
     // radius_R is the right minimum turning radius
     double radius_R = 30;
-    ltl_sampling_dubins.init_parameter(EPSILON, RADIUS, radius_L, radius_R);
+    ltl_sampling_dubins.init_parameter(EPSILON, RADIUS, radius_L, radius_R, 1);
 
     /*** Read formula ***/
     // "(<> p0) && (<> p1) && (<> p2)" means visit p0, p1 and p2 region of interests

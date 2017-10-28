@@ -32,6 +32,7 @@ private:
     double work_space_size_y_;
     double EPSILON_;
     double RADIUS_;
+    double ground_speed_ = 1;
     // double radius_L_;
     // double radius_R_;
     LTLFormula Global_LTL_;

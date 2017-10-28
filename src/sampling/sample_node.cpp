@@ -60,7 +60,13 @@ void SampleNode::set_traj(std::vector<std::vector<double>> traj) {
     traj_point_wise_ = traj;
 }
 
+void SampleNode::set_traj_data(DubinsSteer::SteerData traj_data){
+    traj_data_ = traj_data;
+}
 
+DubinsSteer::SteerData SampleNode::get_traj_data(){
+    return traj_data_;
+}
 
 std::vector<std::pair<int, uint64_t>>& SampleNode::get_children_id(){
     return children_;
