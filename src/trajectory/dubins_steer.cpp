@@ -38,19 +38,23 @@
 		return array;
 	}
 
+	// if (std::abs(a - b) < 1e-3) {	
+	// 	for (int i = 0; i < n; i++){
+	// 		array.push_back(a);
+	// 	}
+	// 	return array;
+	// }
 	if (std::abs(a - b) < 1e-3) {	
-		for (int i = 0; i < n; i++){
-			array.push_back(a);
-		}
+		array.push_back(b);
 		return array;
 	}
-   if (a < b) {
+   	if (a < b) {
 	   double step = (b-a) / (n-1);
 	   while(a < b) {
 		   array.push_back(a);
 		   a += step;
-	  }
-	  array.push_back(b);
+	}
+	array.push_back(b);
 	  
    }
    else {
@@ -383,7 +387,9 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				}
 				double L = t_spec[4];
 				
-				int range_up = num_points_3 + std::ceil(traj_lengths[np]/step_length);
+				int range_up = num_points_3 + std::ceil(traj_lengths[np]/step_length) + 1;
+				// std::cout << "in case 0 , num_points_3: " << num_points_3 << std::endl;
+				num_indx_range.clear();
 				for (int it = num_points_3; it < range_up; it++){
 					num_indx_range.push_back(it);
 				}
@@ -397,7 +403,12 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				for (int i = 0; i < a_par.size(); i++){
 					std::vector<double> temp = {x_s + a_par[i]*cos(yaw_s), y_s + a_par[i]*sin(yaw_s), yaw_s};
 					traj_point_wise.push_back(temp);
-					double temp_len = travLength + L*(i - num_points_3)/num_points_4;
+					// double temp_len = travLength + L*((double)i - (double)num_points_3)/(double)num_points_4;
+					double temp_len = travLength + L*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4;
+					// std::cout << "~~~~: " << L*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4 << std::endl;
+					// std::cout << "@@@@@@ " << L*(i - (double)num_points_3)/(double)num_points_4 << std::endl;
+					std::cout << "np: " << np << ", case 0: " << temp_len << std::endl;
+					// std::cout << "np: " << np << ", case 0: " << temp_len << ", traveled length: " << travLength << std::endl;
 					traj_len_map.push_back(temp_len);
 				}
 
@@ -446,7 +457,8 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				double x_c = x_s + dirn*r_crv*sin(yaw_s);
 				double y_c = y_s - dirn*r_crv*cos(yaw_s);
 
-				int range_up = num_points_3 + std::ceil(traj_lengths[np]/step_length);				
+				int range_up = num_points_3 + std::ceil(traj_lengths[np]/step_length) + 1;
+				num_indx_range.clear();				
 				for (int it = num_points_3; it < range_up; it++){
 					num_indx_range.push_back(it);
 				}
@@ -457,11 +469,14 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				else {
 					num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				}
-				std::vector<double> a_par = LinSpace(yaw_s + dirn*M_PI/2, yaw_f + dirn*M_PI/2, num_points_4);
+				std::vector<double> a_par = LinSpace(yaw_s + dirn*M_PI/2.0, yaw_f + dirn*M_PI/2.0, num_points_4);
 				for (int i = 0; i < a_par.size(); i++){
 					std::vector<double> temp = {x_c + r_crv*cos(a_par[i]), y_c + r_crv*sin(a_par[i]), a_par[i] - dirn*M_PI/2};
 					traj_point_wise.push_back(temp);
-					double temp_len = travLength + std::abs(yaw_f - yaw_s)*r_crv*(i - num_points_3)/num_points_4;
+					double temp_len = travLength + std::abs(yaw_f - yaw_s)*r_crv*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4;
+					std::cout << "np: " << np << ", case 1: " << temp_len << std::endl;
+					// std::cout << "~~~~: " << std::abs(yaw_f - yaw_s)*r_crv*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4 << std::endl;
+					// std::cout << "np: " << np << ", case 1: " << temp_len << ", traveled length: " << travLength << std::endl;
 					traj_len_map.push_back(temp_len);
 				}
 				if (num_indx_range.empty()) {
@@ -470,8 +485,8 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				else {
 					num_points_3 = num_indx_range.back() + 1;
 				}
-				x_0 = x_c + r_crv*cos(yaw_f + dirn*M_PI/2);
-				y_0 = y_c + r_crv*sin(yaw_f + dirn*M_PI/2);
+				x_0 = x_c + r_crv*cos(yaw_f + dirn*M_PI/2.0);
+				y_0 = y_c + r_crv*sin(yaw_f + dirn*M_PI/2.0);
 				yaw_0 = yaw_f;
 				travLength = travLength + std::abs(yaw_f - yaw_s)*r_crv;
 				break;
