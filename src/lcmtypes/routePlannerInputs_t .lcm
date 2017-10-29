@@ -1,0 +1,12 @@
+package rts3a;
+
+struct routePlannerInputs_t
+{
+    double altitude;
+	double trueAirspeed;
+	double thrust_Undegraded;
+	double thrust_Degraded;
+	double dThrust_dFlightSpeed;
+	double dThrust_dFuelFlowRate;
+	double minimumTurnRadius_meters;
+}

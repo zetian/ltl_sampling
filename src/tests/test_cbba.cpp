@@ -21,7 +21,7 @@ int main(int argc, char** argv )
     lcm::LCM lcm;
     // Timer
     stopwatch::StopWatch stopwatch;
-
+    
     /*** Set up the seaching object ***/
     CBBA_sampling cbba_sampling;
 
@@ -87,6 +87,7 @@ int main(int argc, char** argv )
 	all_agent[0].init_state_ = {20, 10, M_PI/2};
 	all_agent[0].radius_L_ = 15;
     all_agent[0].radius_R_ = 15;
+    all_agent[0].ground_speed_ = 1;
     // Visual the init state
     node_data.state[0] = all_agent[0].init_state_[0];
     node_data.state[1] = all_agent[0].init_state_[1];
@@ -95,6 +96,7 @@ int main(int argc, char** argv )
 	all_agent[1].init_state_ = {80, 10, M_PI/2};
 	all_agent[1].radius_L_ = 15;
     all_agent[1].radius_R_ = 15;
+    all_agent[0].ground_speed_ = 1;
     // Visual the init state
     node_data.state[0] = all_agent[1].init_state_[0];
     node_data.state[1] = all_agent[1].init_state_[1];

@@ -1,0 +1,15 @@
+package rts3a;
+
+struct waypoint_t
+{
+    double x;
+	double y;
+	double z;
+	double t;
+}
+
+struct routePlannerOutputs_t
+{
+    int16_t     numWaypoints;
+	waypoint_t  waypoints[numWaypoints];
+}

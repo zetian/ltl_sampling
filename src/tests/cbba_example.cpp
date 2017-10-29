@@ -53,7 +53,7 @@ int main(int argc, char** argv )
 		indep_set_str[i].erase(indep_set_str[i].begin());
 		indep_set.push_back(std::stoi(indep_set_str[i]));
     }
-	std::cout <<"~~~lalal~~" << indep_set[0] << indep_set[1] <<  indep_set[2] << std::endl;
+	// std::cout <<"~~~lalal~~" << indep_set[0] << indep_set[1] <<  indep_set[2] << std::endl;
 	// std::vector<std::vector<std::string>> ObtainBuchiRegion(std::vector<std::string> expressions);
 
 	// std::cout << "~~~~" << std::endl;
