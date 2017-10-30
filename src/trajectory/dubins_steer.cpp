@@ -44,7 +44,7 @@
 	// 	}
 	// 	return array;
 	// }
-	if (std::abs(a - b) < 1e-3) {	
+	if (std::abs(a - b) < 1e-4) {	
 		array.push_back(b);
 		return array;
 	}
@@ -402,12 +402,13 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 				std::vector<double> a_par = LinSpace(0, L, num_points_4);
 				for (int i = 0; i < a_par.size(); i++){
 					std::vector<double> temp = {x_s + a_par[i]*cos(yaw_s), y_s + a_par[i]*sin(yaw_s), yaw_s};
+					std::cout << "~~~~~case 0:  " << x_s + a_par[i]*cos(yaw_s) << std::endl;
 					traj_point_wise.push_back(temp);
 					// double temp_len = travLength + L*((double)i - (double)num_points_3)/(double)num_points_4;
 					double temp_len = travLength + L*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4;
 					// std::cout << "~~~~: " << L*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4 << std::endl;
 					// std::cout << "@@@@@@ " << L*(i - (double)num_points_3)/(double)num_points_4 << std::endl;
-					std::cout << "np: " << np << ", case 0: " << temp_len << std::endl;
+					// std::cout << "np: " << np << ", case 0: " << temp_len << std::endl;
 					// std::cout << "np: " << np << ", case 0: " << temp_len << ", traveled length: " << travLength << std::endl;
 					traj_len_map.push_back(temp_len);
 				}
@@ -470,11 +471,14 @@ DubinsSteer::SteerData DubinsSteer::GetDubinsTrajectoryPointWise(std::vector<dou
 					num_points_4 = num_indx_range.back() + 1 - num_points_3;
 				}
 				std::vector<double> a_par = LinSpace(yaw_s + dirn*M_PI/2.0, yaw_f + dirn*M_PI/2.0, num_points_4);
+				// std::cout << "yaw_s" << yaw_s << std::endl;
+				// std::cout << "yaw_f" << yaw_f << std::endl;
 				for (int i = 0; i < a_par.size(); i++){
 					std::vector<double> temp = {x_c + r_crv*cos(a_par[i]), y_c + r_crv*sin(a_par[i]), a_par[i] - dirn*M_PI/2};
+					std::cout << "~~~~~case 1:  " << x_c + r_crv*cos(a_par[i]) << std::endl;
 					traj_point_wise.push_back(temp);
 					double temp_len = travLength + std::abs(yaw_f - yaw_s)*r_crv*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4;
-					std::cout << "np: " << np << ", case 1: " << temp_len << std::endl;
+					// std::cout << "np: " << np << ", case 1: " << temp_len << std::endl;
 					// std::cout << "~~~~: " << std::abs(yaw_f - yaw_s)*r_crv*(num_indx_range[i] - (double)num_points_3)/(double)num_points_4 << std::endl;
 					// std::cout << "np: " << np << ", case 1: " << temp_len << ", traveled length: " << travLength << std::endl;
 					traj_len_map.push_back(temp_len);
