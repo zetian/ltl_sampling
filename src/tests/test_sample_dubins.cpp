@@ -61,9 +61,10 @@ int main()
     double RADIUS = config_reader.GetReal("RADIUS", 0);
     // min_radius is the minimum turning radius
     double min_radius = config_reader.GetReal("min_radius", 0);
+    // time_step is the time step for way points sequence
+    double time_step = config_reader.GetReal("time_step", 0);
     // Set the groud speed of the aircraft
     double ground_speed = 1;
-    double time_step = 0.1;
     ltl_sampling_dubins.init_parameter(EPSILON, RADIUS, min_radius, ground_speed, time_step);
 
     /*** Read formula ***/
