@@ -137,7 +137,7 @@ bool Region::collision_check_multi_dubins(std::vector<std::vector<std::vector<do
     return false;
 }
 
-bool Region::collision_check_multi_dubins(std::vector<DubinsSteer::SteerData> multi_dubins_steer_data, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
+bool Region::collision_check_multi_dubins(std::vector<DubinsPath::PathData> multi_dubins_steer_data, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
     for (int k = 0; k < multi_dubins_steer_data.size(); k++){
         std::vector<std::vector<double>> multi_traj = multi_dubins_steer_data[k].traj_point_wise;
         int SAMPLE_NUM =  multi_traj.size()/2.5;

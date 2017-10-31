@@ -253,34 +253,34 @@ BAStruct SpotHoaInterpreter::GetBuchi(std::string ltl_str, std::vector<std::stri
 	}
 
 	// print data
-	std::cout <<"Init buchi state: " << ba.init_state_idx << std::endl;
-	std::cout << " - Transition Table String: " << std::endl;
-	for(auto it = ba.trans_table_str.begin(); it != ba.trans_table_str.end(); it++)
-	{
-		for(auto ite = (*it).begin(); ite != (*it).end(); ite++)
-			std::cout << std::setw(25) << (*ite) << " ";
-		std::cout << std::endl;
-	}
+	// std::cout <<"Init buchi state: " << ba.init_state_idx << std::endl;
+	// std::cout << " - Transition Table String: " << std::endl;
+	// for(auto it = ba.trans_table_str.begin(); it != ba.trans_table_str.end(); it++)
+	// {
+	// 	for(auto ite = (*it).begin(); ite != (*it).end(); ite++)
+	// 		std::cout << std::setw(25) << (*ite) << " ";
+	// 	std::cout << std::endl;
+	// }
 
-	std::cout << "\nAlphabet Set: " << std::endl;
-	int idx = 0;
-	for(auto it = ba.alphabet_set.begin(); it != ba.alphabet_set.end(); it++) {
-		std::cout<< std::bitset<32>(*it) << " , " << idx << std::endl;
-		idx++;
-	}
-	std::cout << "\nTransition Table: " << std::endl;
-	for(int i = 0; i < aut->num_states(); i++) {
-		for(auto it = ba.trans_con[i].begin(); it != ba.trans_con[i].end(); it++)
-		{
-			std::string str = "";
-			for(auto itc = (*it).begin(); itc != (*it).end(); itc++)
-			{
-				str = str + std::to_string(*itc) + ",";
-			}
-			std::cout << std::setw(25) << str << " ";
-		}
-		std::cout << "   -----   line " << i << std::endl;
-	}
+	// std::cout << "\nAlphabet Set: " << std::endl;
+	// int idx = 0;
+	// for(auto it = ba.alphabet_set.begin(); it != ba.alphabet_set.end(); it++) {
+	// 	std::cout<< std::bitset<32>(*it) << " , " << idx << std::endl;
+	// 	idx++;
+	// }
+	// std::cout << "\nTransition Table: " << std::endl;
+	// for(int i = 0; i < aut->num_states(); i++) {
+	// 	for(auto it = ba.trans_con[i].begin(); it != ba.trans_con[i].end(); it++)
+	// 	{
+	// 		std::string str = "";
+	// 		for(auto itc = (*it).begin(); itc != (*it).end(); itc++)
+	// 		{
+	// 			str = str + std::to_string(*itc) + ",";
+	// 		}
+	// 		std::cout << std::setw(25) << str << " ";
+	// 	}
+	// 	std::cout << "   -----   line " << i << std::endl;
+	// }
 
 	return ba;
 }

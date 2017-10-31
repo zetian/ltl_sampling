@@ -19,8 +19,8 @@ double SampleSpace::get_dist(std::vector<double> states_1, std::vector<double> s
     return dist;
 }
 
-double SampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R) {
-    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_L, radius_R);
+double SampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double min_radius) {
+    double min_length = DubinsPath::GetDubinsPathLength(states_1, states_2, min_radius);
     return min_length;
 }
 
@@ -98,18 +98,18 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, std::vector<
 }
 
 
-void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
+void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step) {
     SampleNode &new_sample = sample_space_ltl_map_.find(new_sample_ba)->second.get_sample(new_sample_id);
     std::vector<SampleNode>& all_sub_samples = sample_space_ltl_map_.find(new_sample_ba)->second.get_all_samples();
     for (int i = 0; i < all_sub_samples.size(); i++) {
         if (all_sub_samples[i].get_id() != new_sample.get_parent_id() &&
-            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_L, radius_R) < RADIUS &&
-            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), radius_L, radius_R) + new_sample.get_cost() < 
-            all_sub_samples[i].get_cost() ) {
+            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), min_radius) < RADIUS &&
+            get_dist_dubins(all_sub_samples[i].get_state(), new_sample.get_state(), min_radius) + new_sample.get_cost() < 
+            all_sub_samples[i].get_cost()) {
                 
                
                 SampleNode &rewire_sample = all_sub_samples[i];
-                DubinsSteer::SteerData dubins_steer_data_new = DubinsSteer::GetDubinsTrajectoryPointWise(rewire_sample.get_state(), new_sample.get_state(), radius_L, radius_R);
+                DubinsPath::PathData dubins_steer_data_new = DubinsPath::GetDubinsPathPointWise(rewire_sample.get_state(), new_sample.get_state(), min_radius, path_step);
                 if (Region::collision_check_dubins(dubins_steer_data_new.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
                     continue;
                 }
@@ -122,7 +122,7 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::
                 rewire_sample.set_parent_ba(new_sample_ba);
                 rewire_sample.set_parent_id(new_sample_id);
                 double old_cost_of_rewire = rewire_sample.get_cost();
-                rewire_sample.set_cost(new_sample.get_cost() + get_dist_dubins(rewire_sample.get_state(), new_sample.get_state(), radius_L, radius_R));
+                rewire_sample.set_cost(new_sample.get_cost() + get_dist_dubins(rewire_sample.get_state(), new_sample.get_state(), min_radius));
                 double decreased_cost = old_cost_of_rewire - rewire_sample.get_cost();
                 new_sample.add_children_id(rewire_sample_id);
                 new_sample.set_traj(dubins_steer_data_new.traj_point_wise);

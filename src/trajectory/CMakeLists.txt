@@ -8,7 +8,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add libraries
 set(TRAJECTORY_LIB_SRC
-	dubins_steer.cpp
+	#dubins_steer.cpp
+	dubins_path.cpp
 )
 add_library(trajectory STATIC ${TRAJECTORY_LIB_SRC})
 target_link_libraries(trajectory)

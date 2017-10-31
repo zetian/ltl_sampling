@@ -3,7 +3,8 @@
 #include <map>
 #include <vector>
 #include <utility>
-#include "trajectory/dubins_steer.h"
+// #include "trajectory/dubins_steer.h"
+#include "trajectory/dubins_path.h"
 #include "sampling/region.h"
 
 
@@ -22,7 +23,7 @@ private:
     int parent_ba_;
     std::vector<std::pair<int, uint64_t>> children_;
     std::vector<std::vector<double>> traj_point_wise_;
-    DubinsSteer::SteerData traj_data_;
+    DubinsPath::PathData traj_data_;
 
 public:
     std::vector<double> get_state();
@@ -46,8 +47,8 @@ public:
     std::vector<std::vector<double>> get_traj();
     void set_traj(std::vector<std::vector<double>> traj);
 
-    void set_traj_data(DubinsSteer::SteerData traj_data);
-    DubinsSteer::SteerData get_traj_data();
+    void set_traj_data(DubinsPath::PathData traj_data);
+    DubinsPath::PathData get_traj_data();
 
     std::vector<std::pair<int, uint64_t>>& get_children_id();
     void set_children_id(std::vector<std::pair<int, uint64_t>> children);
@@ -63,9 +64,10 @@ public:
 private:
     std::vector<SampleNode> sample_nodes_;
     int ba_state_;
+    double step_ = 0.1;
     std::map<int, SampleNode> sample_node_id_map_; 
     double get_dist(std::vector<double> states_1, std::vector<double> states_2);
-    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R);
+    double get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double min_radius);
 public:
     void insert_sample(SampleNode new_sample);
     SampleNode& get_sample(uint64_t id);
@@ -74,8 +76,8 @@ public:
     int num_samples();
     int get_ba_state();
     SampleNode& get_parent(std::vector<double> state);
-    SampleNode& get_parent_dubins(std::vector<double> state, double radius_L, double radius_R);
+    SampleNode& get_parent_dubins(std::vector<double> state, double min_radius);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS);
-    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R);
+    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsPath::PathData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step);
 
 };

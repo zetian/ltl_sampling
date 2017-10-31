@@ -60,11 +60,11 @@ void SampleNode::set_traj(std::vector<std::vector<double>> traj) {
     traj_point_wise_ = traj;
 }
 
-void SampleNode::set_traj_data(DubinsSteer::SteerData traj_data){
+void SampleNode::set_traj_data(DubinsPath::PathData traj_data){
     traj_data_ = traj_data;
 }
 
-DubinsSteer::SteerData SampleNode::get_traj_data(){
+DubinsPath::PathData SampleNode::get_traj_data(){
     return traj_data_;
 }
 
@@ -87,8 +87,8 @@ double SubSampleSpace::get_dist(std::vector<double> states_1, std::vector<double
     return dist;
 }
 
-double SubSampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double radius_L, double radius_R) {
-    double min_length = DubinsSteer::GetDubinsCurveLength(states_1, states_2, radius_L, radius_R);
+double SubSampleSpace::get_dist_dubins(std::vector<double> states_1, std::vector<double> states_2, double min_radius_) {
+    double min_length = DubinsPath::GetDubinsPathLength(states_1, states_2, min_radius_);
     return min_length;
 }
 
@@ -140,11 +140,11 @@ SampleNode& SubSampleSpace::get_parent(std::vector<double> state) {
     return parent_sample;
 }
 
-SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double radius_L, double radius_R) {
+SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double min_radius) {
     SampleNode &parent_sample = sample_nodes_.front();
     
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R)) {
+        if (get_dist_dubins(sample_nodes_[i].get_state(), state, min_radius) < get_dist_dubins(parent_sample.get_state(), state, min_radius)) {
             parent_sample = sample_nodes_[i];
         }
     }
@@ -167,19 +167,19 @@ SampleNode& SubSampleSpace::rechoose_parent(SampleNode parent_sample, std::vecto
     return new_parent_sample;
 }
 
-SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsSteer::SteerData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double radius_L, double radius_R) {
+SampleNode& SubSampleSpace::rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsPath::PathData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step) {
     SampleNode &new_parent_sample = sample_nodes_.front();
     for (int i = 0; i < sample_nodes_.size(); i++) {
-        double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, radius_L, radius_R);
-        if (get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) < RADIUS &&
-                get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost() < new_cost) {
+        double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_state(), state, min_radius);
+        if (get_dist_dubins(sample_nodes_[i].get_state(), state, min_radius) < RADIUS &&
+                get_dist_dubins(sample_nodes_[i].get_state(), state, min_radius) + sample_nodes_[i].get_cost() < new_cost) {
                 new_parent_sample = sample_nodes_[i];
 
-                dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_state(), state, radius_L, radius_R);
+                dubins_steer_data = DubinsPath::GetDubinsPathPointWise(sample_nodes_[i].get_state(), state, min_radius, path_step);
                 if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
                     continue;
                 }
-                new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, radius_L, radius_R) + sample_nodes_[i].get_cost();
+                new_cost = get_dist_dubins(sample_nodes_[i].get_state(), state, min_radius) + sample_nodes_[i].get_cost();
         }
     }
     return new_parent_sample;

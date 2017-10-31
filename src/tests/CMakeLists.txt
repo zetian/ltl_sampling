@@ -19,33 +19,10 @@ include_directories(${LCM_GENERATED_HEADER_PATH})
 
 
 # Add executables
-#add_executable(test_buchi test_buchi.cpp)
-#target_link_libraries(test_buchi transsys vis map ${OpenCV_LIBS})
-
-# add_executable(test_product test_product.cpp)
-# target_link_libraries(test_product transsys vis map ${OpenCV_LIBS})
-
-# add_executable(test_memory test_memory.cpp)
-# target_link_libraries(test_memory transsys vis map ${OpenCV_LIBS})
-
-#add_executable(test_product test_product.cpp)
-#target_link_libraries(test_product transsys vis map ${OpenCV_LIBS})
-
-#add_executable(test_tile_data test_tile_data.cpp)
-#target_link_libraries(test_tile_data transsys vis map ${OpenCV_LIBS})
-
-#add_executable(test_lifted_transition test_lifted_transition.cpp)
-#target_link_libraries(test_lifted_transition transsys vis map ${OpenCV_LIBS})
 
 
-add_executable(test_dubins test_dubins.cpp)
-target_link_libraries(test_dubins trajectory)
-
-#add_executable(test_sample test_sample.cpp)
-#target_link_libraries(test_sample transsys trajectory sampling ${LCM_LIBRARIES})
-
-add_executable(test_sample_v2 test_sample_v2.cpp)
-target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIES})
+#add_executable(test_sample_v2 test_sample_v2.cpp)
+#target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIES})
 
 add_executable(test_sample_dubins test_sample_dubins.cpp)
 target_link_libraries(test_sample_dubins transsys trajectory sampling ${LCM_LIBRARIES})
@@ -53,20 +30,20 @@ target_link_libraries(test_sample_dubins transsys trajectory sampling ${LCM_LIBR
 #add_executable(test_sample_dubins_v2 test_sample_dubins_v2.cpp)
 #target_link_libraries(test_sample_dubins_v2 transsys trajectory sampling ${LCM_LIBRARIES})
 
-add_executable(test_cbba test_cbba.cpp)
-target_link_libraries(test_cbba transsys trajectory sampling ${LCM_LIBRARIES})
+#add_executable(test_cbba test_cbba.cpp)
+#target_link_libraries(test_cbba transsys trajectory sampling ${LCM_LIBRARIES})
 
-add_executable(test_cbba_v2 test_cbba_v2.cpp)
-target_link_libraries(test_cbba_v2 transsys trajectory sampling ${LCM_LIBRARIES})
+#add_executable(test_cbba_v2 test_cbba_v2.cpp)
+#target_link_libraries(test_cbba_v2 transsys trajectory sampling ${LCM_LIBRARIES})
 
-add_executable(test_multi test_multi.cpp)
-target_link_libraries(test_multi transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
+#add_executable(test_multi test_multi.cpp)
+#target_link_libraries(test_multi transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
 
-add_executable(test_multi_dubins test_multi_dubins.cpp)
-target_link_libraries(test_multi_dubins transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
+#add_executable(test_multi_dubins test_multi_dubins.cpp)
+#target_link_libraries(test_multi_dubins transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
 
-add_executable(test_multi_dubins_v2 test_multi_dubins_v2.cpp)
-target_link_libraries(test_multi_dubins_v2 transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
+#add_executable(test_multi_dubins_v2 test_multi_dubins_v2.cpp)
+#target_link_libraries(test_multi_dubins_v2 transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
 
-add_executable(cbba_example cbba_example.cpp)
-target_link_libraries(cbba_example transsys)
+#add_executable(cbba_example cbba_example.cpp)
+#target_link_libraries(cbba_example transsys)
