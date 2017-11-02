@@ -51,6 +51,7 @@ private:
     int step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions);
     int step_from_to_buchi (int paraent_ba, std::vector<std::vector<double>> all_new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions);
     std::vector<double> sample_state (std::vector<int> ba_act);
+    std::vector<std::vector<double>> multi_sample_state (BAStruct buchi, SampleSpace &sample_space);
     std::vector<std::vector<double>> multi_sample_state (std::vector<int> ba_act);
     
 public:

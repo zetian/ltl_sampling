@@ -334,6 +334,41 @@ std::vector<std::vector<double>> MultiSamplingDubins::multi_sample_state (std::v
     return multi_sampled_position;
 }
 
+std::vector<std::vector<double>> MultiSamplingDubins::multi_sample_state (BAStruct buchi, SampleSpace &sample_space){
+   
+    std::vector<std::vector<double>> multi_sampled_position;
+    for (int i = 0; i < num_agent_; i++){
+        std::vector<int> ba_act = sample_from_ba(buchi, sample_space);
+
+        double new_node_x = 0;
+        double new_node_y = 0;
+        if (ba_act[0] == ba_act[1]) {
+            new_node_x = fRand(0, work_space_size_x_);
+            new_node_y = fRand(0, work_space_size_y_);
+        }
+        else {
+            int interest_id = 0;
+            int act = ba_.trans_con[ba_act[0]][ba_act[1]].front();
+            std::bitset<32> act_bit = std::bitset<32>(act);
+            for (int i = 0; i < act_bit.size(); i++) {
+                if (act_bit.test(i)){
+                    interest_id = i;
+                    break;
+                }
+            }
+            double new_node_x_min = all_interest_regions_.find(interest_id)->second.get_x_position().first;
+            double new_node_x_max = all_interest_regions_.find(interest_id)->second.get_x_position().second;
+            double new_node_y_min = all_interest_regions_.find(interest_id)->second.get_y_position().first;
+            double new_node_y_max = all_interest_regions_.find(interest_id)->second.get_y_position().second;
+            new_node_x = fRand(new_node_x_min, new_node_x_max);
+            new_node_y = fRand(new_node_y_min, new_node_y_max);
+        }
+        std::vector<double> sampled_position = {new_node_x, new_node_y}; 
+        multi_sampled_position.push_back(sampled_position);
+    }
+    return multi_sampled_position;
+}
+
 void MultiSamplingDubins::set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id) {
     Region interest_region;
     interest_region.set_position(position_x, position_y);
@@ -373,6 +408,9 @@ void MultiSamplingDubins::start_sampling(int iteration) {
         // std::cout << "iteration: " << i << std::endl;
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<std::vector<double>> sampled_position = multi_sample_state(ba_act);
+
+        // std::vector<std::vector<double>> sampled_position = multi_sample_state(ba_, all_space_);
+
         std::vector<DubinsPath::PathData> multi_dubins_steer_data;
         MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
         std::vector<std::vector<double>> new_sample_state = step_from_to(parent_sample, sampled_position, multi_dubins_steer_data, EPSILON_);
@@ -437,6 +475,9 @@ void MultiSamplingDubins::start_sampling() {
         // std::cout << "iteration: " << i << std::endl;
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<std::vector<double>> sampled_position = multi_sample_state(ba_act);
+
+        // std::vector<std::vector<double>> sampled_position = multi_sample_state(ba_, all_space_);
+
         std::vector<DubinsPath::PathData> multi_dubins_steer_data;
         MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
         std::vector<std::vector<double>> new_sample_state = step_from_to(parent_sample, sampled_position, multi_dubins_steer_data, EPSILON_);

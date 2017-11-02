@@ -153,7 +153,8 @@ int main()
     int iterations = config_reader.GetInteger("iterations", -1);;
     /*** Start sampling searching ***/
     stopwatch.tic();
-    multi_sampling_ltl.start_sampling(iterations);
+    // multi_sampling_ltl.start_sampling(iterations);
+    multi_sampling_ltl.start_sampling();
     std::cout << "Time used for searching: " << stopwatch.toc() << std::endl;
     
 
