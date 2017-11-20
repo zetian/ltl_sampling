@@ -249,7 +249,7 @@ MultiSampleNode& SubSampleSpace::rechoose_parent(MultiSampleNode parent_sample, 
     return new_parent_sample;
 }
 
-MultiSampleNode& SubSampleSpace::rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<DubinsPath::PathData>& multi_dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step) {
+MultiSampleNode& SubSampleSpace::rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<DubinsPath::PathData>& multi_dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step, double collision_check_rate) {
     MultiSampleNode &new_parent_sample = sample_nodes_.front();
     for (int i = 0; i < sample_nodes_.size(); i++) {
         double new_cost = parent_sample.get_cost() + get_dist_dubins(parent_sample.get_all_states(), all_states, min_radius);
@@ -262,7 +262,7 @@ MultiSampleNode& SubSampleSpace::rechoose_parent_dubins(MultiSampleNode parent_s
                     multi_dubins_steer_data.push_back(dubins_steer_data);
                 }
                 // dubins_steer_data = DubinsSteer::GetDubinsTrajectoryPointWise(sample_nodes_[i].get_all_states(), all_states, radius_L, radius_R);
-                if (Region::collision_check_multi_dubins(multi_dubins_steer_data, obstacles, work_space_size_x, work_space_size_y)) {
+                if (Region::collision_check_multi_dubins(multi_dubins_steer_data, obstacles, work_space_size_x, work_space_size_y, collision_check_rate)) {
                     continue;
                 }
                 new_cost = get_dist_dubins(sample_nodes_[i].get_all_states(), all_states, min_radius) + sample_nodes_[i].get_cost();

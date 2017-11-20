@@ -24,9 +24,10 @@ std::pair<double, double> Region::get_y_position() {
 }
 
 
-bool Region::collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
+bool Region::collision_check_dubins(std::vector<std::vector<double>> traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y, double collision_check_rate){
     // int SAMPLE_NUM = 15;
-    int SAMPLE_NUM =  traj.size()/2.5;
+    // int SAMPLE_NUM =  traj.size()/2.5;
+    int SAMPLE_NUM =  traj.size()*collision_check_rate;
     // if (traj.size() < SAMPLE_NUM) {
     //     SAMPLE_NUM = traj.size();
     // }
@@ -104,8 +105,9 @@ bool Region::collision_check_multi_simple(std::vector<std::vector<double>> state
     return false;
 }
 
-bool Region::collision_check_multi_dubins(std::vector<std::vector<std::vector<double>>> multi_traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
-    int SAMPLE_NUM =  multi_traj.size()/2.5;
+bool Region::collision_check_multi_dubins(std::vector<std::vector<std::vector<double>>> multi_traj, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y, double collision_check_rate){
+    // int SAMPLE_NUM =  multi_traj.size()/2.5;
+    int SAMPLE_NUM =  multi_traj.size()*collision_check_rate;
     // if (traj.size() < SAMPLE_NUM) {
     //     SAMPLE_NUM = traj.size();
     // }
@@ -137,10 +139,10 @@ bool Region::collision_check_multi_dubins(std::vector<std::vector<std::vector<do
     return false;
 }
 
-bool Region::collision_check_multi_dubins(std::vector<DubinsPath::PathData> multi_dubins_steer_data, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y){
+bool Region::collision_check_multi_dubins(std::vector<DubinsPath::PathData> multi_dubins_steer_data, std::vector<Region> obstacle, double work_space_size_x, double work_space_size_y, double collision_check_rate){
     for (int k = 0; k < multi_dubins_steer_data.size(); k++){
         std::vector<std::vector<double>> multi_traj = multi_dubins_steer_data[k].traj_point_wise;
-        int SAMPLE_NUM =  multi_traj.size()/2.5;
+        int SAMPLE_NUM =  multi_traj.size()*collision_check_rate;
         // if (traj.size() < SAMPLE_NUM) {
         //     SAMPLE_NUM = traj.size();
         // }

@@ -30,7 +30,7 @@ private:
     double path_step_;
     std::vector<std::vector<double>> path_;
     std::vector<WayPoint> path_way_points_;
-
+    double collision_check_rate_;
     BAStruct ba_;
     SampleSpace all_space_;
     std::map<int, Region> all_interest_regions_;
@@ -48,7 +48,7 @@ private:
 public:
     void read_formula(std::string ltl_formula, std::vector<std::string> buchi_regions, std::vector<int> indep_set);
     void init_workspace(double work_space_size_x,double work_space_size_y);
-    void init_parameter(double EPSILON, double RADIUS, double min_radius, double ground_speed, double time_step);
+    void init_parameter(double EPSILON, double RADIUS, double min_radius, double ground_speed, double time_step, double collision_check_rate);
     void set_interest_region(std::pair <double, double> position_x, std::pair <double, double> position_y, int interest_id);
     void set_obstacle(std::pair <double, double> position_x, std::pair <double, double> position_y);
     void set_init_state(std::vector<double> init_state);

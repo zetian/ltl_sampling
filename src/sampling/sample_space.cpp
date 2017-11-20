@@ -4,7 +4,7 @@
 #include <queue>
 
 #include "sampling/sample_space.h"
-#include "trajectory/dubins_steer.h"
+#include "trajectory/dubins_path.h"
 SampleSpace::SampleSpace(int num_ba) {
     num_ba_ = num_ba;
     for (int i = 0; i < num_ba; i++) {
@@ -98,7 +98,7 @@ void SampleSpace::rewire(uint64_t new_sample_id, int new_sample_ba, std::vector<
 }
 
 
-void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step) {
+void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step, double collision_check_rate) {
     SampleNode &new_sample = sample_space_ltl_map_.find(new_sample_ba)->second.get_sample(new_sample_id);
     std::vector<SampleNode>& all_sub_samples = sample_space_ltl_map_.find(new_sample_ba)->second.get_all_samples();
     for (int i = 0; i < all_sub_samples.size(); i++) {
@@ -110,7 +110,7 @@ void SampleSpace::rewire_dubins(uint64_t new_sample_id, int new_sample_ba, std::
                
                 SampleNode &rewire_sample = all_sub_samples[i];
                 DubinsPath::PathData dubins_steer_data_new = DubinsPath::GetDubinsPathPointWise(rewire_sample.get_state(), new_sample.get_state(), min_radius, path_step);
-                if (Region::collision_check_dubins(dubins_steer_data_new.traj_point_wise, obstacles, work_space_size_x, work_space_size_y)) {
+                if (Region::collision_check_dubins(dubins_steer_data_new.traj_point_wise, obstacles, work_space_size_x, work_space_size_y, collision_check_rate)) {
                     continue;
                 }
                 uint64_t old_parent_id = rewire_sample.get_parent_id();
