@@ -91,6 +91,6 @@ public:
     MultiSampleNode& get_parent_dubins(std::vector<double> state, double min_radius);
     MultiSampleNode& get_parent_dubins(std::vector<std::vector<double>> multi_states, double min_radius);
     MultiSampleNode& rechoose_parent(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<Region> obstacles, double RADIUS);
-    MultiSampleNode& rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<DubinsPath::PathData>& multi_dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step);
+    MultiSampleNode& rechoose_parent_dubins(MultiSampleNode parent_sample, std::vector<std::vector<double>> all_states, std::vector<DubinsPath::PathData>& multi_dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step, double collision_check_rate);
 
 };

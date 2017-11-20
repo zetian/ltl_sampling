@@ -211,13 +211,14 @@ void LTL_SamplingDubins::init_workspace(double work_space_size_x, double work_sp
     work_space_size_y_ = work_space_size_y;
 }
 
-void LTL_SamplingDubins::init_parameter(double EPSILON, double RADIUS, double min_radius, double ground_speed, double time_step){
+void LTL_SamplingDubins::init_parameter(double EPSILON, double RADIUS, double min_radius, double ground_speed, double time_step, double collision_check_rate){
     EPSILON_ = EPSILON;
     RADIUS_ = RADIUS;
     min_radius_ = min_radius;
     ground_speed_ = ground_speed;
     time_step_ = time_step;
     path_step_ = time_step_*ground_speed_;
+    collision_check_rate_ = collision_check_rate;
 }
 
 std::vector<double> LTL_SamplingDubins::sample_state(std::vector<int> ba_act) {
@@ -288,11 +289,11 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
             DubinsPath::PathData dubins_steer_data;
             SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
             std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, dubins_steer_data, EPSILON_);
-            if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, all_obstacles_, work_space_size_x_, work_space_size_y_)) {
+            if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, all_obstacles_, work_space_size_x_, work_space_size_y_, collision_check_rate_)) {
                 continue;
             } 
             int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-            SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+            SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
             SampleNode new_node;
             uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
             new_node.set_id(new_id);
@@ -306,7 +307,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
             new_node.set_traj_data(dubins_steer_data);
             all_space_.insert_sample(new_node, new_ba);
     
-            all_space_.rewire_dubins(new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+            all_space_.rewire_dubins(new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
             if (all_space_.get_sub_space(ba_.acc_state_idx.front()).num_samples() > 0) {
                 find_path = true;
             }
@@ -322,11 +323,11 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
             DubinsPath::PathData dubins_steer_data;
             SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
             std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, dubins_steer_data, EPSILON_);
-            if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, all_obstacles_, work_space_size_x_, work_space_size_y_)) {
+            if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, all_obstacles_, work_space_size_x_, work_space_size_y_, collision_check_rate_)) {
                 continue;
             } 
             int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-            SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+            SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
             SampleNode new_node;
             uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
             new_node.set_id(new_id);
@@ -340,7 +341,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
             new_node.set_traj_data(dubins_steer_data);
             all_space_.insert_sample(new_node, new_ba);
     
-            all_space_.rewire_dubins(new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+            all_space_.rewire_dubins(new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
     
             /// Vis for debug
             // sampling::sample_data node_data;

@@ -264,13 +264,14 @@ void MultiSamplingDubins::init_workspace(double work_space_size_x, double work_s
 //     radius_R_ = radius_R;
 // }
 
-void MultiSamplingDubins::init_parameter(double EPSILON, double RADIUS, double min_radius, double ground_speed, double time_step){
+void MultiSamplingDubins::init_parameter(double EPSILON, double RADIUS, double min_radius, double ground_speed, double time_step, double collision_check_rate){
     EPSILON_ = EPSILON;
     RADIUS_ = RADIUS;
     min_radius_ = min_radius;
     ground_speed_ = ground_speed;
     time_step_ = time_step;
     path_step_ = time_step_*ground_speed_;
+    collision_check_rate_ = collision_check_rate_;
 }
 
 std::vector<double> MultiSamplingDubins::sample_state(std::vector<int> ba_act) {
@@ -415,11 +416,11 @@ void MultiSamplingDubins::start_sampling(int iteration) {
         MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
         std::vector<std::vector<double>> new_sample_state = step_from_to(parent_sample, sampled_position, multi_dubins_steer_data, EPSILON_);
 
-        if (Region::collision_check_multi_dubins(multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_)) {
+        if (Region::collision_check_multi_dubins(multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, collision_check_rate_)) {
             continue;
         } 
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+        MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
         // MultiSampleNode &chosen_parent_sample = parent_sample;
         MultiSampleNode new_node;
         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
@@ -442,7 +443,7 @@ void MultiSamplingDubins::start_sampling(int iteration) {
 
         all_space_.insert_sample(new_node, new_ba);
 
-        all_space_.rewire_dubins(num_agent_, new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+        all_space_.rewire_dubins(num_agent_, new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
 
         /// Vis for debug
         // sampling::sample_data node_data;
@@ -482,11 +483,11 @@ void MultiSamplingDubins::start_sampling() {
         MultiSampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
         std::vector<std::vector<double>> new_sample_state = step_from_to(parent_sample, sampled_position, multi_dubins_steer_data, EPSILON_);
 
-        if (Region::collision_check_multi_dubins(multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_)) {
+        if (Region::collision_check_multi_dubins(multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, collision_check_rate_)) {
             continue;
         } 
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
-        MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+        MultiSampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent_dubins(parent_sample, new_sample_state, multi_dubins_steer_data, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
         // MultiSampleNode &chosen_parent_sample = parent_sample;
         MultiSampleNode new_node;
         uint64_t new_id = all_space_.get_sub_space(new_ba).num_samples();
@@ -510,7 +511,7 @@ void MultiSamplingDubins::start_sampling() {
 
         all_space_.insert_sample(new_node, new_ba);
 
-        all_space_.rewire_dubins(num_agent_, new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_);
+        all_space_.rewire_dubins(num_agent_, new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
 
         if (all_space_.get_sub_space(ba_.acc_state_idx.front()).num_samples() > 0) {
             find_path = true;

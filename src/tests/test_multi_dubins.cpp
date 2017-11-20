@@ -63,7 +63,10 @@ int main()
     double time_step = config_reader.GetReal("time_step", 0);
     // Set the groud speed of the aircraft
     double ground_speed = 1;
-    multi_sampling_ltl.init_parameter(EPSILON, RADIUS, min_radius, ground_speed, time_step);
+    // collision_check_rate is the percentage that sampling nodes will do the collision checking
+    double collision_check_rate = config_reader.GetReal("collision_check_rate", 0);
+
+    multi_sampling_ltl.init_parameter(EPSILON, RADIUS, min_radius, ground_speed, time_step, collision_check_rate);
 
     /*** Read formula ***/
     // "(<> p0) && (<> p1) && (<> p2)" means visit p0, p1 and p2 region of interests

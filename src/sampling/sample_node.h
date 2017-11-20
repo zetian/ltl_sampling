@@ -78,6 +78,6 @@ public:
     SampleNode& get_parent(std::vector<double> state);
     SampleNode& get_parent_dubins(std::vector<double> state, double min_radius);
     SampleNode& rechoose_parent(SampleNode parent_sample, std::vector<double> state, std::vector<Region> obstacles, double RADIUS);
-    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsPath::PathData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step);
+    SampleNode& rechoose_parent_dubins(SampleNode parent_sample, std::vector<double> state, DubinsPath::PathData& dubins_steer_data, std::vector<Region> obstacles, double work_space_size_x, double work_space_size_y, double RADIUS, double min_radius, double path_step, double collision_check_rate);
 
 };
