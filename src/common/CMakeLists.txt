@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(acel-base)
-
-# cmake module path
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-# automatically build LCM types.  This also defines a number of CMake
-# variables, see cmake/lcmtypes.cmake for details
-include(cmake/lcmtypes.cmake)
-lcmtypes_build()
+project(librav_common)
 
 ## Set compiler to use c++ 11 features
 include(CheckCXXCompilerFlag)
@@ -29,17 +21,26 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-## Config common include directories
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/utility/)
+# Include path
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-## Add other sub source directories
-add_subdirectory(examples)
-add_subdirectory(utility)
-add_subdirectory(sampling)
-add_subdirectory(multi_sampling)
-add_subdirectory(trajectory)
-add_subdirectory(trans_sys)
-add_subdirectory(tests)
-add_subdirectory(polyopt)
-add_subdirectory(common)
+# Dependency libraries
+#find_package(LIBRARY_NAME REQUIRED)
+
+# Add libraries
+set(COMMON_LIB_SRC
+	src/librav_math.cpp
+    src/poly_curve.cpp
+    #src/quad_flattraj.cpp
+)
+add_library(common STATIC ${COMMON_LIB_SRC})
+if(ENABLE_LOGGING)
+	add_definitions(-DENABLE_LOGGING)
+	target_compile_definitions(common PUBLIC ENABLE_LOGGING=1)
+	target_link_libraries(common -lpthread)
+endif(ENABLE_LOGGING)
+target_include_directories(common PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
+	$<INSTALL_INTERFACE:include>
+	PRIVATE src)
+
