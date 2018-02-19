@@ -34,12 +34,17 @@ include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/utility/)
 
 ## Add other sub source directories
-add_subdirectory(examples)
-add_subdirectory(utility)
+#add_subdirectory(examples)
 add_subdirectory(sampling)
 add_subdirectory(multi_sampling)
 add_subdirectory(trajectory)
 add_subdirectory(trans_sys)
 add_subdirectory(tests)
-add_subdirectory(polyopt)
+
 add_subdirectory(common)
+add_subdirectory(planning)
+add_subdirectory(interface)
+add_subdirectory(utilities)
+#add_subdirectory(libraries)
+
+add_subdirectory(platforms/quadrotor)

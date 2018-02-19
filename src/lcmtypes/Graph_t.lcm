@@ -1,0 +1,10 @@
+package srcl_lcm_msgs;
+
+struct Graph_t
+{
+	int64_t edge_num;
+	int64_t vertex_num;
+	
+	Vertex_t vertices[vertex_num];
+	Edge_t edges[edge_num];
+}

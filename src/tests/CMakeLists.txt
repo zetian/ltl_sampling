@@ -25,7 +25,7 @@ include_directories(${LCM_GENERATED_HEADER_PATH})
 #target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIES})
 
 add_executable(test_sample_dubins test_sample_dubins.cpp)
-target_link_libraries(test_sample_dubins transsys trajectory sampling ${LCM_LIBRARIES})
+target_link_libraries(test_sample_dubins transsys trajectory sampling utilities ${LCM_LIBRARIES})
 
 #add_executable(test_sample_dubins_v2 test_sample_dubins_v2.cpp)
 #target_link_libraries(test_sample_dubins_v2 transsys trajectory sampling ${LCM_LIBRARIES})
@@ -40,7 +40,7 @@ target_link_libraries(test_sample_dubins transsys trajectory sampling ${LCM_LIBR
 #target_link_libraries(test_multi transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
 
 add_executable(test_multi_dubins test_multi_dubins.cpp)
-target_link_libraries(test_multi_dubins transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})
+target_link_libraries(test_multi_dubins transsys trajectory multi_sampling sampling utilities ${LCM_LIBRARIES})
 
 #add_executable(test_multi_dubins_v2 test_multi_dubins_v2.cpp)
 #target_link_libraries(test_multi_dubins_v2 transsys trajectory multi_sampling sampling ${LCM_LIBRARIES})

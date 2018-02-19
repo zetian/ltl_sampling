@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(librav_common)
+project(librav_utility)
 
 ## Set compiler to use c++ 11 features
 include(CheckCXXCompilerFlag)
@@ -25,22 +25,20 @@ set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Dependency libraries
-#find_package(LIBRARY_NAME REQUIRED)
+find_package(Threads REQUIRED)
 
 # Add libraries
-set(COMMON_LIB_SRC
-	src/librav_math.cpp
-    src/poly_curve.cpp
-    src/quad_flattraj.cpp
+set(UTILITY_LIB_SRC
+	#logging/logger.cpp
 )
-add_library(common STATIC ${COMMON_LIB_SRC})
-if(ENABLE_LOGGING)
-	add_definitions(-DENABLE_LOGGING)
-	target_compile_definitions(common PUBLIC ENABLE_LOGGING=1)
-	target_link_libraries(common -lpthread)
-endif(ENABLE_LOGGING)
-target_include_directories(common PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>
-	PRIVATE src)
+add_library(utilities INTERFACE)
 
+#target_link_libraries(utilities ${CMAKE_THREAD_LIBS_INIT})
+target_include_directories(utilities INTERFACE
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+	$<INSTALL_INTERFACE:include>)
+
+#add_executable(test_logging tests/test_logging.cpp)
+#target_link_libraries(test_logging utilities)
+
+#add_executable(test_stopwatch tests/test_stopwatch.cpp)

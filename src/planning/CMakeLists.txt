@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(librav_common)
+project(librav_planning_v2)
 
 ## Set compiler to use c++ 11 features
 include(CheckCXXCompilerFlag)
@@ -21,26 +21,38 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Include path
+## Include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-# Dependency libraries
-#find_package(LIBRARY_NAME REQUIRED)
+## Find Eigen3
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
-# Add libraries
-set(COMMON_LIB_SRC
-	src/librav_math.cpp
-    src/poly_curve.cpp
-    src/quad_flattraj.cpp
-)
-add_library(common STATIC ${COMMON_LIB_SRC})
-if(ENABLE_LOGGING)
-	add_definitions(-DENABLE_LOGGING)
-	target_compile_definitions(common PUBLIC ENABLE_LOGGING=1)
-	target_link_libraries(common -lpthread)
-endif(ENABLE_LOGGING)
-target_include_directories(common PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>
-	PRIVATE src)
+## Find LCM
+find_package(LCM REQUIRED)
+if(LCM_NOT_FOUND)
+  message(STATUS "LCM is not found. Inter-process communication depends on LCM.")
+endif(LCM_NOT_FOUND)
+# Include files for LCM
+set(LCM_GENERATED_HEADER_PATH ${CMAKE_BINARY_DIR}/include)
+include_directories(${LCM_GENERATED_HEADER_PATH})
+
+## Find Gurobi
+find_package(GUROBI QUIET)
+if (NOT GUROBI_FOUND)
+  message("-- Gurobi not found. Trajectory generation will not be built. Make sure you have set the GUROBI_HOME variable")
+else()
+  message("-- Gurobi found")
+  include_directories(${GUROBI_INCLUDE_DIRS})
+endif()
+
+## Add other sub source directories
+# add_subdirectory(libgraph)
+# add_subdirectory(demo)
+# add_subdirectory(geometry)
+# add_subdirectory(planner)
+# add_subdirectory(map)
+if (GUROBI_FOUND)
+add_subdirectory(polyopt)
+endif()
 

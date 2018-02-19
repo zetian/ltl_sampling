@@ -1,0 +1,9 @@
+package srcl_lcm_msgs;
+
+struct KeyframeSet_t 
+{
+	int64_t kf_num;
+	Keyframe_t kfs[kf_num];
+	TimeStamp_t sys_time;
+	int64_t path_id;
+}

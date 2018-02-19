@@ -7,7 +7,7 @@
  * Copyright (c) 2017 Ruixiang Du (rdu)
  */ 
 
-#include "common/librav_math.h"
+#include "common/librav_math.hpp"
 
 using namespace librav;
 

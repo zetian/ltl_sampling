@@ -1,0 +1,7 @@
+package srcl_lcm_msgs;
+
+struct Pose_t
+{
+	float position[3];
+	float quaternion[4];	// w, x, y, z
+}
