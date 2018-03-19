@@ -4,6 +4,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # Add libraries
 set(POLYOPT_LIB_SRC
     src/polyopt_math.cpp
+    src/quad_polyopt.cpp
     src/gurobi_solver/gurobi_utils.cpp
     src/gurobi_solver/gurobi_polyopt.cpp
 )
@@ -15,4 +16,4 @@ target_include_directories(polyopt PUBLIC
     PRIVATE src)
 
 # Add executables
-#add_subdirectory(tests)
+add_subdirectory(tests)

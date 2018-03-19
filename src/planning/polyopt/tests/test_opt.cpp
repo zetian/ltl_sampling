@@ -40,18 +40,18 @@ int main(int argc, char* argv[])
 	OptResultCurve result;
 	result = traj_opt.OptimizeTrajectory(keyframe_vals, keyframe_ts, kf_num, N, r);
 
-//	std::cout << "**************************************" << std::endl;
-//	std::cout << "cost: " << result.cost << std::endl;
-//	std::cout << "segments: " << std::endl;
-//	uint32_t idx = 0;
-//	for(auto& seg:result.segments)
-//	{
-//		std::cout << "seg " << idx << " : " << std::endl;
-//		for(auto& coef:seg.coeffs)
-//			std::cout << coef << std::endl;
-//		std::cout << "start time: " << seg.ts << " , end time: " << seg.te << std::endl;
-//		idx++;
-//	}
+	std::cout << "**************************************" << std::endl;
+	std::cout << "cost: " << result.cost << std::endl;
+	std::cout << "segments: " << std::endl;
+	uint32_t idx = 0;
+	for(auto& seg:result.segments)
+	{
+		std::cout << "seg " << idx << " : " << std::endl;
+		for(auto& coef:seg.coeffs)
+			std::cout << coef << std::endl;
+		std::cout << "start time: " << seg.ts << " , end time: " << seg.te << std::endl;
+		idx++;
+	}
 	result.print();
 }
 

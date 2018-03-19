@@ -40,7 +40,11 @@ int main()
     LTL_SamplingSimple ltl_sampling_simple;
     ltl_sampling_simple.read_formula(ltl_formula, buchi_regions, indep_set);
     ltl_sampling_simple.init_workspace(work_space_size_x, work_space_size_y);
-
+    // Publish workspace size for visualization
+    sampling::workspace_size_data space_data;
+    space_data.size_x = work_space_size_x;
+    space_data.size_y = work_space_size_y;
+    lcm.publish("WORKSPACE", &space_data);
 
     // sampling::all_regions all_regions_;
     // all_regions_.num_region = 3;

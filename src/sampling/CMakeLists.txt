@@ -28,7 +28,7 @@ set(SAMPLING_LIB_SRC
 	region.cpp
 )
 add_library(sampling STATIC ${SAMPLING_LIB_SRC})
-target_link_libraries(sampling transsys trajectory)
+target_link_libraries(sampling transsys trajectory common)
 #add_library(transsys STATIC ${GRAPH_LIB_SRC})
 #target_link_libraries(transsys spot bddx)
 

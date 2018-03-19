@@ -24,6 +24,19 @@ else()
 	message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++14 or C++11 support. Please use a different C++ compiler.")
 endif()
 
+## Find Gurobi
+find_package(GUROBI QUIET)
+if (NOT GUROBI_FOUND)
+  message("-- Gurobi not found. Trajectory generation will not be built. Make sure you have set the GUROBI_HOME variable")
+else()
+  message("-- Gurobi found")
+  include_directories(${GUROBI_INCLUDE_DIRS})
+endif()
+
+
+
+
+
 ## Put all binary files into /bin and libraries into /lib
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)

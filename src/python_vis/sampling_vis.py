@@ -70,6 +70,7 @@ class SamplingVis(object):
         plt.figure(figsize=(10,10))
         plt.plot(all_states_x, all_states_y, 'ro')
 
+        
         for rect in self.regions:
             draw_rect = patches.Rectangle((rect.position_x[0],rect.position_y[0]), rect.position_x[1] - rect.position_x[0],rect.position_y[1] - rect.position_y[0],linewidth=1,edgecolor='orange',facecolor='orange')
             currentAxis = plt.gca()
@@ -79,16 +80,16 @@ class SamplingVis(object):
             draw_rect = patches.Rectangle((rect.position_x[0],rect.position_y[0]), rect.position_x[1] - rect.position_x[0],rect.position_y[1] - rect.position_y[0],linewidth=1,edgecolor='grey',facecolor='grey')
             currentAxis = plt.gca()
             currentAxis.add_patch(draw_rect)
-
+        
         for x in range(0, len(self.path_x)):
             plt.plot(self.path_x[x], self.path_y[x], color = 'black', linewidth = 2)
         self.path_x = []
         self.path_y = []
+        
         # plt.plot(self.path_x, self.path_y, color = 'black', linewidth = 2)
         # plt.plot(self.path_x_test, self.path_y_test, color = 'blue', linewidth = 2)
         plt.axis([0,self.workspace_size_x, 0, self.workspace_size_y])
         plt.axes().set_aspect('equal')
-        
         plt.show()
 
 
