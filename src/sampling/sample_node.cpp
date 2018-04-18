@@ -1,3 +1,4 @@
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 #include <climits>
@@ -148,6 +149,7 @@ SampleNode& SubSampleSpace::get_parent_dubins(std::vector<double> state, double 
             parent_sample = sample_nodes_[i];
         }
     }
+    // std::cout << "~~~" << std::endl;
     return parent_sample;
 }
 

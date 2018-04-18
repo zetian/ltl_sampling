@@ -80,14 +80,14 @@ int main()
     // Wrap all region of interests (ROI) as input for reading formula
     std::vector<std::string> buchi_regions;
     int num_buchi_regions = config_reader.GetInteger("num_buchi_regions", 0);
-
+    
     for (int i = 0; i < num_buchi_regions; i++){
         buchi_regions.push_back(config_reader.Get("buchi_region_" + std::to_string(i), ""));
     }
 
     // indep_set store the ROI that independent to each other, in this case means p0, p1 and p2 have no intersections
     int num_indep_regions = config_reader.GetInteger("num_indep_regions", 0);
-
+    
     // std::vector<int> indep_set = {0, 1, 2};
     std::vector<int> indep_set;
     for (int i = 0; i < num_indep_regions; i++){
@@ -107,6 +107,7 @@ int main()
     /*** Set region of interests ***/
     // All ROI and obstacles are rectangle for now
     // Three parameters are x position, y position and the name of ROI (0 means p0)
+    
     int num_ROI = config_reader.GetInteger("num_ROI", -1);
     sampling::region_data r_data;
     for (int i = 0; i < num_ROI; i++){
@@ -139,9 +140,10 @@ int main()
     
     /*** Set the number of iterations ***/
     // Solution towards to optimal when iterations -> infinite
-    int iterations = config_reader.GetInteger("iterations", -1);;
+    int iterations = config_reader.GetInteger("iterations", -1);
     /*** Start sampling searching ***/
     stopwatch.tic();
+    std::cout << "Searching..." << std::endl;
     ltl_sampling_dubins.start_sampling(iterations);
     std::cout << "Time used for searching: " << stopwatch.toc() << std::endl;
 

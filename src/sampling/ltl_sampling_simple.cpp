@@ -250,20 +250,20 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
 
         all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
 
-        // // Vis for debug
-        // sampling::sample_data node_data;
-        // node_data.state[0] = new_sample_state[0];
-        // node_data.state[1] = new_sample_state[1];
-        // lcm.publish("SAMPLE", &node_data);
+        // Vis for debug
+        sampling::sample_data node_data;
+        node_data.state[0] = new_sample_state[0];
+        node_data.state[1] = new_sample_state[1];
+        lcm.publish("SAMPLE", &node_data);
 
-        // std::cout << "new ba state: " << new_ba << std::endl;
-        // if (new_ba == ba_.acc_state_idx.front()) {
-        //     // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
-        //     std::cout << "Find a solution!!!" << std::endl;
-        //     first_acc_state_id = new_id;
-        //     find_path = true;
-        //     break;
-        // }
+        std::cout << "new ba state: " << new_ba << std::endl;
+        if (new_ba == ba_.acc_state_idx.front()) {
+            // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
+            std::cout << "Find a solution!!!" << std::endl;
+            first_acc_state_id = new_id;
+            find_path = true;
+            break;
+        }
     }
 }
 

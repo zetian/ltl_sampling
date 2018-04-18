@@ -179,7 +179,9 @@ int main()
     lcm::LCM lcm;
     double EPSILON = 1;
     double RADIUS = 2;
-    std::string ltl_formula = "(<> p0) && (<> p1) && (<> p2)";
+    // std::string ltl_formula = "(<> p0) && (<> p1) && (<> p2)";
+    // std::string ltl_formula = "(<> p0) && ((p1 -> <> p2))";
+    std::string ltl_formula = "<> (p1 -> <> p2)";
     std::vector<std::string> buchi_regions;
     buchi_regions.push_back("p0");
     buchi_regions.push_back("p1");
