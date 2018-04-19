@@ -23,6 +23,7 @@ set(SAMPLING_LIB_SRC
 	sample_node.cpp
 	sample_space.cpp
 	ltl_sampling_simple.cpp
+	ltl_sampling_3d.cpp
 	ltl_sampling_dubins.cpp
 	#cbba_sampling.cpp
 	region.cpp

@@ -282,7 +282,7 @@ void LTL_SamplingDubins::set_obstacle(std::pair <double, double> position_x, std
 
 void LTL_SamplingDubins::set_init_state(std::vector<double> init_state) {
     all_space_.set_space(ba_.state_num);
-    std::cout << "wwwwwwwwwwwwwwwwww" << ba_.state_num << std::endl;
+    // std::cout << "wwwwwwwwwwwwwwwwww" << ba_.state_num << std::endl;
     int init_ba = ba_.init_state_idx;
     int acc_ba = ba_.acc_state_idx.front();
     SampleNode init_node;
@@ -353,7 +353,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
                 continue;
             }
             SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent_dubins(sampled_position, min_radius_);
-            std::cout << "222222222222222222222" << std::endl;
+            // std::cout << "222222222222222222222" << std::endl;
             std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position, dubins_steer_data, EPSILON_);
             
             if (Region::collision_check_dubins(dubins_steer_data.traj_point_wise, all_obstacles_, work_space_size_x_, work_space_size_y_, collision_check_rate_)) {

@@ -11,6 +11,11 @@ struct sample_data
     double state[2];
 }
 
+struct sample_data_3d
+{
+    double state[3];
+}
+
 struct path_data
 {
     int32_t num_state;
@@ -18,10 +23,25 @@ struct path_data
     double state_y[num_state];
 }
 
+struct path_data_3d
+{
+    int32_t num_state;
+    double state_x[num_state];
+    double state_y[num_state];
+    double state_z[num_state];
+}
+
 struct region_data
 {
     double position_x[2];
     double position_y[2];
+}
+
+struct region_data_3d
+{
+    double position_x[2];
+    double position_y[2];
+    double position_z[2];
 }
 
 struct all_regions
