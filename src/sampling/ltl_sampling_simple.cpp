@@ -225,12 +225,14 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<double> sampled_position = sample_state(ba_act); 
+        if (all_space_.get_sub_space(ba_act[0]).num_samples() == 0) {
+                continue;
+        }
         SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent(sampled_position);
         std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position);
         if (Region::collision_check_simple(parent_sample.get_state(), new_sample_state, all_obstacles_) ){
             continue;
         }
-
 
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
         SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);

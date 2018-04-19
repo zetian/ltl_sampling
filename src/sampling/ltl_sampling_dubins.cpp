@@ -302,9 +302,9 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
         bool find_path = false;
         int cnt = 0;
         while (!find_path){
-            cnt++;
+            // cnt++;
             // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-            std::cout << "iteration: " << cnt << std::endl;
+            // std::cout << "iteration: " << cnt << std::endl;
             std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
             std::vector<double> sampled_position = sample_state(ba_act);
             DubinsPath::PathData dubins_steer_data;
@@ -346,9 +346,9 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
             std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
             std::vector<double> sampled_position = sample_state(ba_act);
             DubinsPath::PathData dubins_steer_data;
-            std::cout << "111111111111111111111" << std::endl;
-            std::cout << "ba state: " << ba_act[0] << std::endl;
-            std::cout << "num of states: " << all_space_.get_sub_space(ba_act[0]).num_samples() << std::endl;
+            // std::cout << "111111111111111111111" << std::endl;
+            // std::cout << "ba state: " << ba_act[0] << std::endl;
+            // std::cout << "num of states: " << all_space_.get_sub_space(ba_act[0]).num_samples() << std::endl;
             if (all_space_.get_sub_space(ba_act[0]).num_samples() == 0) {
                 continue;
             }
