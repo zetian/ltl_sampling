@@ -6,6 +6,13 @@ struct workspace_size_data
     double size_y;
 }
 
+struct workspace_size_data_3d
+{
+    double size_x;
+    double size_y;
+    double size_z;
+}
+
 struct sample_data
 {
     double state[2];
@@ -48,6 +55,12 @@ struct all_regions
 {
     int32_t num_region;
     region_data regions[num_region];
+}
+
+struct all_regions_3d
+{
+    int32_t num_region;
+    region_data_3d regions[num_region];
 }
 
 struct sample_draw
