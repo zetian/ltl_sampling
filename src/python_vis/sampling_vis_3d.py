@@ -5,10 +5,10 @@ import matplotlib.patches as patches
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
-from sampling import sample_data_3d
-from sampling import region_data_3d
-from sampling import path_data_3d
-from sampling import workspace_size_data_3d
+from sampling_3d import sample_data_3d
+from sampling_3d import region_data_3d
+from sampling_3d import path_data_3d
+from sampling_3d import workspace_size_data_3d
 
 class Region(object):
     def __init__(self, position_x, position_y, position_z):
@@ -32,7 +32,7 @@ class SamplingVis(object):
         print("Received message on channel \"%s\"" % channel)
         print("   workspace x   = %s" % str(msg.size_x))
         print("   workspace y   = %s" % str(msg.size_y))
-        print("   workspace y   = %s" % str(msg.size_z))
+        print("   workspace z   = %s" % str(msg.size_z))
         self.workspace_size_x = msg.size_x
         self.workspace_size_y = msg.size_y
         
@@ -41,7 +41,7 @@ class SamplingVis(object):
         print("Received message on channel \"%s\"" % channel)
         print("   state_x   = %s" % str(msg.state[0]))
         print("   state_y   = %s" % str(msg.state[1]))
-        print("   state_y   = %s" % str(msg.state[2]))
+        print("   state_z   = %s" % str(msg.state[2]))
         self.all_samples.append(msg.state)
 
     def region_handler(self, channel, data):
@@ -51,7 +51,7 @@ class SamplingVis(object):
         print("Received message on channel \"%s\"" % channel)
         print("   region position x: " + str(msg.position_x[0]) + " to " + str(msg.position_x[1]))
         print("   region position y: " + str(msg.position_y[0]) + " to " + str(msg.position_y[1]))
-        print("   region position y: " + str(msg.position_z[0]) + " to " + str(msg.position_z[1]))
+        print("   region position z: " + str(msg.position_z[0]) + " to " + str(msg.position_z[1]))
         self.regions.append(region)
     
     def obstacle_handler(self, channel, data):
@@ -89,6 +89,12 @@ class SamplingVis(object):
         r = z**2 + 1
         x = r * np.sin(theta)
         y = r * np.cos(theta)
+        path_x = np.array(self.path_x)
+        path_y = np.array(self.path_y)
+        path_z = np.array(self.path_z)
+        print(len(path_x))
+        print(len(path_y))
+        print(len(path_z))
         ax.plot(x, y, z, label='parametric curve')
         ax.legend()
 
@@ -121,12 +127,14 @@ class SamplingVis(object):
 
 
 def main():
+    
+
     lc = lcm.LCM()
     sample_vis = SamplingVis()
     subscription = lc.subscribe("WORKSPACE", sample_vis.workspace_size_handler)
     subscription = lc.subscribe("REGION", sample_vis.region_handler)
     subscription = lc.subscribe("OBSTACLE", sample_vis.obstacle_handler)
-    subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
+    # subscription = lc.subscribe("SAMPLE", sample_vis.sampling_node_handler)
     subscription = lc.subscribe("PATH", sample_vis.path_handler)
     subscription = lc.subscribe("DRAW_SAMPLE", sample_vis.samples_draw)
     

@@ -58,9 +58,10 @@ int main()
     ltl_sampling_simple.read_formula(ltl_formula, buchi_regions, indep_set);
     ltl_sampling_simple.init_workspace(work_space_size_x, work_space_size_y, work_space_size_z);
     // Publish workspace size for visualization
-    sampling::workspace_size_data space_data;
+    sampling_3d::workspace_size_data_3d space_data;
     space_data.size_x = work_space_size_x;
     space_data.size_y = work_space_size_y;
+    space_data.size_z = work_space_size_z;
     lcm.publish("WORKSPACE", &space_data);
 
     // sampling::all_regions all_regions_;
@@ -70,7 +71,7 @@ int main()
     std::pair <double, double> position_y (30, 45);
     std::pair <double, double> position_z (10, 30);
     ltl_sampling_simple.set_interest_region(position_x, position_y, position_z, 0);
-    sampling::region_data_3d r_data;
+    sampling_3d::region_data_3d r_data;
     r_data.position_x[0] =  position_x.first;
     r_data.position_x[1] =  position_x.second;
     r_data.position_y[0] =  position_y.first;
@@ -141,11 +142,11 @@ int main()
 
     librav::KeyframeSet kfs;
     for (int i = 0; i < path.size(); i++) {
-        sampling::sample_data_3d node_data;
+        sampling_3d::sample_data_3d node_data;
         node_data.state[0] = path[i][0];
         node_data.state[1] = path[i][1];
-        node_data.state[1] = path[i][2];
-        // lcm.publish("SAMPLE", &node_data);
+        node_data.state[2] = path[i][2];
+        lcm.publish("SAMPLE", &node_data);
 
 
         librav::Keyframe kf;
@@ -394,7 +395,7 @@ int main()
 
     }
 
-    sampling::path_data_3d path_data_;
+    sampling_3d::path_data_3d path_data_;
     path_data_.num_state = all_traj.size();
     path_data_.state_x.resize(path_data_.num_state);
     path_data_.state_y.resize(path_data_.num_state);
@@ -425,7 +426,7 @@ int main()
     // std::cout << "Length of the solution path: " << path_data_.num_state << std::endl;
     // lcm.publish("PATH", &path_data_);
     
-    sampling::sample_draw draw;
+    sampling_3d::sample_draw_3d draw;
     draw.if_draw = true;
     // lcm.publish("DRAW_REGION", &draw);
     lcm.publish("DRAW_SAMPLE", &draw);
