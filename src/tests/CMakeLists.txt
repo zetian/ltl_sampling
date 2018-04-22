@@ -25,7 +25,7 @@ include_directories(${LCM_GENERATED_HEADER_PATH})
 #target_link_libraries(test_sample_v2 transsys trajectory sampling ${LCM_LIBRARIES})
 
 add_executable(test_3d test_3d.cpp)
-target_link_libraries(test_3d transsys trajectory sampling polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
+target_link_libraries(test_3d transsys trajectory sampling utilities polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
 
 add_executable(test_quad test_quad.cpp)
 target_link_libraries(test_quad transsys trajectory sampling polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})

@@ -10,6 +10,9 @@ from sampling_3d import region_data_3d
 from sampling_3d import path_data_3d
 from sampling_3d import workspace_size_data_3d
 
+
+
+
 class Region(object):
     def __init__(self, position_x, position_y, position_z):
         self.position_x = position_x
@@ -26,6 +29,9 @@ class SamplingVis(object):
     path_x = []
     path_y = []
     path_z = []
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.set_aspect('equal')
 
     def workspace_size_handler(self, channel, data):
         msg = workspace_size_data_3d.decode(data)
@@ -35,6 +41,7 @@ class SamplingVis(object):
         print("   workspace z   = %s" % str(msg.size_z))
         self.workspace_size_x = msg.size_x
         self.workspace_size_y = msg.size_y
+        self.workspace_size_z = msg.size_z
         
     def sampling_node_handler(self, channel, data):
         msg = sample_data_3d.decode(data)
@@ -47,7 +54,7 @@ class SamplingVis(object):
     def region_handler(self, channel, data):
         # self.all_samples = []
         msg = region_data_3d.decode(data)
-        region = Region(msg.position_x, msg.position_y, msg.position_x)
+        region = Region(msg.position_x, msg.position_y, msg.position_z)
         print("Received message on channel \"%s\"" % channel)
         print("   region position x: " + str(msg.position_x[0]) + " to " + str(msg.position_x[1]))
         print("   region position y: " + str(msg.position_y[0]) + " to " + str(msg.position_y[1]))
@@ -71,7 +78,64 @@ class SamplingVis(object):
         self.path_y.append(msg.state_y)
         self.path_z.append(msg.state_z)
 
+    def plot_region(self, x_range, y_range, z_range):
+        # TODO: refactor this to use an iterotor
+        alpha_ = 0.1
+        color_ = "orange"
+        xx, yy = np.meshgrid(x_range, y_range)
+        self.ax.plot_wireframe(xx, yy, z_range[0], color=color_)
+        self.ax.plot_surface(xx, yy, z_range[0], color=color_, alpha=alpha_)
+        self.ax.plot_wireframe(xx, yy, z_range[1], color=color_)
+        self.ax.plot_surface(xx, yy, z_range[1], color=color_, alpha=alpha_)
+
+
+        yy, zz = np.meshgrid(y_range, z_range)
+        self.ax.plot_wireframe(x_range[0], yy, zz, color=color_)
+        self.ax.plot_surface(x_range[0], yy, zz, color=color_, alpha=alpha_)
+        self.ax.plot_wireframe(x_range[1], yy, zz, color=color_)
+        self.ax.plot_surface(x_range[1], yy, zz, color=color_, alpha=alpha_)
+
+        xx, zz = np.meshgrid(x_range, z_range)
+        self.ax.plot_wireframe(xx, y_range[0], zz, color=color_)
+        self.ax.plot_surface(xx, y_range[0], zz, color=color_, alpha=alpha_)
+        self.ax.plot_wireframe(xx, y_range[1], zz, color=color_)
+        self.ax.plot_surface(xx, y_range[1], zz, color=color_, alpha=alpha_)
+
+    def plot_obstacles(self, x_range, y_range, z_range):
+        # TODO: refactor this to use an iterotor
+        alpha_ = 0.8
+        color_ = "grey"
+        xx, yy = np.meshgrid(x_range, y_range)
+        self.ax.plot_wireframe(xx, yy, z_range[0], color=color_)
+        self.ax.plot_surface(xx, yy, z_range[0], color=color_, alpha=alpha_)
+        self.ax.plot_wireframe(xx, yy, z_range[1], color=color_)
+        self.ax.plot_surface(xx, yy, z_range[1], color=color_, alpha=alpha_)
+
+
+        yy, zz = np.meshgrid(y_range, z_range)
+        self.ax.plot_wireframe(x_range[0], yy, zz, color=color_)
+        self.ax.plot_surface(x_range[0], yy, zz, color=color_, alpha=alpha_)
+        self.ax.plot_wireframe(x_range[1], yy, zz, color=color_)
+        self.ax.plot_surface(x_range[1], yy, zz, color=color_, alpha=alpha_)
+
+        xx, zz = np.meshgrid(x_range, z_range)
+        self.ax.plot_wireframe(xx, y_range[0], zz, color=color_)
+        self.ax.plot_surface(xx, y_range[0], zz, color=color_, alpha=alpha_)
+        self.ax.plot_wireframe(xx, y_range[1], zz, color=color_)
+        self.ax.plot_surface(xx, y_range[1], zz, color=color_, alpha=alpha_)
+
     def samples_draw(self, channel, data):
+        self.ax.set_xlim3d(0, self.workspace_size_x)
+        self.ax.set_ylim3d(0, self.workspace_size_y)
+        self.ax.set_zlim3d(0, self.workspace_size_z)
+        for rect in self.regions:
+            self.plot_region(np.array([rect.position_x[0], rect.position_x[1]]), np.array([rect.position_y[0], rect.position_y[1]]), np.array([rect.position_z[0], rect.position_z[1]]))
+        for rect in self.obstacles:
+            self.plot_obstacles(np.array([rect.position_x[0], rect.position_x[1]]), np.array([rect.position_y[0], rect.position_y[1]]), np.array([rect.position_z[0], rect.position_z[1]]))
+
+
+        # self.rect_prism(np.array([-1, 1]), np.array([-1, 1]), np.array([-0.5, 0.5]))
+
         all_states_x = []
         all_states_y = []
         all_states_z = []
@@ -81,23 +145,26 @@ class SamplingVis(object):
             all_states_z.append(x[2])
         # self.fig
 
-        fig = plt.figure()
+        # fig = plt.figure()
 
-        ax = fig.gca(projection='3d')
-        theta = np.linspace(-4 * np.pi, 4 * np.pi, 100)
-        z = np.linspace(-2, 2, 100)
-        r = z**2 + 1
-        x = r * np.sin(theta)
-        y = r * np.cos(theta)
+        # ax = fig.gca(projection='3d')
+        # theta = np.linspace(-4 * np.pi, 4 * np.pi, 100)
+        # z = np.linspace(-2, 2, 100)
+        # r = z**2 + 1
+        # x = r * np.sin(theta)
+        # y = r * np.cos(theta)
         path_x = np.array(self.path_x)
         path_y = np.array(self.path_y)
         path_z = np.array(self.path_z)
-        print(len(path_x))
-        print(len(path_y))
-        print(len(path_z))
-        ax.plot(x, y, z, label='parametric curve')
-        ax.legend()
-
+        # print(len(path_x))
+        # print(len(path_y))
+        # print(len(path_z))
+        self.ax.plot(path_x[0], path_y[0], path_z[0], color = 'blue', linewidth = 2)
+        self.ax.set_aspect('equal')
+        # ax.plot(x, y, z, label='parametric curve')
+        # self.ax.legend()
+        # plt.axis([0,self.workspace_size_x, 0, self.workspace_size_y, 0, self.workspace_size_z])
+        # plt.axes().set_aspect('equal')
         plt.show()
 
         # plt.figure(figsize=(10,10))
