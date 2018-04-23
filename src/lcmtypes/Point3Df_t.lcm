@@ -1,0 +1,8 @@
+package srcl_lcm_msgs;
+
+struct Point3Df_t 
+{
+	float x;
+	float y;
+	float z;
+}

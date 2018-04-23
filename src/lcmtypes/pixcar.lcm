@@ -1,0 +1,29 @@
+package librav_lcm_msgs;
+
+// IMU raw data
+struct CarRawIMU_t
+{
+    int64_t mtime;
+    float gyro[3];
+    float accel[3];
+} 
+
+struct CarRawMag_t
+{
+    int64_t mtime;
+    float mag[3];
+} 
+
+struct CarRawSpeed_t
+{
+    int64_t mtime;
+    int32_t count;
+    float speed;
+} 
+
+// command range: [-1,1]
+struct CarCommand_t
+{
+    int8_t servo;
+    int8_t motor;
+} 

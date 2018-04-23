@@ -1,0 +1,6 @@
+package srcl_lcm_msgs;
+
+struct NewDataReady_t 
+{
+	boolean new_data_ready_;
+}

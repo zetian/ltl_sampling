@@ -254,6 +254,7 @@ BAStruct SpotHoaInterpreter::GetBuchi(std::string ltl_str, std::vector<std::stri
 
 	// print data
 	// std::cout <<"Init buchi state: " << ba.init_state_idx << std::endl;
+	// std::cout << "accept buchi state: " << ba.acc_state_idx[0] << std::endl;
 	// std::cout << " - Transition Table String: " << std::endl;
 	// for(auto it = ba.trans_table_str.begin(); it != ba.trans_table_str.end(); it++)
 	// {

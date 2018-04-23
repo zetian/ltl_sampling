@@ -11,6 +11,12 @@ void Region::set_position(std::pair<double, double> position_x, std::pair<double
     position_y_ = position_y;
 }
 
+void Region::set_position(std::pair<double, double> position_x, std::pair<double, double> position_y, std::pair<double, double> position_z) {
+    position_x_ = position_x;
+    position_y_ = position_y;
+    position_z_ = position_z;
+}
+
 int Region::get_region_interest() {
     return region_interest_;
 }
@@ -21,6 +27,10 @@ std::pair<double, double> Region::get_x_position() {
 
 std::pair<double, double> Region::get_y_position() {
     return position_y_;
+}
+
+std::pair<double, double> Region::get_z_position() {
+    return position_z_;
 }
 
 
@@ -80,6 +90,34 @@ bool Region::collision_check_simple(std::vector<double> state_s, std::vector<dou
     }
     return false;
 }
+
+bool Region::collision_check_simple_3d(std::vector<double> state_s, std::vector<double> state_f, std::vector<Region> obstacle){
+    int SAMPLE_NUM = 15;
+    std::vector<double> generated_values;
+    for(int i = 0; i < SAMPLE_NUM; i++) {
+        std::uniform_real_distribution<double> dist(0, 1);
+        std::mt19937 rng;
+        rng.seed(std::random_device{}());
+        double num = dist(rng);
+        generated_values.push_back(num);
+    }
+
+    for (int i = 0; i < obstacle.size(); i++) {
+        for (int j = 0; j < SAMPLE_NUM; j++) {
+            double x = (state_f[0] - state_s[0])*generated_values[j] + state_s[0];
+            double y = (state_s[1] - state_f[1])/(state_s[0] - state_f[0])*(x - state_s[0]) + state_s[1];
+            double z = (state_s[2] - state_f[2])/(state_s[0] - state_f[0])*(x - state_s[0]) + state_s[2];
+            if (x > obstacle[i].get_x_position().first && x < obstacle[i].get_x_position().second &&
+             y > obstacle[i].get_y_position().first && y < obstacle[i].get_y_position().second && 
+             z > obstacle[i].get_z_position().first && z < obstacle[i].get_z_position().second){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
 bool Region::collision_check_multi_simple(std::vector<std::vector<double>> state_s, std::vector<std::vector<double>> state_f, std::vector<Region> obstacle){
     int SAMPLE_NUM = 15;
     std::vector<double> generated_values;

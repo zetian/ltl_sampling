@@ -1,0 +1,13 @@
+package srcl_lcm_msgs;
+
+struct UAVTrajectoryPoint_t
+{    
+    boolean point_empty;
+	float positions[3];
+	float velocities[3];
+	float accelerations[3];
+	float jerks[3];
+	float yaw;
+	float yaw_rate;
+	int64_t duration;
+}

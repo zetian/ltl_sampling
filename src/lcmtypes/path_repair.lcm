@@ -1,0 +1,72 @@
+package librav_lcm_msgs;
+
+// MAP
+struct MapRequest_t
+{
+    boolean new_map_requested;
+    int32_t map_size_x;
+    int32_t map_size_y;
+    int32_t map_size_z;
+    int8_t map_type;
+}
+
+struct Cell_t
+{
+    int32_t id;
+    int32_t pos_x;
+    int32_t pos_y;
+    boolean occupied;
+}
+
+struct Voxel_t
+{
+    int32_t id;
+    int32_t pos_x;
+    int32_t pos_y;
+    int32_t pos_z;
+    boolean occupied;
+}
+
+struct Map_t 
+{
+    // 3D map dimension
+    int32_t size_x;
+    int32_t size_y;
+    int32_t size_z;
+
+    // 2D map cells
+	int64_t cell_num;
+	Cell_t cells[cell_num];
+
+    // 3D map voxels
+    int64_t voxel_num;
+    Voxel_t voxels[voxel_num];
+}
+
+// VEHICLE INFO
+struct QuadPose_t
+{
+    int32_t x;
+    int32_t y;
+    int32_t z;
+    double yaw;
+
+    int32_t id;    
+}
+
+// PATH
+struct Waypoint_t
+{
+    int32_t x;
+    int32_t y;
+    int32_t z;
+    double yaw;
+
+    int32_t id;
+}
+
+struct Path_t
+{
+    int32_t pt_num;
+    Waypoint_t points[pt_num];
+}

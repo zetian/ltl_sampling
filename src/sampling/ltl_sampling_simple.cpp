@@ -23,6 +23,10 @@ std::vector<int> LTL_SamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace 
         return std::vector<int>();
     }
     int size_buchi = buchi.state_num;
+    int temp = buchi.acc_state_idx.front();
+    if (size_buchi == 1) {
+        return {temp, temp};
+    }
     std::vector<uint32_t> ba_accept_state = buchi.acc_state_idx;
     int new_ba_sample = rand() % (size_buchi);
     std::vector<int> new_ba_candidate;
@@ -34,6 +38,7 @@ std::vector<int> LTL_SamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace 
         {
             if (i != new_ba_sample && !buchi.trans_con[i][new_ba_sample].empty())
             {
+
                 temp_candidate.push_back(i);
                 if (sample_space.get_sub_space(i).num_samples() > 0)
                 {
@@ -53,8 +58,14 @@ std::vector<int> LTL_SamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace 
             act_q.push_back({new_ba_sample, new_ba_sample});
         }
     }
-    while (new_ba_candidate.empty())
+
+    // std::cout << "temp_candidate" << std::endl;
+    // for (auto it: temp_candidate) {
+    //     std::cout << it << std::endl;
+    // }
+    if (new_ba_candidate.empty())
     {
+        // std::cout << "~~~~~~~~~~~check~~~~~~~~~~" << std::endl;
         std::vector<int> new_temp_candidate;
         for (int i = 0; i < temp_candidate.size(); i++)
         {
@@ -72,6 +83,9 @@ std::vector<int> LTL_SamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace 
             }
         }
         temp_candidate = new_temp_candidate;
+    }
+    if (new_ba_candidate.empty()) {
+        return {temp, temp};
     }
     int r = rand() % (new_ba_candidate.size());
     int new_ba_state = new_ba_candidate[r];
@@ -128,15 +142,23 @@ std::vector<double> LTL_SamplingSimple::step_from_to (SampleNode parent_sample, 
 
 int LTL_SamplingSimple::step_from_to_buchi (int paraent_ba, std::vector<double> new_sample_state, BAStruct ba, std::map<int, Region> all_interest_regions) {
     std::bitset<32> bit_set;
+    // std::cout << "*******in step from to buchi function: ******" << std::endl;
     int buchi_num = paraent_ba;
     for (int i = 0; i < all_interest_regions.size(); i++) {
         if (if_in_region(new_sample_state, all_interest_regions.find(i)->second)) {
             bit_set.set(all_interest_regions.find(i)->second.get_region_interest());
-            break;
+            // break;
         }
     }
     int act = bit_set.to_ullong();
     for (int i = 0; i < ba.trans_con[paraent_ba].size(); i++) {
+        // std::cout << "parent trans: " << std::endl;
+        // for (auto it: ba.trans_con[paraent_ba][i]) {
+        //     std::cout << it << std::endl;
+        // }
+        if (buchi_num == i) {
+            continue;
+        }
         if (std::find(ba.trans_con[paraent_ba][i].begin(), ba.trans_con[paraent_ba][i].end(), act) != ba.trans_con[paraent_ba][i].end()) {
             buchi_num = i;
             break;
@@ -225,12 +247,14 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
     for (int i = 0; i < iteration; i++) {
         std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
         std::vector<double> sampled_position = sample_state(ba_act); 
+        if (all_space_.get_sub_space(ba_act[0]).num_samples() == 0) {
+                continue;
+        }
         SampleNode parent_sample = all_space_.get_sub_space(ba_act[0]).get_parent(sampled_position);
         std::vector<double> new_sample_state = step_from_to(parent_sample, sampled_position);
         if (Region::collision_check_simple(parent_sample.get_state(), new_sample_state, all_obstacles_) ){
             continue;
         }
-
 
         int new_ba = step_from_to_buchi(parent_sample.get_ba(), new_sample_state, ba_, all_interest_regions_);
         SampleNode &chosen_parent_sample = all_space_.get_sub_space(parent_sample.get_ba()).rechoose_parent(parent_sample, new_sample_state, all_obstacles_, RADIUS_);
@@ -250,20 +274,20 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
 
         all_space_.rewire(new_id, new_ba, all_obstacles_, RADIUS_);
 
-        // // Vis for debug
-        // sampling::sample_data node_data;
-        // node_data.state[0] = new_sample_state[0];
-        // node_data.state[1] = new_sample_state[1];
-        // lcm.publish("SAMPLE", &node_data);
+        // Vis for debug
+        sampling::sample_data node_data;
+        node_data.state[0] = new_sample_state[0];
+        node_data.state[1] = new_sample_state[1];
+        lcm.publish("SAMPLE", &node_data);
 
-        // std::cout << "new ba state: " << new_ba << std::endl;
-        // if (new_ba == ba_.acc_state_idx.front()) {
-        //     // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
-        //     std::cout << "Find a solution!!!" << std::endl;
-        //     first_acc_state_id = new_id;
-        //     find_path = true;
-        //     break;
-        // }
+        std::cout << "new ba state: " << new_ba << std::endl;
+        if (new_ba == ba_.acc_state_idx.front()) {
+            // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
+            std::cout << "Find a solution!!!" << std::endl;
+            first_acc_state_id = new_id;
+            find_path = true;
+            break;
+        }
     }
 }
 

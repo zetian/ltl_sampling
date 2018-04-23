@@ -1,0 +1,15 @@
+package srcl_lcm_msgs;
+
+struct PolynomialCurve_t
+{    
+	int64_t seg_num;
+	PolyCurveSegment_t segments[seg_num];
+	
+	int32_t wp_num;
+	WayPoint_t waypoints[wp_num]; 
+	
+	TimeStamp_t start_time;
+	int64_t trajectory_id;
+	
+	float scaling_factor;
+}

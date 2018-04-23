@@ -6,10 +6,24 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # Dependency libraries
 #find_package(OpenCV REQUIRED)
 
+## Find LCM
+find_package(LCM REQUIRED)
+
+if(LCM_NOT_FOUND)
+  message(STATUS "LCM is not found. Inter-process communication depends on LCM.")
+endif(LCM_NOT_FOUND)
+
+# Include files for LCM
+set(LCM_GENERATED_HEADER_PATH ${CMAKE_BINARY_DIR}/include)
+include_directories(${LCM_GENERATED_HEADER_PATH})
+
+
+
 # Add libraries
 set(TRAJECTORY_LIB_SRC
 	#dubins_steer.cpp
 	dubins_path.cpp
+	#quad_polyopt.cpp
 )
 add_library(trajectory STATIC ${TRAJECTORY_LIB_SRC})
 target_link_libraries(trajectory)

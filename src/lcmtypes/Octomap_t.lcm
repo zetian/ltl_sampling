@@ -1,0 +1,10 @@
+package srcl_lcm_msgs;
+
+struct Octomap_t
+{
+	boolean binary;
+	string id;
+	double resolution;
+	int32_t data_size;
+	int8_t data[data_size];
+}

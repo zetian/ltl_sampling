@@ -1,0 +1,10 @@
+package srcl_lcm_msgs;
+
+struct Keyframe_t 
+{
+	float position[3];
+	float velocity[3];
+	float yaw;
+	
+	boolean vel_constr;
+}
