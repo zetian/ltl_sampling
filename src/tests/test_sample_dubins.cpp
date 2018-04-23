@@ -18,7 +18,8 @@
 #include "config_reader/config_reader.h"
 
 #include <lcm/lcm-cpp.hpp>
-#include "lcmtypes/acel_lcm_msgs.hpp"
+// #include "lcmtypes/acel_lcm_msgs.hpp"
+#include "lcmtypes/librav.hpp"
 
 using namespace acel;
 

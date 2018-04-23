@@ -3,7 +3,7 @@
 // #include "trans_sys/buchi_automaton.h"
 
 #include <lcm/lcm-cpp.hpp>
-#include "lcmtypes/acel_lcm_msgs.hpp"
+#include "lcmtypes/librav.hpp"
 
 using namespace acel;
 
@@ -16,8 +16,8 @@ private:
     double work_space_size_y_ = 100;
     double work_space_size_z_ = 100;
     std::string ltl_formula_;
-    double EPSILON_ = 6;
-    double RADIUS_ = 12;
+    double EPSILON_ = 8;
+    double RADIUS_ = 16;
     std::vector<std::vector<double>> path_;
 
     BAStruct ba_;

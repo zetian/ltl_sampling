@@ -17,7 +17,8 @@
 #include "sampling/ltl_sampling_3d.h"
 
 #include <lcm/lcm-cpp.hpp>
-#include "lcmtypes/acel_lcm_msgs.hpp"
+// #include "lcmtypes/acel_lcm_msgs.hpp"
+#include "lcmtypes/librav.hpp"
 
 #include "common/librav_types.hpp"
 
