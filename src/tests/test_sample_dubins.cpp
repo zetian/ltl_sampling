@@ -178,7 +178,7 @@ int main()
         way_point_.y = way_points[i].y;
         way_point_.z = 0;
         way_point_.t = way_points[i].t;
-        std::cout << "x: " << way_points[i].x << ", y: " << way_points[i].y << ", t: " <<way_points[i].t << std::endl;
+        // std::cout << "x: " << way_points[i].x << ", y: " << way_points[i].y << ", t: " <<way_points[i].t << std::endl;
         
         planner_output.waypoints[i] = way_point_;
     }

@@ -297,7 +297,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
     
     uint64_t first_acc_state_id;
     lcm::LCM lcm;
-
+    int first_it = 0;
     if (iteration == -1){
         bool find_path = false;
         int cnt = 0;
@@ -381,23 +381,28 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
             all_space_.insert_sample(new_node, new_ba);
             
             all_space_.rewire_dubins(new_id, new_ba, all_obstacles_, work_space_size_x_, work_space_size_y_, RADIUS_, min_radius_, path_step_, collision_check_rate_);
-    
+            
+
+            // int cost = all_space_.get_sub_space(ba_.acc_state_idx.front()).get_min_cost_sample().get_cost();
+            // std::cout << "cost:" << cost << std::endl;
+
             /// Vis for debug
             // sampling::sample_data node_data;
             // node_data.state[0] = new_sample_state[0];
             // node_data.state[1] = new_sample_state[1];
             // lcm.publish("SAMPLE", &node_data);
-    
+            
             // std::cout << "new ba state: " << new_ba << std::endl;
             // if (new_ba == ba_.acc_state_idx.front()) {
-            //     // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
-            //     std::cout << "Find a solution!!!" << std::endl;
-            //     first_acc_state_id = new_id;
-            //     find_path = true;
-            //     break;
+                // first_it = i;
+                // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
+                // std::cout << "Find a solution!!!" << std::endl;
+                // first_acc_state_id = new_id;
+                // find_path = true;
+                // break;
             // }
         }
-
+        // std::cout << "First iteration: " << first_it << std::endl;
     }
     
 }

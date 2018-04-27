@@ -509,11 +509,19 @@ int main()
     path_data_.state_y.resize(path_data_.num_state);
     path_data_.state_z.resize(path_data_.num_state);
     for (int i = 0; i < path_data_.num_state; i++) {
+        std::cout << "========Way point " << i << " =========" << std::endl;
         path_data_.state_x[i] = all_traj[i].positions[0];
-        
         path_data_.state_y[i] = all_traj[i].positions[1];
         path_data_.state_z[i] = all_traj[i].positions[2];
-
+        std::cout << "position x: " << all_traj[i].positions[0] << std::endl;
+        std::cout << "position y: " << all_traj[i].positions[1] << std::endl;
+        std::cout << "position z: " << all_traj[i].positions[2] << std::endl;
+        std::cout << "velocity x: " << all_traj[i].velocities[0] << std::endl;
+        std::cout << "velocity y: " << all_traj[i].velocities[1] << std::endl;
+        std::cout << "velocity z: " << all_traj[i].velocities[2] << std::endl;
+        std::cout << "acceleration x: " << all_traj[i].accelerations[0] << std::endl;
+        std::cout << "acceleration y: " << all_traj[i].accelerations[1] << std::endl;
+        std::cout << "acceleration z: " << all_traj[i].accelerations[2] << std::endl;
     }
     std::cout << "Length of the solution path: " << path_data_.num_state << std::endl;
     lcm.publish("PATH", &path_data_);

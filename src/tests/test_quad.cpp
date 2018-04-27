@@ -529,9 +529,9 @@ int main()
     path_data_.state_y.resize(path_data_.num_state);
     for (int i = 0; i < path_data_.num_state; i++) {
         path_data_.state_x[i] = all_traj[i].positions[0];
-        
         path_data_.state_y[i] = all_traj[i].positions[1];
     }
+
     std::cout << "Length of the solution path: " << path_data_.num_state << std::endl;
     lcm.publish("PATH", &path_data_);
 
