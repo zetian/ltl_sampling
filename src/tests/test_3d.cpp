@@ -273,7 +273,7 @@ int main()
     poly_msg.wp_num = kfs.keyframes.size();
     librav::QuadPolyOpt traj_opt_;
     librav::QuadFlatTraj flat_traj_;
-    traj_opt_.InitOptWithCorridorJointMatrices(kf_num, 20, 4);
+    traj_opt_.InitOptWithCorridorJointMatrices(kf_num, 20, 8);
     traj_opt_.SetYawPolynomialOrder(3);
     // traj_opt_.InitOptJointMatrices(kf_num);
     for(int i = 0; i < kfs.keyframes.size(); i++)
@@ -385,8 +385,11 @@ int main()
 				
 			for(auto& coeff:seg.seg_z.param_.coeffs)
 				seg_msg.coeffs_z.push_back(coeff);
-			for(auto& coeff:seg.seg_yaw.param_.coeffs)
+            for(auto& coeff:seg.seg_yaw.param_.coeffs){
+                // std::cout << "yaw~~~"  << coeff << std::endl;
 				seg_msg.coeffs_yaw.push_back(coeff);
+            }
+                
 
 			seg_msg.t_start = seg.t_start;
 			seg_msg.t_end = seg.t_end;
@@ -466,7 +469,7 @@ int main()
         // int32_t fpt_idx = FindFurthestPointWithinRadius(waypoints_,seg_idx, 5.0);
         // Eigen::Vector3d furthest_pt_vec(waypoints_[fpt_idx].x, waypoints_[fpt_idx].y, 0);
         pt.yaw = librav::PolynomialMath::GetPolynomialValue(flat_traj_.traj_segs_[seg_idx].seg_yaw.param_.coeffs, 0, t_factor);
-        pt.yaw_rate = 0;
+        pt.yaw_rate = librav::PolynomialMath::GetPolynomialValue(flat_traj_.traj_segs_[seg_idx].seg_yaw.param_.coeffs, 1, t_factor);
         double dist = 0;
         if(seg_idx == flat_traj_.traj_segs_.size() - 1)
 		{
@@ -522,6 +525,8 @@ int main()
         std::cout << "acceleration x: " << all_traj[i].accelerations[0] << std::endl;
         std::cout << "acceleration y: " << all_traj[i].accelerations[1] << std::endl;
         std::cout << "acceleration z: " << all_traj[i].accelerations[2] << std::endl;
+        std::cout << "yaw : " << all_traj[i].yaw << std::endl;
+        std::cout << "yaw rate: " << all_traj[i].yaw_rate << std::endl;
     }
     std::cout << "Length of the solution path: " << path_data_.num_state << std::endl;
     lcm.publish("PATH", &path_data_);

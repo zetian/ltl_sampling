@@ -39,10 +39,6 @@ std::vector<int> MultiSamplingDubins::sample_from_ba(BAStruct buchi, SampleSpace
         return std::vector<int>();
     }
     int size_buchi = buchi.state_num;
-    int temp = buchi.acc_state_idx.front();
-    if (size_buchi == 1) {
-        return {temp, temp};
-    }
     std::vector<uint32_t> ba_accept_state = buchi.acc_state_idx;
     int new_ba_sample = rand() % (size_buchi);
     std::vector<int> new_ba_candidate;
@@ -54,7 +50,6 @@ std::vector<int> MultiSamplingDubins::sample_from_ba(BAStruct buchi, SampleSpace
         {
             if (i != new_ba_sample && !buchi.trans_con[i][new_ba_sample].empty())
             {
-
                 temp_candidate.push_back(i);
                 if (sample_space.get_sub_space(i).num_samples() > 0)
                 {
