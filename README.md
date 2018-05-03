@@ -81,8 +81,8 @@ $ make
 
 Edit the path variable for lcm, edit ~/.bashrc
 ```
-export AURORA_HOME=$HOME/Workspace/ltl_sampling
-export PYTHONPATH=$AURORA_HOME/src/lcmtypes/python:$AURORA_HOME/src/lcmtypes/python/sampling:$PYTHONPATH
+export LTLSAMPLING=$HOME/Workspace/ltl_sampling
+export PYTHONPATH=$LTLSAMPLING/src/lcmtypes/python:$LTLSAMPLING/src/lcmtypes/python/sampling:$PYTHONPATH
 
 ```
 
@@ -90,7 +90,7 @@ export PYTHONPATH=$AURORA_HOME/src/lcmtypes/python:$AURORA_HOME/src/lcmtypes/pyt
 ### Single UAV case
 
 Follow the test example in src/tests/test_sample_dubins.cpp. 
-Once you set up all the paremeters, tasks and environment, run src/python_vis/sampling_vis.py for visualization first, then run the test example, the result would looks like:
+Once you set up all the paremeters, tasks and environment, run src/python_vis/sampling_vis.py for visualization first, then run the test example, the result would look like:
 
 <img src="/data/test_example.png" align="middle" height="500" >
 
