@@ -109,9 +109,3 @@ Follow the test example in src/tests/test_cbba.cpp, the result looks like:
 1. There are 2 UAVs in this set up, both of them have a minimun turning radius 15.
 2. The environment and task is the same as before: visit all ROIs in the map without considering the order.
 
-## Reference:
-Git
-
-* [Git Tutorial](http://cleanercode.com/introduction-to-git-talk/introduction-to-git.pdf)
-* [Git Cheat Sheet 1](https://www.atlassian.com/dms/wac/images/landing/git/atlassian_git_cheatsheet.pdf)
-* [Git Cheat Sheet 2](https://training.github.com/kit/downloads/github-git-cheat-sheet.pdf)
