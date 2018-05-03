@@ -41,6 +41,10 @@ double MultiSamplingSimple::fRand(double fMin, double fMax)
     return dist(rng);
 }
 
+
+
+
+
 std::vector<int> MultiSamplingSimple::sample_from_ba(BAStruct buchi, SampleSpace &sample_space)
 {
     if (sample_space.total_sample_num() == 0) {

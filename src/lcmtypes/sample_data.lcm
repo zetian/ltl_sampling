@@ -18,6 +18,7 @@ struct path_data
     double state_y[num_state];
 }
 
+
 struct region_data
 {
     double position_x[2];

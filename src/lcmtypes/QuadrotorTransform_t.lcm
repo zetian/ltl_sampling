@@ -1,0 +1,7 @@
+package srcl_lcm_msgs;
+
+struct QuadrotorTransform
+{
+	Pose_t base_to_world;
+	Pose_t laser_to_base;	
+}

@@ -1,0 +1,8 @@
+package srcl_lcm_msgs;
+
+struct MissionInfo_t
+{    
+	double dist_to_goal;
+	int32_t next_wp_id;
+	int64_t trajectory_id;
+}

@@ -1,0 +1,7 @@
+package srcl_lcm_msgs;
+
+struct Edge_t 
+{
+	int64_t id_start;
+	int64_t id_end;
+}

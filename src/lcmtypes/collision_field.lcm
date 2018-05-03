@@ -1,0 +1,10 @@
+package librav_lcm_msgs;
+
+// MAP
+struct ScalarField_t
+{
+    int32_t size_x;
+    int32_t size_y;
+
+	double value[size_x][size_y];
+}

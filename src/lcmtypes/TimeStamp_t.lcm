@@ -1,0 +1,6 @@
+package srcl_lcm_msgs;
+
+struct TimeStamp_t 
+{
+	int64_t time_stamp;
+}

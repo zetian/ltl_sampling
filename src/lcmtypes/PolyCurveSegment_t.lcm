@@ -1,0 +1,17 @@
+package srcl_lcm_msgs;
+
+struct PolyCurveSegment_t
+{    
+	int32_t coeffsize_x;
+	int32_t coeffsize_y;
+	int32_t coeffsize_z;
+	int32_t coeffsize_yaw;
+	
+	double coeffs_x[coeffsize_x];
+	double coeffs_y[coeffsize_y];
+	double coeffs_z[coeffsize_z];
+	double coeffs_yaw[coeffsize_yaw];
+	
+	double   t_start;
+	double   t_end;
+}

@@ -23,12 +23,13 @@ set(SAMPLING_LIB_SRC
 	sample_node.cpp
 	sample_space.cpp
 	ltl_sampling_simple.cpp
+	ltl_sampling_3d.cpp
 	ltl_sampling_dubins.cpp
 	#cbba_sampling.cpp
 	region.cpp
 )
 add_library(sampling STATIC ${SAMPLING_LIB_SRC})
-target_link_libraries(sampling transsys trajectory)
+target_link_libraries(sampling transsys trajectory common)
 #add_library(transsys STATIC ${GRAPH_LIB_SRC})
 #target_link_libraries(transsys spot bddx)
 

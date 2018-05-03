@@ -82,7 +82,7 @@
 
 cmake_minimum_required(VERSION 2.6.0)
 
-set(POD_NAME acel_lcm_msgs)
+set(POD_NAME librav)
 include(cmake/pods.cmake)
 
 # Policy settings to prevent warnings on 2.6 but ensure proper operation on

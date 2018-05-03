@@ -3,7 +3,8 @@
 // #include "trans_sys/buchi_automaton.h"
 
 #include <lcm/lcm-cpp.hpp>
-#include "lcmtypes/acel_lcm_msgs.hpp"
+// #include "lcmtypes/acel_lcm_msgs.hpp"
+#include "lcmtypes/librav.hpp"
 #include "trajectory/dubins_path.h"
 
 using namespace acel;

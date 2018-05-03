@@ -18,7 +18,8 @@
 #include "config_reader/config_reader.h"
 
 #include <lcm/lcm-cpp.hpp>
-#include "lcmtypes/acel_lcm_msgs.hpp"
+// #include "lcmtypes/acel_lcm_msgs.hpp"
+#include "lcmtypes/librav.hpp"
 
 using namespace acel;
 
@@ -35,7 +36,8 @@ int main()
     // std::cout << "This program will let the user input a configuration filename with its path. e.g. ../../config/test_sample_dubins.ini" << std::endl;
     // std::cout << "\nPlease enter your desired filename path." << std::endl;
     // std::cin >> filename;
-    ConfigReader config_reader("../../config/test_sample_dubins.ini");
+    // ConfigReader config_reader("../../config/test_sample_dubins.ini");
+    ConfigReader config_reader("../../config/task.ini");
     // ConfigReader config_reader(filename);
     if (config_reader.CheckError()){
         return -1;
@@ -80,14 +82,14 @@ int main()
     // Wrap all region of interests (ROI) as input for reading formula
     std::vector<std::string> buchi_regions;
     int num_buchi_regions = config_reader.GetInteger("num_buchi_regions", 0);
-
+    
     for (int i = 0; i < num_buchi_regions; i++){
         buchi_regions.push_back(config_reader.Get("buchi_region_" + std::to_string(i), ""));
     }
 
     // indep_set store the ROI that independent to each other, in this case means p0, p1 and p2 have no intersections
     int num_indep_regions = config_reader.GetInteger("num_indep_regions", 0);
-
+    
     // std::vector<int> indep_set = {0, 1, 2};
     std::vector<int> indep_set;
     for (int i = 0; i < num_indep_regions; i++){
@@ -107,6 +109,7 @@ int main()
     /*** Set region of interests ***/
     // All ROI and obstacles are rectangle for now
     // Three parameters are x position, y position and the name of ROI (0 means p0)
+    
     int num_ROI = config_reader.GetInteger("num_ROI", -1);
     sampling::region_data r_data;
     for (int i = 0; i < num_ROI; i++){
@@ -139,9 +142,10 @@ int main()
     
     /*** Set the number of iterations ***/
     // Solution towards to optimal when iterations -> infinite
-    int iterations = config_reader.GetInteger("iterations", -1);;
+    int iterations = config_reader.GetInteger("iterations", -1);
     /*** Start sampling searching ***/
     stopwatch.tic();
+    std::cout << "Searching..." << std::endl;
     ltl_sampling_dubins.start_sampling(iterations);
     std::cout << "Time used for searching: " << stopwatch.toc() << std::endl;
 
@@ -174,7 +178,7 @@ int main()
         way_point_.y = way_points[i].y;
         way_point_.z = 0;
         way_point_.t = way_points[i].t;
-        std::cout << "x: " << way_points[i].x << ", y: " << way_points[i].y << ", t: " <<way_points[i].t << std::endl;
+        // std::cout << "x: " << way_points[i].x << ", y: " << way_points[i].y << ", t: " <<way_points[i].t << std::endl;
         
         planner_output.waypoints[i] = way_point_;
     }
