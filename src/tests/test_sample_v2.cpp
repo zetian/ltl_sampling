@@ -14,9 +14,10 @@
 #include "trans_sys/spot_hoa_interpreter.h"
 
 #include "sampling/ltl_sampling_simple.h"
-
+#include "stopwatch/stopwatch.h"
 #include <lcm/lcm-cpp.hpp>
-#include "lcmtypes/acel_lcm_msgs.hpp"
+//#include "lcmtypes/acel_lcm_msgs.hpp"
+#include "lcmtypes/librav.hpp"
 
 using namespace acel;
 
@@ -99,8 +100,10 @@ int main()
 
     ltl_sampling_simple.set_init_state(init_state);
     int interation = 1000;
-
+    stopwatch::StopWatch stopwatch;
+    stopwatch.tic();
     ltl_sampling_simple.start_sampling(interation);
+    std::cout << "Time used for searching: " << stopwatch.toc() << std::endl;
     std::vector<std::vector<double>> path = ltl_sampling_simple.get_path();
 
     sampling::path_data path_data_;

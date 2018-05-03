@@ -190,6 +190,10 @@ void LTL_SamplingSimple::init_parameter(double EPSILON, double RADIUS){
 std::vector<double> LTL_SamplingSimple::sample_state(std::vector<int> ba_act) {
     double new_node_x = 0;
     double new_node_y = 0;
+    // new_node_x = fRand(0, work_space_size_x_);
+    // new_node_y = fRand(0, work_space_size_y_);
+    // std::vector<double> sampled_position = {new_node_x, new_node_y}; 
+    // return sampled_position;
     if (ba_act[0] == ba_act[1]) {
         new_node_x = fRand(0, work_space_size_x_);
         new_node_y = fRand(0, work_space_size_y_);
@@ -280,7 +284,7 @@ void LTL_SamplingSimple::start_sampling(int iteration) {
         node_data.state[1] = new_sample_state[1];
         lcm.publish("SAMPLE", &node_data);
 
-        std::cout << "new ba state: " << new_ba << std::endl;
+        // std::cout << "new ba state: " << new_ba << std::endl;
         if (new_ba == ba_.acc_state_idx.front()) {
             // std::cout << "acc ba: " << ba.acc_state_idx.front() << std::endl;
             std::cout << "Find a solution!!!" << std::endl;
