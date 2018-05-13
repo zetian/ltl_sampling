@@ -302,7 +302,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
         bool find_path = false;
         int cnt = 0;
         while (!find_path){
-            // cnt++;
+            cnt++;
             // std::cout << "~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
             // std::cout << "iteration: " << cnt << std::endl;
             std::vector<int> ba_act = sample_from_ba(ba_, all_space_);
@@ -336,6 +336,7 @@ void LTL_SamplingDubins::start_sampling(int iteration) {
                 find_path = true;
             }
         }
+        std::cout << "After " << cnt << " iterations find a feasible path. " << std::endl;
     }
 
     else {
