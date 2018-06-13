@@ -19,13 +19,15 @@ $ sudo apt-get install cmake
 
 Download the source code from [website](https://github.com/lcm-proj/lcm).
 
+Follow the build instructions [website](http://lcm-proj.github.io/build_instructions.html).
+
 ```
 $ git clone https://github.com/lcm-proj/lcm lcm
 $ cd lcm
-$ ./bootstrap.sh
 $ ./configure
 $ make
 $ sudo make install
+$ sudo ldconfig
 ```
 
 Post install
