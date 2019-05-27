@@ -4,7 +4,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Dependency libraries
-find_package(OpenCV REQUIRED)
+#find_package(OpenCV REQUIRED)
 
 ## Find LCM
 find_package(LCM REQUIRED)
@@ -24,14 +24,14 @@ include_directories(${LCM_GENERATED_HEADER_PATH})
 add_executable(test_sample_v2 test_sample_v2.cpp)
 target_link_libraries(test_sample_v2 transsys trajectory sampling utilities ${LCM_LIBRARIES})
 
-add_executable(test_3d test_3d.cpp)
-target_link_libraries(test_3d transsys trajectory sampling utilities polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
+# add_executable(test_3d test_3d.cpp)
+# target_link_libraries(test_3d transsys trajectory sampling utilities polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
 
-add_executable(test_quad test_quad.cpp)
-target_link_libraries(test_quad transsys trajectory sampling polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
+# add_executable(test_quad test_quad.cpp)
+# target_link_libraries(test_quad transsys trajectory sampling polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
 
-add_executable(test_quad_2 test_quad_2.cpp)
-target_link_libraries(test_quad_2 transsys trajectory sampling polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
+# add_executable(test_quad_2 test_quad_2.cpp)
+# target_link_libraries(test_quad_2 transsys trajectory sampling polyopt ${GUROBI_LIBRARIES} ${LCM_LIBRARIES})
 
 add_executable(test_sample_dubins test_sample_dubins.cpp)
 target_link_libraries(test_sample_dubins transsys trajectory sampling utilities ${LCM_LIBRARIES})

@@ -36,8 +36,8 @@ int main()
     // std::cout << "This program will let the user input a configuration filename with its path. e.g. ../../config/test_sample_dubins.ini" << std::endl;
     // std::cout << "\nPlease enter your desired filename path." << std::endl;
     // std::cin >> filename;
-    ConfigReader config_reader("../../config/test_sample_dubins.ini");
-    // ConfigReader config_reader("../../config/task.ini");
+    // ConfigReader config_reader("../../config/test_sample_dubins.ini");
+    ConfigReader config_reader("../../config/test_dubins_2.ini");
     // ConfigReader config_reader(filename);
     if (config_reader.CheckError()){
         return -1;
